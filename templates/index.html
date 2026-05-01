@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LogosDepth — Bible Word Translator</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Noto+Serif+Hebrew&family=Noto+Serif:ital@0;1&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <span class="logo-icon">&#x05D0;</span>
+    <span class="logo-text">LogosDepth</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <button class="nav-btn active" data-view="dashboard" onclick="showView('dashboard', this)">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-btn" data-view="search" onclick="showView('search', this)">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Search Words
+    </button>
+    <button class="nav-btn" data-view="browse" onclick="showView('browse', this)">
+      <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Browse
+    </button>
+  </nav>
+
+  <div class="sidebar-section-label">Language Filter</div>
+  <div class="lang-filter">
+    <button class="lang-btn active" data-lang="all" onclick="setLang('all', this)">All</button>
+    <button class="lang-btn hebrew" data-lang="hebrew" onclick="setLang('hebrew', this)">Hebrew</button>
+    <button class="lang-btn greek" data-lang="greek" onclick="setLang('greek', this)">Greek</button>
+  </div>
+
+  <div class="sidebar-section-label">Categories</div>
+  <ul class="category-list" id="categoryList">
+    <li class="cat-item loading">Loading…</li>
+  </ul>
+
+  <div class="sidebar-stats" id="sidebarStats">
+    <div class="stat-pill hebrew-pill">
+      <span class="stat-num" id="statHebrew">–</span>
+      <span class="stat-label">Hebrew</span>
+    </div>
+    <div class="stat-pill greek-pill">
+      <span class="stat-num" id="statGreek">–</span>
+      <span class="stat-label">Greek</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<main class="main">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <button class="menu-toggle" onclick="toggleSidebar()">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="search-wrap" id="topSearchWrap">
+      <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input
+        type="text"
+        id="searchInput"
+        class="search-input"
+        placeholder='Search English words — e.g. "love", "peace", "faith"…'
+        autocomplete="off"
+        oninput="onSearchInput(this.value)"
+      />
+      <button class="clear-btn" id="clearBtn" onclick="clearSearch()" style="display:none">✕</button>
+    </div>
+  </header>
+
+  <!-- ===== VIEW: DASHBOARD ===== -->
+  <section class="view" id="view-dashboard">
+
+    <div class="dashboard-grid">
+
+      <!-- Word of the Day -->
+      <div class="card wod-card" id="wodCard">
+        <div class="card-label">✦ Word of the Day</div>
+        <div class="wod-body">
+          <div class="wod-original" id="wodOriginal">…</div>
+          <div class="wod-translit" id="wodTranslit"></div>
+          <div class="wod-def" id="wodDef"></div>
+          <div class="wod-meta">
+            <span class="badge" id="wodLang"></span>
+            <span class="strongs-ref" id="wodRef"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats row -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-big" id="dashTotal">–</div>
+          <div class="stat-desc">Words in Lexicon</div>
+        </div>
+        <div class="stat-card hebrew-card">
+          <div class="stat-big" id="dashHebrew">–</div>
+          <div class="stat-desc">Hebrew (OT)</div>
+        </div>
+        <div class="stat-card greek-card">
+          <div class="stat-big" id="dashGreek">–</div>
+          <div class="stat-desc">Greek (NT)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-big" id="dashCats">–</div>
+          <div class="stat-desc">Categories</div>
+        </div>
+      </div>
+
+      <!-- Featured words -->
+      <div class="section-heading">Featured Words</div>
+      <div class="results-grid" id="featuredGrid"></div>
+
+      <!-- Recent searches -->
+      <div class="section-heading" id="recentHeading" style="display:none">Recent Searches</div>
+      <div class="recent-tags" id="recentTags"></div>
+
+    </div>
+  </section>
+
+  <!-- ===== VIEW: SEARCH ===== -->
+  <section class="view hidden" id="view-search">
+    <div class="results-header" id="resultsHeader"></div>
+    <div class="results-grid" id="resultsGrid"></div>
+    <div class="no-results hidden" id="noResults">
+      <div class="no-results-icon">🔍</div>
+      <div>No words found for <strong id="noResultsQuery"></strong></div>
+      <div class="no-results-hint">Try a different English word like "love", "faith", "covenant", or "grace".</div>
+    </div>
+    <div class="loading-state hidden" id="loadingState">Searching…</div>
+  </section>
+
+  <!-- ===== VIEW: BROWSE ===== -->
+  <section class="view hidden" id="view-browse">
+    <div class="browse-heading">Browse by Category</div>
+    <div class="browse-grid" id="browseGrid"></div>
+  </section>
+
+</main>
+
+<!-- ===== DETAIL MODAL ===== -->
+<div class="modal-backdrop hidden" id="modalBackdrop" onclick="closeModal()"></div>
+<div class="modal hidden" id="wordModal">
+  <button class="modal-close" onclick="closeModal()">✕</button>
+  <div class="modal-lang-badge" id="modalLang"></div>
+  <div class="modal-original" id="modalOriginal"></div>
+  <div class="modal-translit" id="modalTranslit"></div>
+  <div class="modal-pronunciation" id="modalPronun"></div>
+  <div class="modal-strongs" id="modalStrongs"></div>
+  <div class="modal-divider"></div>
+  <div class="modal-section-label">Definition</div>
+  <div class="modal-def" id="modalDef"></div>
+  <div class="modal-section-label" style="margin-top:1.2rem">In Depth</div>
+  <div class="modal-extended" id="modalExtended"></div>
+  <div class="modal-meta">
+    <div>
+      <span class="modal-meta-label">Category</span>
+      <span class="modal-meta-val" id="modalCat"></span>
+    </div>
+    <div>
+      <span class="modal-meta-label">KJV Translations</span>
+      <span class="modal-meta-val" id="modalKjv"></span>
+    </div>
+    <div>
+      <span class="modal-meta-label">OT/NT Occurrences</span>
+      <span class="modal-meta-val" id="modalUsage"></span>
+    </div>
+  </div>
+</div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>
