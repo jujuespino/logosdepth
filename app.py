@@ -123,5 +123,18 @@ def featured():
     return jsonify(out)
 
 
+@app.route("/api/words")
+def all_words():
+    lang = request.args.get("lang", "all")
+    pool = LEXICON
+    if lang == "hebrew":
+        pool = [e for e in LEXICON if e["language"] == "Hebrew"]
+    elif lang == "greek":
+        pool = [e for e in LEXICON if e["language"] == "Greek"]
+    shuffled = pool[:]
+    random.shuffle(shuffled)
+    return jsonify(shuffled)
+
+
 if __name__ == "__main__":
     app.run(debug=True)

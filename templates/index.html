@@ -30,6 +30,10 @@
       <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
       Browse
     </button>
+    <button class="nav-btn" data-view="game" onclick="showView('game', this)">
+      <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Word Game
+    </button>
   </nav>
 
   <div class="sidebar-section-label">Language Filter</div>
@@ -138,6 +142,108 @@
       <div class="no-results-hint">Try a different English word like "love", "faith", "covenant", or "grace".</div>
     </div>
     <div class="loading-state hidden" id="loadingState">Searching…</div>
+  </section>
+
+  <!-- ===== VIEW: GAME ===== -->
+  <section class="view hidden" id="view-game">
+    <div class="game-container">
+
+      <div class="game-header">
+        <div class="game-title-row">
+          <span class="game-star-icon">✦</span>
+          <h1 class="game-title">Scripture Word Game</h1>
+        </div>
+        <p class="game-subtitle">Master Hebrew &amp; Greek biblical words — one card at a time</p>
+      </div>
+
+      <!-- Mode tabs -->
+      <div class="game-mode-tabs">
+        <button class="mode-tab active" id="tabFlashcard" onclick="setGameMode('flashcard', this)">Flashcard</button>
+        <button class="mode-tab" id="tabQuiz" onclick="setGameMode('quiz', this)">Quiz</button>
+      </div>
+
+      <!-- Score bar -->
+      <div class="game-scorebar">
+        <div class="score-chip"><span class="score-val" id="gameScore">0</span><span class="score-lbl">Score</span></div>
+        <div class="score-chip streak-chip"><span class="score-val" id="gameStreak">0</span><span class="score-lbl">🔥 Streak</span></div>
+        <div class="score-chip"><span class="score-val" id="gameBest">0</span><span class="score-lbl">Best</span></div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="game-progress-wrap">
+        <div class="game-progress-bar"><div class="game-progress-fill" id="gameProgressFill" style="width:0%"></div></div>
+        <span class="game-progress-label" id="gameProgressLabel">0 / 0</span>
+      </div>
+
+      <!-- START screen -->
+      <div class="game-start-screen" id="gameStart">
+        <div class="gs-emoji">📖</div>
+        <h2 class="gs-title">Ready to Learn?</h2>
+        <p class="gs-desc">Pick a language filter, then start — definitions, original scripts, and streak rewards await!</p>
+        <div class="gs-lang-row">
+          <button class="gs-lang-btn active" data-lang="all"    onclick="pickGameLang('all',this)">All Words</button>
+          <button class="gs-lang-btn"        data-lang="hebrew" onclick="pickGameLang('hebrew',this)">Hebrew</button>
+          <button class="gs-lang-btn"        data-lang="greek"  onclick="pickGameLang('greek',this)">Greek</button>
+        </div>
+        <button class="gs-start-btn" onclick="startGame()">Start Game</button>
+      </div>
+
+      <!-- PLAY area -->
+      <div class="game-play-area hidden" id="gamePlay">
+
+        <!-- Flashcard -->
+        <div id="flashcardArea">
+          <div class="flashcard" id="flashcard" onclick="flipCard()">
+            <div class="flashcard-inner" id="flashcardInner">
+              <div class="flashcard-front">
+                <div class="fc-tap-hint">Tap to reveal meaning</div>
+                <div class="fc-original" id="fcOriginal"></div>
+                <div class="fc-translit" id="fcTranslit"></div>
+                <span class="fc-badge" id="fcBadge"></span>
+              </div>
+              <div class="flashcard-back">
+                <div class="fc-tap-hint">Did you get it?</div>
+                <div class="fc-word-small" id="fcWordSmall"></div>
+                <div class="fc-def" id="fcDef"></div>
+                <div class="fc-extended" id="fcExtended"></div>
+              </div>
+            </div>
+          </div>
+          <div class="fc-actions hidden" id="fcActions">
+            <button class="fc-btn fc-btn-no"  onclick="markCard(false)">Still Learning</button>
+            <button class="fc-btn fc-btn-yes" onclick="markCard(true)">Got it! ✓</button>
+          </div>
+        </div>
+
+        <!-- Quiz -->
+        <div id="quizArea" class="hidden">
+          <div class="quiz-prompt-card">
+            <div class="quiz-prompt-label">What does this word mean?</div>
+            <div class="quiz-word" id="quizWord"></div>
+            <div class="quiz-translit" id="quizTranslit"></div>
+            <span class="fc-badge" id="quizBadge"></span>
+          </div>
+          <div class="quiz-options" id="quizOptions"></div>
+          <div class="quiz-feedback hidden" id="quizFeedback"></div>
+          <button class="quiz-next-btn hidden" id="quizNextBtn" onclick="nextQuizQuestion()">Next Word →</button>
+        </div>
+
+      </div>
+
+      <!-- DONE screen -->
+      <div class="game-done-screen hidden" id="gameDone">
+        <div class="gd-emoji" id="gdEmoji">🏆</div>
+        <h2 class="gd-title" id="gdTitle">Round Complete!</h2>
+        <div class="gd-stats">
+          <div class="gd-stat"><span id="doneScore">0</span><label>Score</label></div>
+          <div class="gd-stat"><span id="doneBest">0</span><label>Best Streak</label></div>
+          <div class="gd-stat"><span id="doneCorrect">0</span><label>Correct</label></div>
+        </div>
+        <button class="gs-start-btn" onclick="restartGame()">Play Again</button>
+        <button class="gd-back-btn" onclick="showView('dashboard', document.querySelector('[data-view=\'dashboard\']'))">← Back to Dashboard</button>
+      </div>
+
+    </div>
   </section>
 
   <!-- ===== VIEW: BROWSE ===== -->

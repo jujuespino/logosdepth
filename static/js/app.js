@@ -281,6 +281,225 @@ document.addEventListener('keydown', e => {
   }
 });
 
+// ─── GAME ────────────────────────────────────────────
+const CORRECT_MSGS = ['Excellent!', 'That\'s right!', 'You got it!', 'Perfect!', 'Well done!', 'Amazing!'];
+const WRONG_MSGS   = ['Keep going!', 'Almost there!', 'You\'ll get it next time!', 'Don\'t give up!'];
+
+let gameMode     = 'flashcard'; // 'flashcard' | 'quiz'
+let gameLang     = 'all';
+let gameWords    = [];          // all loaded words
+let gameQueue    = [];          // words for this round
+let gameIndex    = 0;
+let gameScore    = 0;
+let gameStreak   = 0;
+let gameBestStreak = 0;
+let gameCorrect  = 0;
+let cardFlipped  = false;
+let quizAnswered = false;
+
+function setGameMode(mode, btn) {
+  gameMode = mode;
+  document.querySelectorAll('.mode-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (gameWords.length > 0 && !document.getElementById('gameStart').classList.contains('hidden')) {
+    // just update mode, no restart needed
+  }
+}
+
+function pickGameLang(lang, btn) {
+  gameLang = lang;
+  document.querySelectorAll('.gs-lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+async function startGame() {
+  const res   = await fetch(`/api/words?lang=${gameLang}`);
+  gameWords   = await res.json();
+  gameQueue   = [...gameWords];
+  gameIndex   = 0;
+  gameScore   = 0;
+  gameStreak  = 0;
+  gameBestStreak = 0;
+  gameCorrect = 0;
+
+  document.getElementById('gameStart').classList.add('hidden');
+  document.getElementById('gameDone').classList.add('hidden');
+  document.getElementById('gamePlay').classList.remove('hidden');
+
+  updateScoreBar();
+  updateProgress();
+
+  if (gameMode === 'flashcard') {
+    document.getElementById('flashcardArea').classList.remove('hidden');
+    document.getElementById('quizArea').classList.add('hidden');
+    showFlashcard();
+  } else {
+    document.getElementById('flashcardArea').classList.add('hidden');
+    document.getElementById('quizArea').classList.remove('hidden');
+    showQuizQuestion();
+  }
+}
+
+function restartGame() {
+  document.getElementById('gameDone').classList.add('hidden');
+  document.getElementById('gameStart').classList.remove('hidden');
+  document.getElementById('gamePlay').classList.add('hidden');
+}
+
+// ── Flashcard ──
+function showFlashcard() {
+  if (gameIndex >= gameQueue.length) { endGame(); return; }
+  const entry = gameQueue[gameIndex];
+  cardFlipped = false;
+
+  const inner = document.getElementById('flashcardInner');
+  inner.classList.remove('flipped');
+
+  document.getElementById('fcOriginal').textContent = entry.original;
+  document.getElementById('fcTranslit').textContent = entry.transliteration;
+  const badge = document.getElementById('fcBadge');
+  badge.textContent = entry.language;
+  badge.className   = `fc-badge ${entry.language.toLowerCase()}`;
+
+  document.getElementById('fcWordSmall').textContent = `${entry.transliteration} · ${entry.strongs_id}`;
+  document.getElementById('fcDef').textContent      = entry.definition;
+  document.getElementById('fcExtended').textContent = entry.extended_definition || '';
+
+  document.getElementById('fcActions').classList.add('hidden');
+  updateProgress();
+}
+
+function flipCard() {
+  if (cardFlipped) return;
+  cardFlipped = true;
+  document.getElementById('flashcardInner').classList.add('flipped');
+  setTimeout(() => {
+    document.getElementById('fcActions').classList.remove('hidden');
+  }, 350);
+}
+
+function markCard(correct) {
+  if (correct) {
+    gameScore  += 10 + Math.min(gameStreak, 5) * 2;
+    gameStreak++;
+    if (gameStreak > gameBestStreak) gameBestStreak = gameStreak;
+    gameCorrect++;
+  } else {
+    gameStreak = 0;
+    // put the card back near the end so they see it again
+    const entry = gameQueue[gameIndex];
+    const remaining = gameQueue.length - gameIndex - 1;
+    const insertAt  = gameIndex + 1 + Math.min(3, Math.floor(remaining / 2));
+    gameQueue.splice(insertAt, 0, entry);
+  }
+
+  gameIndex++;
+  updateScoreBar();
+  showFlashcard();
+}
+
+// ── Quiz ──
+function showQuizQuestion() {
+  if (gameIndex >= gameQueue.length) { endGame(); return; }
+  const entry = gameQueue[gameIndex];
+  quizAnswered = false;
+
+  document.getElementById('quizWord').textContent    = entry.original;
+  document.getElementById('quizTranslit').textContent = entry.transliteration;
+  const badge = document.getElementById('quizBadge');
+  badge.textContent = entry.language;
+  badge.className   = `fc-badge ${entry.language.toLowerCase()}`;
+
+  // Generate 4 options: 1 correct + 3 random wrong
+  const wrongPool = gameWords.filter(w => w.strongs_id !== entry.strongs_id);
+  const shuffledWrong = wrongPool.sort(() => Math.random() - 0.5).slice(0, 3);
+  const options = [entry, ...shuffledWrong].sort(() => Math.random() - 0.5);
+
+  const optEl = document.getElementById('quizOptions');
+  optEl.innerHTML = '';
+  options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className   = 'quiz-option';
+    btn.textContent = opt.definition;
+    btn.onclick     = () => answerQuiz(opt.strongs_id === entry.strongs_id, btn, optEl, entry);
+    optEl.appendChild(btn);
+  });
+
+  document.getElementById('quizFeedback').classList.add('hidden');
+  document.getElementById('quizNextBtn').classList.add('hidden');
+  updateProgress();
+}
+
+function answerQuiz(correct, clickedBtn, optionsEl, entry) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+
+  optionsEl.querySelectorAll('.quiz-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === entry.definition) btn.classList.add('correct');
+  });
+
+  const feedbackEl = document.getElementById('quizFeedback');
+  feedbackEl.classList.remove('hidden', 'correct-feedback', 'wrong-feedback');
+
+  if (correct) {
+    clickedBtn.classList.add('correct');
+    gameScore  += 10 + Math.min(gameStreak, 5) * 2;
+    gameStreak++;
+    if (gameStreak > gameBestStreak) gameBestStreak = gameStreak;
+    gameCorrect++;
+    feedbackEl.textContent = CORRECT_MSGS[Math.floor(Math.random() * CORRECT_MSGS.length)] +
+      (gameStreak > 1 ? ` ${gameStreak}× streak! +${10 + Math.min(gameStreak-1,5)*2} pts` : '');
+    feedbackEl.classList.add('correct-feedback');
+  } else {
+    clickedBtn.classList.add('wrong');
+    gameStreak = 0;
+    feedbackEl.textContent = WRONG_MSGS[Math.floor(Math.random() * WRONG_MSGS.length)] +
+      ` The answer was: "${entry.definition}"`;
+    feedbackEl.classList.add('wrong-feedback');
+  }
+
+  updateScoreBar();
+  document.getElementById('quizNextBtn').classList.remove('hidden');
+}
+
+function nextQuizQuestion() {
+  gameIndex++;
+  showQuizQuestion();
+}
+
+// ── Shared helpers ──
+function updateScoreBar() {
+  document.getElementById('gameScore').textContent  = gameScore;
+  document.getElementById('gameStreak').textContent = gameStreak;
+  document.getElementById('gameBest').textContent   = gameBestStreak;
+}
+
+function updateProgress() {
+  const total = gameQueue.length;
+  const done  = Math.min(gameIndex, total);
+  const pct   = total ? (done / total) * 100 : 0;
+  document.getElementById('gameProgressFill').style.width = pct + '%';
+  document.getElementById('gameProgressLabel').textContent = `${done} / ${total}`;
+}
+
+function endGame() {
+  document.getElementById('gamePlay').classList.add('hidden');
+  document.getElementById('gameDone').classList.remove('hidden');
+
+  const pct = gameWords.length ? Math.round((gameCorrect / gameWords.length) * 100) : 0;
+  let emoji = '📖', title = 'Keep Practicing!';
+  if (pct >= 90) { emoji = '🏆'; title = 'Outstanding!'; }
+  else if (pct >= 70) { emoji = '🌟'; title = 'Great Job!'; }
+  else if (pct >= 50) { emoji = '✨'; title = 'Good Effort!'; }
+
+  document.getElementById('gdEmoji').textContent = emoji;
+  document.getElementById('gdTitle').textContent = title;
+  document.getElementById('doneScore').textContent   = gameScore;
+  document.getElementById('doneBest').textContent    = gameBestStreak;
+  document.getElementById('doneCorrect').textContent = `${gameCorrect}/${gameWords.length}`;
+}
+
 // ─── Recent searches ─────────────────────────────────
 function saveRecent(query) {
   let recent = getRecent().filter(r => r.toLowerCase() !== query.toLowerCase());
