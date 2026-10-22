@@ -1,7 +1,7 @@
 """End-to-end browser test. Needs: flask server on BASE, playwright, chromium.
 
   python3 app.py &            # in another shell
-  CHROME=/path/to/chrome python3 tests/e2e.py
+  python3 tests/e2e.py        # set CHROME=/path/to/chrome to use a specific browser
 Optional: SHOTS=/some/dir to save screenshots.
 """
 import json
@@ -10,7 +10,9 @@ from datetime import datetime, timedelta
 
 from playwright.sync_api import sync_playwright
 
-CHROME = os.environ.get('CHROME', '/opt/pw-browsers/chromium-1194/chrome-linux/chrome')
+_SANDBOX_CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
+# Use $CHROME if set, else this sandbox's browser if present, else Playwright's bundled Chromium.
+CHROME = os.environ.get('CHROME') or (_SANDBOX_CHROME if os.path.exists(_SANDBOX_CHROME) else None)
 BASE = os.environ.get('BASE', 'http://localhost:5000/')
 SHOTS = os.environ.get('SHOTS')
 D0 = datetime(2026, 11, 2, 10, 0)

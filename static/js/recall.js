@@ -2,6 +2,7 @@
    LogosDepth — Recall grading and spaced-review scheduling
    Pure functions (no DOM) so they can be unit-tested in Node.
    =================================================== */
+/* global module */
 
 const Recall = (() => {
   // Days until the next review after each successful, unaided recall.

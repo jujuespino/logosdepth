@@ -4,6 +4,7 @@
    Review: type each due verse from memory, spaced over days and weeks
    Grading and scheduling live in recall.js.
    =================================================== */
+/* global Recall, openModal */
 
 const VERSE_SRS_KEY    = 'ld_verse_srs';
 const VERSE_XP_KEY     = 'ld_verse_xp';

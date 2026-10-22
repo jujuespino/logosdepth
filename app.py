@@ -2,12 +2,13 @@ import json
 import os
 import random
 from datetime import date
-from flask import Flask, render_template, request, jsonify
+
+from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
 
 DATA_PATH = os.path.join(os.path.dirname(__file__), "data", "lexicon.json")
-with open(DATA_PATH, "r", encoding="utf-8") as f:
+with open(DATA_PATH, encoding="utf-8") as f:
     LEXICON: list[dict] = json.load(f)
 
 # English keyword → list of entries index
@@ -27,7 +28,7 @@ CATEGORIES = sorted(CATEGORY_INDEX.keys())
 # Memorization verses (KJV, public domain), each linked to lexicon entries
 LEXICON_BY_ID = {e["strongs_id"]: e for e in LEXICON}
 VERSES_PATH = os.path.join(os.path.dirname(__file__), "data", "verses.json")
-with open(VERSES_PATH, "r", encoding="utf-8") as f:
+with open(VERSES_PATH, encoding="utf-8") as f:
     VERSES: list[dict] = json.load(f)
 
 
@@ -156,5 +157,28 @@ def verses():
     return jsonify(out)
 
 
+@app.route("/healthz")
+def healthz():
+    """Liveness probe for hosting platforms and uptime monitors."""
+    return jsonify({"status": "ok", "lexicon": len(LEXICON), "verses": len(VERSES)})
+
+
+@app.after_request
+def add_headers(resp):
+    resp.headers.setdefault("X-Content-Type-Options", "nosniff")
+    resp.headers.setdefault("X-Frame-Options", "DENY")
+    resp.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+    resp.headers.setdefault("Permissions-Policy", "camera=(), geolocation=()")
+    if request.path.startswith("/static/fonts/"):
+        resp.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+    return resp
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Local development only. In production run under gunicorn (see Procfile);
+    # debug mode must never be enabled on a public server.
+    app.run(
+        host=os.environ.get("HOST", "127.0.0.1"),
+        port=int(os.environ.get("PORT", "5000")),
+        debug=os.environ.get("FLASK_DEBUG") == "1",
+    )

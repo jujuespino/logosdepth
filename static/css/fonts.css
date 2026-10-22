@@ -1,0 +1,132 @@
+/* Self-hosted fonts (SIL Open Font License 1.1). Subsets: Latin, Greek (incl. polytonic) and Hebrew.
+   Generated from @fontsource packages; see static/fonts/OFL-NOTICES.txt. */
+
+/* cinzel-latin-400-normal */
+@font-face {
+  font-family: 'Cinzel';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url(/static/fonts/cinzel-latin-400-normal.woff2) format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+/* cinzel-latin-600-normal */
+@font-face {
+  font-family: 'Cinzel';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url(/static/fonts/cinzel-latin-600-normal.woff2) format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+/* cinzel-latin-700-normal */
+@font-face {
+  font-family: 'Cinzel';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url(/static/fonts/cinzel-latin-700-normal.woff2) format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+/* inter-latin-300-normal */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 300;
+  src: url(/static/fonts/inter-latin-300-normal.woff2) format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+/* inter-latin-400-normal */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url(/static/fonts/inter-latin-400-normal.woff2) format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+/* inter-latin-500-normal */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: url(/static/fonts/inter-latin-500-normal.woff2) format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+/* inter-latin-600-normal */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url(/static/fonts/inter-latin-600-normal.woff2) format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+/* noto-serif-latin-400-normal */
+@font-face {
+  font-family: 'Noto Serif';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url(/static/fonts/noto-serif-latin-400-normal.woff2) format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+/* noto-serif-latin-400-italic */
+@font-face {
+  font-family: 'Noto Serif';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 400;
+  src: url(/static/fonts/noto-serif-latin-400-italic.woff2) format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+/* noto-serif-latin-600-normal */
+@font-face {
+  font-family: 'Noto Serif';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url(/static/fonts/noto-serif-latin-600-normal.woff2) format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+/* noto-serif-greek-400-normal */
+@font-face {
+  font-family: 'Noto Serif';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url(/static/fonts/noto-serif-greek-400-normal.woff2) format('woff2');
+  unicode-range: U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF;
+}
+
+/* noto-serif-greek-ext-400-normal */
+@font-face {
+  font-family: 'Noto Serif';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url(/static/fonts/noto-serif-greek-ext-400-normal.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+
+/* noto-serif-hebrew-hebrew-400-normal */
+@font-face {
+  font-family: 'Noto Serif Hebrew';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url(/static/fonts/noto-serif-hebrew-hebrew-400-normal.woff2) format('woff2');
+  unicode-range: U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F;
+}
