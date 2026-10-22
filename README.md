@@ -4,7 +4,7 @@ Memorize scripture word-for-word and keep it, using methods with strong scientif
 
 ## What it does
 
-- **Memorize Verses:** learn a verse in five short steps (Read, Fill In, Order, Recall, Type It), then review it on a spaced schedule. A verse is *mastered* after you recall it unaided on three different days.
+- **Memorize Verses:** learn a verse in short steps (Read, Phrases, Fill In, Order, Recall, Type It; an optional "guess first" comes before reading), then review it on a spaced schedule. A verse is *mastered* after you recall it unaided on three different days.
 - **Content:** 137 verses in 10 packs (KJV, and WEB for 130 of them), each linked to the exact Hebrew/Greek words in it.
 - **Word study:** search and browse 83 hand-written Hebrew and Greek word entries (Strong's numbers, transliteration, definitions, KJV renderings). Words found in verses but not in that set get brief entries.
 - **Word Game:** flashcards and a quiz for the original-language vocabulary.

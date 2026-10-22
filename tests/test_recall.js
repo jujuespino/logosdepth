@@ -98,6 +98,33 @@ test('hint keeps first letters, length and punctuation', () => {
   assert.strictEqual(R.makeHint('The LORD is my shepherd; I'), 'T__ L___ i_ m_ s_______; I');
 });
 
+// ── Phrases ──
+test('makePhrases breaks at punctuation', () => {
+  assert.deepStrictEqual(R.makePhrases('The LORD is my shepherd; I shall not want.'),
+    ['The LORD is my shepherd;', 'I shall not want.']);
+});
+test('makePhrases splits long unpunctuated runs in half', () => {
+  const p = R.makePhrases('In the beginning God created the heaven and the earth.');
+  assert.strictEqual(p.length, 2);
+  assert.strictEqual(p.join(' '), 'In the beginning God created the heaven and the earth.');
+});
+test('makePhrases folds tiny fragments into a neighbor', () => {
+  const p = R.makePhrases('Rejoice evermore. Pray without ceasing. In every thing give thanks: for this is the will of God.');
+  assert.ok(p.every(x => x.split(' ').length >= 3), JSON.stringify(p));
+});
+test('makePhrases keeps short verses whole and never loses words', () => {
+  assert.deepStrictEqual(R.makePhrases('Jesus wept.'), ['Jesus wept.']);
+  const verses = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'verses.json'), 'utf8'));
+  for (const v of verses) {
+    for (const text of [v.text, v.translations && v.translations.web].filter(Boolean)) {
+      const p = R.makePhrases(text);
+      assert.strictEqual(p.join(' '), text.split(/\s+/).filter(Boolean).join(' '), v.ref);
+      assert.ok(p.length >= 1 && p.every(x => x.split(' ').length <= 12), v.ref + ' ' + JSON.stringify(p));
+      if (text.split(/\s+/).length > 10) assert.ok(p.length >= 2, v.ref);
+    }
+  }
+});
+
 // ── Dates ──
 test('addDays crosses month and year boundaries', () => {
   assert.strictEqual(R.addDays('2026-10-31', 1), '2026-11-01');

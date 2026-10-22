@@ -77,23 +77,31 @@ def click_btn(pg, name):
 
 
 def guided_to_typed(pg, ref):
-    """Play Read -> Fill In -> Order -> Recall through the UI, arriving at Type It."""
+    """Play the guided steps (Read, Phrases when present, Fill In, Order, Recall) through the UI."""
     pg.evaluate(f'startVerse({ref!r})')
     click_btn(pg, "I've read it →")
-    for _ in range(3):
-        step = pg.evaluate('VERSE_STEPS[vs.step].id')
+    while pg.evaluate('vs.steps[vs.step].id') != 'type':
+        step = pg.evaluate('vs.steps[vs.step].id')
         guard = 0
         while pg.get_by_role('button', name='Next step →').count() == 0 and guard < 80:
             guard += 1
+            if step == 'phrases':
+                phase = pg.evaluate('vs.phr.stage')
+                if phase == 'study':
+                    click_btn(pg, 'Cover it and type it →')
+                else:
+                    pg.fill('#vsInput', pg.evaluate('vs.phrases[vs.phr.i]'))
+                    click_btn(pg, 'Check')
+                continue
             idx = pg.evaluate('''() => {
-                if (VERSE_STEPS[vs.step].id === 'order')
+                if (vs.steps[vs.step].id === 'order')
                     return vs.order.bank.findIndex(c => c.key === normUnit(vs.order.units[vs.order.pos]));
                 return vs.fill.bank.findIndex(c => c.key === vs.tokens[vs.fill.active].key);
             }''')
             pg.locator('#vsBank .vchip').nth(idx).click()
         check(f'{ref}: guided step {step} completes', pg.get_by_role('button', name='Next step →').count() == 1, guard)
         click_btn(pg, 'Next step →')
-    check(f'{ref}: arrives at Type It', pg.evaluate('VERSE_STEPS[vs.step].id') == 'type')
+    check(f'{ref}: arrives at Type It', pg.evaluate('vs.steps[vs.step].id') == 'type')
 
 
 def submit(pg, text):
@@ -132,7 +140,7 @@ with sync_playwright() as p:
     check('picker lists 25+ verses', pg.locator('.verse-card').count() >= 25)
 
     guided_to_typed(pg, 'Psalm 23:1')
-    check('step bar shows 5 steps', pg.locator('.vs-step').count() == 5)
+    check('step bar matches the steps for this verse (incl. Phrases)', pg.locator('.vs-step').count() == pg.evaluate('vs.steps.length') == 6)
     # Case/punctuation don't matter
     submit(pg, 'the lord is my shepherd i shall not want')
     check('clean pass message', 'Perfect recall' in pg.inner_text('#vsMsg'))
@@ -158,7 +166,7 @@ with sync_playwright() as p:
     # ───────────── Scenario 2: miss, feedback diff, same-day retry ─────────────
     pg = new_page(b)
     open_verses(pg)
-    pg.evaluate('startVerse("John 3:16"); vs.step = 4; renderStep()')
+    pg.evaluate('startVerse("John 3:16"); goToStep("type")')
     full = verse_text(pg, 'John 3:16')
     submit(pg, full.replace('only begotten ', ''))
     check('miss message', 'Not yet' in pg.inner_text('#vsMsg'))
@@ -186,7 +194,7 @@ with sync_playwright() as p:
     # ───────────── Scenario 3: hinted pass doesn't count as recall ─────────────
     pg = new_page(b)
     open_verses(pg)
-    pg.evaluate('startVerse("Psalm 56:3"); vs.step = 4; renderStep()')
+    pg.evaluate('startVerse("Psalm 56:3"); goToStep("type")')
     click_btn(pg, 'Show first letters')
     hint = pg.inner_text('#vsHint')
     check('hint shows first letters', hint.startswith('W___ t___'), hint)
@@ -200,7 +208,7 @@ with sync_playwright() as p:
     # ───────────── Scenario 4: "I don't remember" + typo tolerance ─────────────
     pg = new_page(b)
     open_verses(pg)
-    pg.evaluate('startVerse("Genesis 1:1"); vs.step = 4; renderStep()')
+    pg.evaluate('startVerse("Genesis 1:1"); goToStep("type")')
     click_btn(pg, "I don't remember")
     check('gave up: full verse shown', verse_text(pg, 'Genesis 1:1') in pg.inner_text('#vsText'))
     check('gave up: counted as miss', card(pg, 'Genesis 1:1')['lapses'] == 1)
@@ -208,7 +216,7 @@ with sync_playwright() as p:
 
     pg = new_page(b)
     open_verses(pg)
-    pg.evaluate('startVerse("Genesis 1:1"); vs.step = 4; renderStep()')
+    pg.evaluate('startVerse("Genesis 1:1"); goToStep("type")')
     submit(pg, 'In the begining God created the heaven and the earth.')
     check('typo accepted with spelling note', 'Check the spelling' in pg.inner_text('#vsMsg'))
     check('typo underlined', pg.locator('.d-typo').count() == 1)
@@ -217,7 +225,7 @@ with sync_playwright() as p:
     # ───────────── Scenario 5: empty submit + Ctrl+Enter ─────────────
     pg = new_page(b)
     open_verses(pg)
-    pg.evaluate('startVerse("Psalm 23:1"); vs.step = 4; renderStep()')
+    pg.evaluate('startVerse("Psalm 23:1"); goToStep("type")')
     click_btn(pg, 'Check')
     check('empty submit asks for input', 'Type what you remember' in pg.inner_text('#vsMsg'))
     check('empty submit records nothing', card(pg, 'Psalm 23:1') is None)
@@ -230,9 +238,9 @@ with sync_playwright() as p:
     pg = new_page(b, 0)
     open_verses(pg)
     # Day 0: learn Psalm 23:1 (pass) and Genesis 1:1 (miss)
-    pg.evaluate('startVerse("Psalm 23:1"); vs.step = 4; renderStep()')
+    pg.evaluate('startVerse("Psalm 23:1"); goToStep("type")')
     submit(pg, verse_text(pg, 'Psalm 23:1'))
-    pg.evaluate('startVerse("Genesis 1:1"); vs.step = 4; renderStep()')
+    pg.evaluate('startVerse("Genesis 1:1"); goToStep("type")')
     submit(pg, 'In the beginning God made the heaven and the earth.')
     check('day0: Genesis miss recorded', card(pg, 'Genesis 1:1')['lapses'] == 1)
 
@@ -324,7 +332,7 @@ with sync_playwright() as p:
     pg.evaluate('startVerse("John 3:16")')
     check('session uses WEB text and WEB card key', pg.evaluate('vs.text') == web_text and pg.evaluate('vs.key') == 'John 3:16|web')
     check('session header shows WEB', '· WEB' in pg.inner_text('#vsRef'))
-    pg.evaluate('vs.step = 4; renderStep()')
+    pg.evaluate('goToStep("type")')
     submit(pg, kjv_text)
     check('KJV wording is rejected when learning WEB', 'Not yet' in pg.inner_text('#vsMsg'))
     click_btn(pg, 'Try again')
@@ -369,11 +377,64 @@ with sync_playwright() as p:
     check('scenario 8: no JS errors', not pg.errors, pg.errors[:2])
     pg.context.close()
 
+    # ───────────── Scenario 9: guess-first (pretest) and phrase-by-phrase study ─────────────
+    pg = new_page(b)
+    open_verses(pg)
+    pg.evaluate('startVerse("Psalm 23:1")')
+    full = verse_text(pg, 'Psalm 23:1')
+    check('guess option offered on the read step', pg.get_by_role('button', name='Guess it first (optional)').count() == 1)
+    click_btn(pg, 'Guess it first (optional)')
+    check('guess prompt hides the verse', pg.is_visible('#vsInput') and full not in pg.inner_text('#vsText'))
+    pg.fill('#vsInput', 'The Lord is my shepherd I will not lack')
+    click_btn(pg, 'Check my guess')
+    check('guess feedback reports words already known', 'already had' in pg.inner_text('#vsMsg'), pg.inner_text('#vsMsg'))
+    check('guess feedback marks correct words', pg.locator('#vsText .d-ok').count() >= 3)
+    click_btn(pg, 'Read it →')
+    check('then the verse is shown to read', full in pg.inner_text('#vsText'))
+    check('guess is only offered once', pg.get_by_role('button', name='Guess it first (optional)').count() == 0)
+    check('guessing leaves schedule and XP untouched', card(pg, 'Psalm 23:1') is None and xp(pg) == 0)
+
+    click_btn(pg, "I've read it →")
+    check('Phrases step follows Read', pg.evaluate('vs.steps[vs.step].id') == 'phrases')
+    check('step bar lists Phrases', 'Phrases' in pg.inner_text('#vsSteps'))
+    n_phr = pg.evaluate('vs.phrases.length')
+    check('Psalm 23:1 splits into 2 phrases', n_phr == 2, n_phr)
+    check('study stage names the phrase', 'Phrase 1 of 2' in pg.inner_text('#vsInstruction'))
+    check('study stage shows the phrase', pg.evaluate('vs.phrases[0]') in pg.inner_text('#vsText'))
+    click_btn(pg, 'Cover it and type it →')
+    check('type stage hides the phrase', pg.evaluate('vs.phrases[0]') not in pg.inner_text('#vsText') and pg.is_visible('#vsInput'))
+    pg.fill('#vsInput', 'the lord is')
+    click_btn(pg, 'Check')
+    check('wrong phrase is marked', 'Not yet' in pg.inner_text('#vsMsg') and pg.locator('#vsText .d-miss').count() >= 1)
+    click_btn(pg, 'Try again')
+    click_btn(pg, 'Show first letters')
+    check('phrase hint shows first letters', pg.inner_text('#vsHint').startswith('T__ L___'), pg.inner_text('#vsHint'))
+    pg.fill('#vsInput', pg.evaluate('vs.phrases[0]'))
+    pg.press('#vsInput', 'Control+Enter')
+    check('correct phrase moves to the next', 'Phrase 2 of 2' in pg.inner_text('#vsInstruction'))
+    check('earlier phrase stays visible as context', pg.evaluate('vs.phrases[0]') in pg.inner_text('#vsText'))
+    click_btn(pg, 'Cover it and type it →')
+    pg.fill('#vsInput', pg.evaluate('vs.phrases[1]'))
+    click_btn(pg, 'Check')
+    check('finishing phrases completes the step', pg.get_by_role('button', name='Next step →').count() == 1)
+    check('phrase practice does not touch schedule or XP', card(pg, 'Psalm 23:1') is None and xp(pg) == 0)
+    click_btn(pg, 'Next step →')
+    check('next step is Fill In', pg.evaluate('vs.steps[vs.step].id') == 'fill1')
+
+    # A single-phrase verse skips the Phrases step (WEB Hebrews 13:8)
+    pg.evaluate('exitVerse()')
+    pg.get_by_role('button', name='WEB', exact=True).click()
+    pg.evaluate('startVerse("Hebrews 13:8")')
+    ids = pg.evaluate('vs.steps.map(s => s.id)')
+    check('single-phrase verse has no Phrases step', 'phrases' not in ids and ids[0] == 'read', ids)
+    check('scenario 9: no JS errors', not pg.errors, pg.errors[:2])
+    pg.context.close()
+
     # ───────────── Scenario 7: mobile layout with the typing UI ─────────────
     pg = new_page(b, 0, width=390, height=800)
     pg.click('.menu-toggle')
     pg.click('[data-view="verses"]')
-    pg.evaluate('startVerse("Isaiah 41:10"); vs.step = 4; renderStep()')
+    pg.evaluate('startVerse("Isaiah 41:10"); goToStep("type")')
     pg.fill('#vsInput', 'Fear thou not; for I am with thee')
     if SHOTS:
         pg.screenshot(path=f'{SHOTS}/mobile_typing.png')

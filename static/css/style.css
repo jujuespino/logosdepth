@@ -1343,6 +1343,7 @@ body {
 .vs-text-read { font-size: 1.45rem; line-height: 1.8; color: var(--gold-light); }
 .vs-text-order { min-height: 4rem; padding: 0.8rem 1rem; background: var(--bg); border: 1px dashed var(--border); border-radius: 10px; line-height: 1.9; }
 .vplaced { color: var(--text); }
+.vphrase-now { color: var(--gold-light); font-size: 1.12em; }
 .vcursor { color: var(--gold); animation: vblink 1.1s steps(2, start) infinite; }
 
 .vslot {

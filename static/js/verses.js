@@ -11,13 +11,20 @@ const VERSE_XP_KEY     = 'ld_verse_xp';
 const VERSE_STREAK_KEY = 'ld_verse_streak';
 const XP_PER_LEVEL     = 100;
 
-const VERSE_STEPS = [
-  { id: 'read',  label: 'Read' },
-  { id: 'fill1', label: 'Fill In', pct: 0.25 },
-  { id: 'order', label: 'Order' },
-  { id: 'fill2', label: 'Recall',  pct: 0.7 },
-  { id: 'type',  label: 'Type It' },
-];
+const STEP_DEFS = {
+  read:    { id: 'read',    label: 'Read' },
+  phrases: { id: 'phrases', label: 'Phrases' },
+  fill1:   { id: 'fill1',   label: 'Fill In', pct: 0.25 },
+  order:   { id: 'order',   label: 'Order' },
+  fill2:   { id: 'fill2',   label: 'Recall',  pct: 0.7 },
+  type:    { id: 'type',    label: 'Type It' },
+};
+
+// Phrase-by-phrase study (retrieval interspersed with learning) only makes sense when a verse has 2+ phrases.
+function stepsFor(phrases) {
+  const ids = ['read', ...(phrases.length >= 2 ? ['phrases'] : []), 'fill1', 'order', 'fill2', 'type'];
+  return ids.map(id => STEP_DEFS[id]);
+}
 
 const CHEERS  = ['Nice!', 'Great job!', 'You\'re getting it!', 'Well done!', 'Keep it up!'];
 const NUDGES  = ['Not quite — try another one!', 'Almost! Look at the sentence again.', 'Close! Give it another go.'];
@@ -138,10 +145,11 @@ function currentStreak() {
 document.addEventListener('DOMContentLoaded', () => {
   loadVerses();
   el('vsInput').addEventListener('keydown', e => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && vs && vs.typed && !e.target.disabled) {
-      e.preventDefault();
-      checkTyped();
-    }
+    if (!(e.ctrlKey || e.metaKey) || e.key !== 'Enter' || !vs || e.target.disabled) return;
+    const step = vs.mode === 'learn' ? vs.steps[vs.step].id : 'type';
+    if (step === 'type' && vs.typed) { e.preventDefault(); checkTyped(); }
+    else if (step === 'phrases' && vs.phr && vs.phr.stage === 'type') { e.preventDefault(); checkPhrase(); }
+    else if (step === 'read' && vs.guessed) { e.preventDefault(); checkGuess(); }
   });
 });
 
@@ -297,8 +305,10 @@ function startVerse(ref, translation) {
   if (!verse) return;
   const tr = resolveTranslation(verse, translation || getSettings().translation);
   const text = textFor(verse, tr);
-  vs = { mode: 'learn', verse, translation: tr, key: cardKey(ref, tr), text, tokens: tokenize(text), step: 0,
-         mistakes: 0, hints: 0, xp: 0, first: null, typed: null,
+  const phrases = Recall.makePhrases(text);
+  vs = { mode: 'learn', verse, translation: tr, key: cardKey(ref, tr), text, tokens: tokenize(text),
+         phrases, steps: stepsFor(phrases), step: 0, guessed: false,
+         mistakes: 0, hints: 0, xp: 0, first: null, typed: null, phr: null,
          newlyMastered: false, levelBefore: levelOf(getXp()) };
   showVersePanel('vSession');
   renderStep();
@@ -348,7 +358,7 @@ function renderSteps() {
     wrap.appendChild(el1);
     return;
   }
-  VERSE_STEPS.forEach((s, i) => {
+  vs.steps.forEach((s, i) => {
     const s1 = document.createElement('span');
     s1.className = 'vs-step' + (i < vs.step ? ' done' : i === vs.step ? ' current' : '');
     s1.textContent = `${i + 1}. ${s.label}`;
@@ -384,15 +394,21 @@ function renderStep() {
 
   if (vs.mode === 'review') { renderTyped(); return; }
 
-  const step = VERSE_STEPS[vs.step];
-  if (step.id === 'read')       renderRead();
-  else if (step.id === 'order') renderOrder();
+  const step = vs.steps[vs.step];
+  if (step.id === 'read')         renderRead();
+  else if (step.id === 'phrases') renderPhrases();
+  else if (step.id === 'order')   renderOrder();
   else if (step.id === 'type')  renderTyped();
   else                          renderFill(step.pct);
 }
 
 function advanceStep() {
   vs.step++;
+  renderStep();
+}
+
+function goToStep(id) {
+  vs.step = vs.steps.findIndex(s => s.id === id);
   renderStep();
 }
 
@@ -414,12 +430,18 @@ function shake(node) {
 // ── Step: Read ──
 function renderRead() {
   el('vsInstruction').textContent =
-    'Read the verse slowly, and say it aloud if you can. When you feel ready, we\'ll play with it.';
+    'Read the verse slowly and say it aloud (saying it out loud helps it stick). When you feel ready, we\'ll practice it.';
   const text = el('vsText');
   text.className = 'vs-text vs-text-read';
   text.textContent = vs.text;
+  el('vsInput').classList.add('hidden');
+  el('vsHint').classList.add('hidden');
 
   const actions = el('vsActions');
+  actions.innerHTML = '';
+  if (!vs.guessed) {
+    addButton(actions, 'Guess it first (optional)', 'gd-back-btn', renderGuess);
+  }
   if ('speechSynthesis' in window) {
     addButton(actions, '🔊 Listen', 'gd-back-btn', () => {
       try {
@@ -598,10 +620,139 @@ function orderHint() {
   placeOrderChip(chip);
 }
 
+// ── Optional: guess before reading (pretesting). Never affects scheduling or XP. ──
+function renderGuess() {
+  vs.guessed = true;
+  el('vsInstruction').textContent =
+    'Before you read it, take a guess: write what you think this verse says, even if you only know a few words. ' +
+    'Being wrong is fine; trying first helps you remember it better.';
+  const text = el('vsText');
+  text.className = 'vs-text';
+  text.textContent = '';
+  const input = el('vsInput');
+  input.value = '';
+  input.disabled = false;
+  input.classList.remove('hidden');
+  el('vsHint').classList.add('hidden');
+  setMsg('');
+  const actions = el('vsActions');
+  actions.innerHTML = '';
+  addButton(actions, 'Skip', 'gd-back-btn', renderRead);
+  addButton(actions, 'Check my guess', 'gs-start-btn', checkGuess);
+  setTimeout(() => input.focus(), 0);
+}
+
+function checkGuess() {
+  const input = el('vsInput');
+  if (!input.value.trim()) { renderRead(); return; }
+  const grade = Recall.gradeRecall(input.value, vs.text);
+  input.classList.add('hidden');
+  const text = el('vsText');
+  text.className = 'vs-text vs-text-feedback';
+  text.innerHTML = '';
+  diffInto(text, grade);
+  showLegend();
+  setMsg(grade.correct
+    ? `You already had ${grade.correct} of ${grade.total} words. Now read it carefully.`
+    : 'No problem. Now read it carefully.', 'good');
+  el('vsActions').innerHTML = '';
+  addButton(el('vsActions'), 'Read it →', 'gs-start-btn', renderRead);
+}
+
+// ── Step: Phrase by phrase (study a phrase, cover it, recall it) ──
+function renderPhrases() {
+  vs.phr = { i: 0, stage: 'study', hinted: false };
+  drawPhrase();
+}
+
+function drawPhrase() {
+  const ph = vs.phr, list = vs.phrases, n = list.length;
+  const text = el('vsText'), actions = el('vsActions'), input = el('vsInput');
+  text.className = 'vs-text';
+  text.innerHTML = '';
+  actions.innerHTML = '';
+  setMsg('');
+  el('vsHint').classList.add('hidden');
+
+  if (ph.i > 0) {
+    const done = document.createElement('span');
+    done.className = 'vplaced';
+    done.textContent = list.slice(0, ph.i).join(' ') + ' ';
+    text.append(done);
+  }
+
+  if (ph.stage === 'study') {
+    el('vsInstruction').textContent =
+      `Phrase ${ph.i + 1} of ${n}. Read it and say it aloud, then cover it and type it from memory.`;
+    input.classList.add('hidden');
+    const cur = document.createElement('span');
+    cur.className = 'vphrase-now';
+    cur.textContent = list[ph.i];
+    text.append(cur);
+    addButton(actions, 'Cover it and type it →', 'gs-start-btn', () => { ph.stage = 'type'; ph.hinted = false; drawPhrase(); });
+  } else {
+    el('vsInstruction').textContent = `Phrase ${ph.i + 1} of ${n}. Type it from memory.`;
+    const cursor = document.createElement('span');
+    cursor.className = 'vcursor';
+    cursor.textContent = '…';
+    text.append(cursor);
+    input.value = '';
+    input.disabled = false;
+    input.classList.remove('hidden');
+    addButton(actions, 'Show it again', 'gd-back-btn', () => { ph.stage = 'study'; drawPhrase(); });
+    addButton(actions, 'Show first letters', 'gd-back-btn', () => {
+      ph.hinted = true;
+      el('vsHint').textContent = Recall.makeHint(list[ph.i]);
+      el('vsHint').classList.remove('hidden');
+      input.focus();
+    });
+    addButton(actions, 'Check', 'gs-start-btn', checkPhrase);
+    setTimeout(() => input.focus(), 0);
+  }
+}
+
+function checkPhrase() {
+  const ph = vs.phr, list = vs.phrases;
+  const input = el('vsInput');
+  if (!input.value.trim()) {
+    setMsg('Type what you remember, or tap "Show it again".', 'bad');
+    input.focus();
+    return;
+  }
+  const grade = Recall.gradeRecall(input.value, list[ph.i]);
+  if (grade.passed) {
+    ph.i++;
+    if (ph.i >= list.length) {
+      input.classList.add('hidden');
+      el('vsHint').classList.add('hidden');
+      el('vsText').className = 'vs-text';
+      el('vsText').textContent = list.join(' ');
+      el('vsActions').innerHTML = '';
+      stepDone();
+    } else {
+      ph.stage = 'study';
+      drawPhrase();
+      setMsg(pick(CHEERS), 'good');
+    }
+    return;
+  }
+  vs.mistakes++;
+  const text = el('vsText');
+  text.className = 'vs-text vs-text-feedback';
+  text.innerHTML = '';
+  diffInto(text, grade);
+  showLegend();
+  input.disabled = true;
+  setMsg('Not yet. Words in red were missing or different.', 'bad');
+  const actions = el('vsActions');
+  actions.innerHTML = '';
+  addButton(actions, 'Try again', 'gs-start-btn', () => { ph.stage = 'type'; drawPhrase(); });
+}
+
 // ── Step: Type it from memory (also the whole of a review) ──
 function renderTyped() {
   const review = vs.mode === 'review';
-  el('vsInstruction').textContent = (review ? 'Type this verse from memory. ' : 'Last step: type the whole verse from memory. ') +
+  el('vsInstruction').textContent = (review ? 'Type this verse from memory. ' : 'Last step: say it aloud once from memory, then type the whole verse. ') +
     'Capitals and punctuation don\'t matter, but the words and their order do.';
 
   vs.typed = { hinted: false };
@@ -719,6 +870,17 @@ function drawFeedback(grade) {
     return;
   }
 
+  diffInto(text, grade);
+  showLegend();
+}
+
+function showLegend() {
+  const hint = el('vsHint');
+  hint.textContent = 'Green = correct · underlined = check spelling · red = missing or different · struck through = extra';
+  hint.classList.remove('hidden');
+}
+
+function diffInto(text, grade) {
   grade.ops.forEach(op => {
     const span = document.createElement('span');
     if (op.kind === 'ok') {
@@ -744,10 +906,6 @@ function drawFeedback(grade) {
     }
     text.append(span, ' ');
   });
-
-  const hint = el('vsHint');
-  hint.textContent = 'Green = correct · underlined = check spelling · red = missing or different · struck through = extra';
-  hint.classList.remove('hidden');
 }
 
 // ─── Finish: learning ────────────────────────────────

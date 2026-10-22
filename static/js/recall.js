@@ -111,6 +111,37 @@ const Recall = (() => {
     };
   }
 
+  // Split a verse into short phrases for phrase-by-phrase study: break at punctuation, split anything
+  // longer than 8 words in half, and fold fragments of under 3 words into a neighbor.
+  function makePhrases(text) {
+    const words = text.split(/\s+/).filter(Boolean);
+    let chunks = [], cur = [];
+    words.forEach(w => {
+      cur.push(w);
+      if (/[,;:.?!)]["'\u2019\u201D]?$/.test(w)) { chunks.push(cur); cur = []; }
+    });
+    if (cur.length) chunks.push(cur);
+
+    const split = c => {
+      if (c.length <= 8) return [c];
+      const mid = Math.ceil(c.length / 2);
+      return [...split(c.slice(0, mid)), ...split(c.slice(mid))];
+    };
+    chunks = chunks.flatMap(split);
+
+    const merged = [];
+    chunks.forEach(c => {
+      if (c.length < 3 && merged.length) merged[merged.length - 1] = merged[merged.length - 1].concat(c);
+      else merged.push(c);
+    });
+    if (merged.length > 1 && merged[0].length < 3) {
+      merged[1] = merged[0].concat(merged[1]);
+      merged.shift();
+    }
+    // Folding fragments together can make a long phrase again; cap at 10 words.
+    return merged.flatMap(c => (c.length > 10 ? split(c) : [c])).map(c => c.join(' '));
+  }
+
   // First-letter cue, e.g. "For God so loved" -> "F__ G__ s_ l____".
   function makeHint(text) {
     return text.split(/\s+/).filter(Boolean).map(raw => {
@@ -194,7 +225,7 @@ const Recall = (() => {
 
   return {
     INTERVAL_DAYS, MASTERY_DAYS,
-    normWord, splitWords, editDistance, gradeRecall, makeHint,
+    normWord, splitWords, editDistance, gradeRecall, makeHint, makePhrases,
     dateKey, addDays, daysBetween,
     recordAttempt, isDue, isMastered, recallDays, dueRefs, describeDue, xpForAttempt,
   };
