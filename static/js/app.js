@@ -24,9 +24,10 @@ function showView(name, btn) {
   document.getElementById(`view-${name}`).classList.remove('hidden');
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
+  document.getElementById('sidebar').classList.remove('open');
 
   if (name !== 'search') {
-    clearSearch();
+    resetSearchState();
   }
 }
 
@@ -89,11 +90,14 @@ function onSearchInput(value) {
   searchTimer = setTimeout(() => runSearch(value.trim()), 280);
 }
 
-function clearSearch() {
+function resetSearchState() {
   document.getElementById('searchInput').value = '';
   document.getElementById('clearBtn').style.display = 'none';
   currentCategory = '';
   document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
+}
+
+function clearSearch() {
   showView('dashboard', document.querySelector('[data-view="dashboard"]'));
 }
 
@@ -301,9 +305,6 @@ function setGameMode(mode, btn) {
   gameMode = mode;
   document.querySelectorAll('.mode-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  if (gameWords.length > 0 && !document.getElementById('gameStart').classList.contains('hidden')) {
-    // just update mode, no restart needed
-  }
 }
 
 function pickGameLang(lang, btn) {

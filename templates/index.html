@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LogosDepth — Bible Word Translator</title>
+  <link rel="icon" href="data:," />
   <link rel="stylesheet" href="/static/css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Noto+Serif+Hebrew&family=Noto+Serif:ital@0;1&display=swap" rel="stylesheet" />
@@ -29,6 +30,10 @@
     <button class="nav-btn" data-view="browse" onclick="showView('browse', this)">
       <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
       Browse
+    </button>
+    <button class="nav-btn" data-view="verses" onclick="showView('verses', this)">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      Memorize Verses
     </button>
     <button class="nav-btn" data-view="game" onclick="showView('game', this)">
       <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
@@ -142,6 +147,69 @@
       <div class="no-results-hint">Try a different English word like "love", "faith", "covenant", or "grace".</div>
     </div>
     <div class="loading-state hidden" id="loadingState">Searching…</div>
+  </section>
+
+  <!-- ===== VIEW: MEMORIZE VERSES ===== -->
+  <section class="view hidden" id="view-verses">
+    <div class="game-container verse-container">
+
+      <!-- Verse picker -->
+      <div id="vPicker">
+        <div class="game-header">
+          <div class="game-title-row">
+            <span class="game-star-icon">✦</span>
+            <h1 class="game-title">Memorize Scripture</h1>
+          </div>
+          <p class="game-subtitle">Pick a verse. Read it, fill it in, put it in order, then recall it — earn stars and XP along the way.</p>
+        </div>
+
+        <div class="vstats">
+          <div class="vlevel">
+            <div class="vlevel-top"><span class="vlevel-name" id="vLevel">Level 1</span><span class="vlevel-xp" id="vXpLabel">0 / 100 XP</span></div>
+            <div class="game-progress-bar"><div class="game-progress-fill" id="vXpFill" style="width:0%"></div></div>
+          </div>
+          <div class="score-chip streak-chip"><span class="score-val" id="vStreak">0</span><span class="score-lbl">🔥 Day streak</span></div>
+          <div class="score-chip"><span class="score-val" id="vMastered">0</span><span class="score-lbl">Mastered</span></div>
+        </div>
+
+        <div class="verse-grid" id="verseGrid"></div>
+      </div>
+
+      <!-- Practice session -->
+      <div id="vSession" class="hidden">
+        <div class="vs-top">
+          <button class="gd-back-btn" onclick="exitVerse()">← All verses</button>
+          <div class="vs-steps" id="vsSteps"></div>
+        </div>
+        <div class="vs-card">
+          <div class="vs-ref" id="vsRef"></div>
+          <div class="vs-instruction" id="vsInstruction"></div>
+          <div class="vs-text" id="vsText"></div>
+          <div class="vs-msg" id="vsMsg" aria-live="polite"></div>
+          <div class="vs-bank" id="vsBank"></div>
+          <div class="vs-actions" id="vsActions"></div>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div id="vResult" class="game-done-screen hidden">
+        <div class="vr-stars" id="vrStars"></div>
+        <h2 class="gd-title" id="vrTitle"></h2>
+        <div class="vr-ref" id="vrRef"></div>
+        <div class="vr-text" id="vrText"></div>
+        <div class="vr-xp" id="vrXp"></div>
+        <div class="vr-words hidden" id="vrWordsWrap">
+          <div class="vr-words-label">Words behind this verse — tap to explore</div>
+          <div class="recent-tags" id="vrWords"></div>
+        </div>
+        <div class="vr-buttons">
+          <button class="gs-start-btn" id="vrNext" onclick="nextVerse()">Next verse →</button>
+          <button class="gd-back-btn" onclick="retryVerse()">Practice again</button>
+          <button class="gd-back-btn" onclick="exitVerse()">All verses</button>
+        </div>
+      </div>
+
+    </div>
   </section>
 
   <!-- ===== VIEW: GAME ===== -->
@@ -285,5 +353,6 @@
 </div>
 
 <script src="/static/js/app.js"></script>
+<script src="/static/js/verses.js"></script>
 </body>
 </html>

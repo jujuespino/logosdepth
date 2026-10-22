@@ -24,6 +24,12 @@ for entry in LEXICON:
 
 CATEGORIES = sorted(CATEGORY_INDEX.keys())
 
+# Memorization verses (KJV, public domain), each linked to lexicon entries
+LEXICON_BY_ID = {e["strongs_id"]: e for e in LEXICON}
+VERSES_PATH = os.path.join(os.path.dirname(__file__), "data", "verses.json")
+with open(VERSES_PATH, "r", encoding="utf-8") as f:
+    VERSES: list[dict] = json.load(f)
+
 
 def _score(entry: dict, query: str) -> int:
     """Higher score = better match."""
@@ -134,6 +140,20 @@ def all_words():
     shuffled = pool[:]
     random.shuffle(shuffled)
     return jsonify(shuffled)
+
+
+@app.route("/api/verses")
+def verses():
+    """Verses for the memorization game, easiest (shortest) first."""
+    out = []
+    for v in VERSES:
+        out.append({
+            "ref": v["ref"],
+            "text": v["text"],
+            "lexicon": [LEXICON_BY_ID[w] for w in v.get("words", []) if w in LEXICON_BY_ID],
+        })
+    out.sort(key=lambda v: len(v["text"].split()))
+    return jsonify(out)
 
 
 if __name__ == "__main__":
