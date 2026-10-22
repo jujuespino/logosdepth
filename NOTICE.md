@@ -16,7 +16,7 @@ The first 27 verses entered by hand were checked against the 1769 text: 26 match
 
   > **Open item:** the in-depth explanations should be reviewed for theological and linguistic accuracy by a qualified person before public release.
 
-- **Brief entries (`data/lexicon_brief.json`):** lemma, transliteration and gloss come from **STEPBible** (Tyndale House, Cambridge, UK; <https://github.com/STEPBible/STEPBible-Data>), TBESG (Greek, based on Abbott-Smith) and TBESH (Hebrew, based on Brown-Driver-Briggs), licensed **CC BY 4.0**. Attribution is required wherever this data is shown; the app shows it in each brief entry and a credits page is planned.
+- **Brief entries (`data/lexicon_brief.json`):** lemma, transliteration and gloss come from **STEPBible** (Tyndale House, Cambridge, UK; <https://github.com/STEPBible/STEPBible-Data>), TBESG (Greek, based on Abbott-Smith) and TBESH (Hebrew, based on Brown-Driver-Briggs), licensed **CC BY 4.0**. Attribution is required wherever this data is shown; the app shows it in each brief entry, in Settings → Credits, and on the public `/about#credits` page.
 
 ## Fonts
 
@@ -24,4 +24,11 @@ Cinzel, Inter, Noto Serif and Noto Serif Hebrew are distributed under the **SIL 
 
 ## Software
 
-Flask, Gunicorn, pytest, Playwright, ESLint and Ruff are used under their respective open-source licenses.
+Flask, Gunicorn, pytest, Playwright, ESLint, axe-core and Ruff are used under their respective open-source licenses.
+
+## Open items before a public launch
+
+- Legal review of `/privacy` (it is served with a "draft" banner until `LEGAL_REVIEWED=1`).
+- Review of the hand-written Hebrew/Greek explanations by a qualified person.
+- A decision on the licence for this project's own code (there is no LICENSE file yet).
+- The King James Version in the United Kingdom (see above).
