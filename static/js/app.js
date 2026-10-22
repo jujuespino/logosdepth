@@ -270,15 +270,23 @@ function openModal(entry) {
   document.getElementById('modalUsage').textContent    = entry.usage_count
     ? `~${entry.usage_count.toLocaleString()}×` : '—';
 
+  modalOpener = document.activeElement;
   modal.classList.remove('hidden');
   backdrop.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
+  document.getElementById('modalCloseBtn').focus();
 }
 
+let modalOpener = null;
+
 function closeModal() {
-  document.getElementById('wordModal').classList.add('hidden');
+  const modal = document.getElementById('wordModal');
+  const wasOpen = !modal.classList.contains('hidden');
+  modal.classList.add('hidden');
   document.getElementById('modalBackdrop').classList.add('hidden');
   document.body.style.overflow = '';
+  if (wasOpen && modalOpener && document.contains(modalOpener)) modalOpener.focus();
+  modalOpener = null;
 }
 
 document.addEventListener('keydown', e => {

@@ -78,8 +78,8 @@
 
   <!-- Top bar -->
   <header class="topbar">
-    <button class="menu-toggle" onclick="toggleSidebar()">
-      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
     <div class="search-wrap" id="topSearchWrap">
       <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -91,7 +91,7 @@
         autocomplete="off"
         oninput="onSearchInput(this.value)"
       />
-      <button class="clear-btn" id="clearBtn" onclick="clearSearch()" style="display:none">✕</button>
+      <button class="clear-btn" id="clearBtn" onclick="clearSearch()" style="display:none" aria-label="Clear search">✕</button>
     </div>
   </header>
 
@@ -103,6 +103,7 @@
 
   <!-- ===== VIEW: DASHBOARD ===== -->
   <section class="view" id="view-dashboard">
+    <h1 class="sr-only">Dashboard</h1>
 
     <div class="dashboard-grid">
 
@@ -153,6 +154,7 @@
 
   <!-- ===== VIEW: SEARCH ===== -->
   <section class="view hidden" id="view-search">
+    <h1 class="sr-only">Search results</h1>
     <div class="results-header" id="resultsHeader"></div>
     <div class="results-grid" id="resultsGrid"></div>
     <div class="no-results hidden" id="noResults">
@@ -284,6 +286,7 @@
 
       <!-- Practice session -->
       <div id="vSession" class="hidden">
+        <h1 class="sr-only">Practice session</h1>
         <div class="vs-top">
           <button class="gd-back-btn" onclick="exitVerse()">← All verses</button>
           <div class="vs-steps" id="vsSteps"></div>
@@ -303,7 +306,7 @@
       <!-- Result -->
       <div id="vResult" class="game-done-screen hidden">
         <div class="vr-stars" id="vrStars"></div>
-        <h2 class="gd-title" id="vrTitle"></h2>
+        <h1 class="gd-title" id="vrTitle"></h1>
         <div class="vr-ref" id="vrRef"></div>
         <div class="vr-text" id="vrText"></div>
         <div class="vr-xp" id="vrXp"></div>
@@ -426,7 +429,7 @@
 
   <!-- ===== VIEW: BROWSE ===== -->
   <section class="view hidden" id="view-browse">
-    <div class="browse-heading">Browse by Category</div>
+    <h1 class="browse-heading">Browse by Category</h1>
     <div class="browse-grid" id="browseGrid"></div>
   </section>
 
@@ -443,8 +446,8 @@
 
 <!-- ===== DETAIL MODAL ===== -->
 <div class="modal-backdrop hidden" id="modalBackdrop" onclick="closeModal()"></div>
-<div class="modal hidden" id="wordModal">
-  <button class="modal-close" onclick="closeModal()">✕</button>
+<div class="modal hidden" id="wordModal" role="dialog" aria-modal="true" aria-labelledby="modalOriginal">
+  <button class="modal-close" id="modalCloseBtn" onclick="closeModal()" aria-label="Close">✕</button>
   <div class="modal-lang-badge" id="modalLang"></div>
   <div class="modal-original" id="modalOriginal"></div>
   <div class="modal-translit" id="modalTranslit"></div>

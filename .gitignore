@@ -13,3 +13,4 @@ node_modules/
 .pytest_cache/
 .ruff_cache/
 scripts/sources/
+a11y-report.json

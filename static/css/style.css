@@ -168,7 +168,7 @@ body {
 
 .cat-item:hover { background: var(--bg3); color: var(--text); }
 .cat-item.active { background: rgba(212,168,67,0.1); color: var(--gold-light); }
-.cat-item .cat-count { font-size: 0.72rem; opacity: 0.6; }
+.cat-item .cat-count { font-size: 0.72rem; color: var(--text-muted); }
 .cat-item.loading { font-size: 0.8rem; font-style: italic; }
 
 /* Stats */
@@ -216,6 +216,11 @@ body {
   gap: 1rem;
 }
 
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
 .menu-toggle {
   display: none;
   background: none;
@@ -223,6 +228,7 @@ body {
   cursor: pointer;
   color: var(--text-muted);
   padding: 4px;
+  min-width: 32px; min-height: 32px;
 }
 
 .menu-toggle svg {
@@ -273,7 +279,7 @@ body {
   cursor: pointer;
   color: var(--text-muted);
   font-size: 0.9rem;
-  padding: 2px 4px;
+  min-width: 28px; min-height: 28px;
   border-radius: 4px;
   transition: color 0.15s;
 }
@@ -1258,7 +1264,7 @@ body {
 .vs-text-feedback { font-size: 1.15rem; line-height: 2; }
 .d-ok { color: #48bb78; }
 .d-typo { color: #48bb78; text-decoration: underline wavy #e8b04a; text-underline-offset: 4px; }
-.d-miss { color: #e85d5d; font-weight: 600; background: rgba(232,93,93,0.12); border-radius: 4px; padding: 0 3px; }
+.d-miss { color: #f28b8b; font-weight: 600; background: rgba(232,93,93,0.12); border-radius: 4px; padding: 0 3px; }
 .d-said { font-weight: 400; font-size: 0.7em; color: var(--text-muted); }
 .d-extra { color: var(--text-muted); text-decoration: line-through; }
 

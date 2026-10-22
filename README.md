@@ -35,6 +35,7 @@ npm run lint                   # ESLint
 playwright install chromium    # once
 python app.py &                # the browser test needs a running server
 python tests/e2e.py            # end-to-end browser test (simulates several days, offline use, backup/restore)
+python tests/a11y_audit.py     # axe-core accessibility audit of every view and key state (needs npm ci)
 ```
 
 CI runs all of the above on every push (`.github/workflows/ci.yml`).

@@ -44,9 +44,15 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-dev.txt
       - run: pip install -r requirements-dev.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
       - run: playwright install --with-deps chromium
       - name: Start the app
         run: |
           gunicorn app:app --bind 127.0.0.1:5000 --workers 2 &
           for i in $(seq 1 30); do curl -sf http://127.0.0.1:5000/healthz && break || sleep 1; done
       - run: python tests/e2e.py
+      - run: python tests/a11y_audit.py
