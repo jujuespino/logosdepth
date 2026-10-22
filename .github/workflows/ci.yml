@@ -56,3 +56,4 @@ jobs:
           for i in $(seq 1 30); do curl -sf http://127.0.0.1:5000/healthz && break || sleep 1; done
       - run: python tests/e2e.py
       - run: python tests/a11y_audit.py
+      - run: python tests/e2e_sync.py

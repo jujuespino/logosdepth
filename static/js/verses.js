@@ -4,7 +4,7 @@
    Review: type each due verse from memory, spaced over days and weeks
    Grading and scheduling live in recall.js.
    =================================================== */
-/* global Recall, openModal, updateDueBadge, showStorageBanner */
+/* global Recall, openModal, updateDueBadge, showStorageBanner, scheduleSync */
 
 const VERSE_SRS_KEY    = 'ld_verse_srs';
 const VERSE_XP_KEY     = 'ld_verse_xp';
@@ -39,6 +39,7 @@ function vLoad(key, fallback) {
 function vSave(key, val) {
   try {
     localStorage.setItem(key, JSON.stringify(val));
+    if (typeof scheduleSync === 'function' && key.startsWith('ld_verse_')) scheduleSync();
   } catch {
     // Storage is blocked or full: the app keeps working, but tell the learner their progress won't persist.
     if (typeof showStorageBanner === 'function') showStorageBanner();

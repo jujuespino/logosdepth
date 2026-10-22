@@ -14,3 +14,4 @@ node_modules/
 .ruff_cache/
 scripts/sources/
 a11y-report.json
+instance/

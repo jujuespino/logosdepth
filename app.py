@@ -8,7 +8,10 @@ from pathlib import Path
 
 from flask import Flask, Response, jsonify, render_template, request
 
+from accounts import bp as accounts_bp
+
 app = Flask(__name__)
+app.register_blueprint(accounts_bp)
 
 DATA_DIR = Path(__file__).resolve().parent / "data"
 LEXICON: list[dict] = json.loads((DATA_DIR / "lexicon.json").read_text(encoding="utf-8"))
@@ -233,6 +236,12 @@ def service_worker():
     resp.headers["Cache-Control"] = "no-cache"
     resp.headers["Service-Worker-Allowed"] = "/"
     return resp
+
+
+@app.route("/api/config")
+def config():
+    """Tells the client which optional server features are switched on."""
+    return jsonify({"accounts": os.environ.get("ACCOUNTS_ENABLED") == "1" or bool(app.config.get("ACCOUNTS_ENABLED"))})
 
 
 @app.route("/healthz")

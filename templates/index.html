@@ -192,6 +192,38 @@
         <div class="settings-msg" id="backupMsg" aria-live="polite"></div>
       </div>
 
+      <div class="settings-card hidden" id="syncCard">
+        <h2>Sync across devices (optional)</h2>
+        <p>Sign in with your email to keep the same progress on your phone and computer. There are no passwords: we email you a one-time link. We store only your email address and your progress.</p>
+        <div id="syncSignedOut">
+          <div class="settings-row">
+            <label class="settings-label" for="syncEmail">Email</label>
+            <input type="email" id="syncEmail" class="settings-input" autocomplete="email" placeholder="you@example.com" />
+            <button class="gs-start-btn" id="syncRequestBtn" onclick="requestSignIn()">Email me a sign-in link</button>
+          </div>
+        </div>
+        <div id="syncSignedIn" class="hidden">
+          <p>Signed in as <strong id="syncWho"></strong>.</p>
+          <div class="settings-row">
+            <button class="gs-start-btn" id="syncNowBtn" onclick="syncNow()">Sync now</button>
+            <button class="gd-back-btn" onclick="signOut()">Sign out</button>
+            <button class="gd-back-btn" onclick="signOutEverywhere()">Sign out on all devices</button>
+          </div>
+          <div class="settings-row">
+            <button class="gd-back-btn" onclick="downloadAccountData()">Download my account data</button>
+            <button class="gd-back-btn" id="deleteAccountBtn" onclick="askDeleteAccount()">Delete my account…</button>
+          </div>
+          <div class="settings-choice hidden" id="deleteAccountChoice">
+            <div>This deletes your email and your synced progress from our server. Progress on this device is kept. This cannot be undone.</div>
+            <div class="settings-row">
+              <button class="gd-back-btn" onclick="cancelDeleteAccount()">Cancel</button>
+              <button class="gs-start-btn danger-btn" onclick="confirmDeleteAccount()">Yes, delete my account</button>
+            </div>
+          </div>
+        </div>
+        <div class="settings-msg" id="syncMsg" aria-live="polite"></div>
+      </div>
+
       <div class="settings-card">
         <h2>Daily reminder</h2>
         <p>Reviews work best when they are spaced out, so pick a time. This adds a repeating event to your calendar app; it works on any phone or computer.</p>
@@ -477,6 +509,7 @@
 <script src="/static/js/app.js"></script>
 <script src="/static/js/recall.js"></script>
 <script src="/static/js/progress.js"></script>
+<script src="/static/js/sync.js"></script>
 <script src="/static/js/reminder.js"></script>
 <script src="/static/js/verses.js"></script>
 <script src="/static/js/settings.js"></script>

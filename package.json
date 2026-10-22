@@ -3,7 +3,7 @@
   "private": true,
   "description": "Scripture memorization with original-language word study",
   "scripts": {
-    "test": "node tests/test_recall.js && node tests/test_progress.js && node tests/test_reminder.js",
+    "test": "node tests/test_recall.js && node tests/test_progress.js && node tests/test_reminder.js && node tests/test_sync.js",
     "lint": "eslint static/js tests/*.js"
   },
   "devDependencies": {

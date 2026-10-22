@@ -30,11 +30,12 @@ Environment variables (all optional): `HOST` (default `127.0.0.1`), `PORT` (defa
 pytest                         # API and data-validation tests
 ruff check .                   # Python lint
 npm ci                         # once
-npm test                       # unit tests: grading/scheduling (recall.js), backup/merge (progress.js), reminders (reminder.js)
+npm test                       # unit tests: grading/scheduling (recall.js), backup/merge (progress.js), reminders (reminder.js), sync (sync.js)
 npm run lint                   # ESLint
 playwright install chromium    # once
 python app.py &                # the browser test needs a running server
 python tests/e2e.py            # end-to-end browser test (simulates several days, offline use, backup/restore)
+python tests/e2e_sync.py       # accounts and two-device sync (starts its own server on port 5057)
 python tests/a11y_audit.py     # axe-core accessibility audit of every view and key state (needs npm ci)
 ```
 
@@ -48,12 +49,29 @@ The app is a standard WSGI app. A `Procfile` is included:
 gunicorn app:app --bind 0.0.0.0:$PORT --workers 2
 ```
 
-`GET /healthz` returns `{"status": "ok"}` for uptime checks. JSON and HTML responses are gzipped when the client accepts it. Progress is stored in the browser (`localStorage`); there are no accounts yet, so Settings offers a downloadable backup. The service worker at `/sw.js` is versioned by a hash of the shipped assets, so every deploy refreshes installed copies.
+`GET /healthz` returns `{"status": "ok"}` for uptime checks. JSON and HTML responses are gzipped when the client accepts it. Progress is stored in the browser (`localStorage`); Settings offers a downloadable backup, and optional accounts (below) sync it across devices. The service worker at `/sw.js` is versioned by a hash of the shipped assets, so every deploy refreshes installed copies.
+
+### Optional accounts and sync
+
+Off by default; the app is local-first and fully usable without them. Set `ACCOUNTS_ENABLED=1` to show **Settings → Sync across devices**. Sign-in is an emailed one-time link (no passwords). The server stores only the email address and one progress document per user (SQLite). The client merges before uploading (same rules as backup import), and a version number rejects stale writes so two devices saving at once never overwrite each other.
+
+| Variable | Purpose |
+|---|---|
+| `ACCOUNTS_ENABLED` | `1` to turn the feature on |
+| `DATABASE_PATH` | SQLite file (default `instance/logosdepth.db`; put it on a persistent disk) |
+| `PUBLIC_URL` | Base URL used in emailed links, e.g. `https://example.org` |
+| `MAIL_BACKEND` | `smtp` in production (`console` only logs the link, for development) |
+| `MAIL_FROM`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_STARTTLS` | SMTP settings |
+| `COOKIE_SECURE` | `1` to force the Secure cookie flag when TLS terminates at a proxy |
+
+Security notes: sign-in tokens and session tokens are random, stored hashed, single-use / revocable, and expire (15 minutes / 90 days); session cookies are `HttpOnly` and `SameSite=Lax`; every write requires an `X-LD-CSRF` header; sign-in requests are rate limited per address and per IP; the response never reveals whether an address already has an account. Users can download their data, sign out everywhere, and delete their account (Settings). `AUTH_RETURN_LINK=1` exists only for automated tests and must never be set in production.
 
 ## Project layout
 
 ```
 app.py                  Flask app and JSON API
+accounts.py             Optional accounts: email sign-in links, sync storage, export/delete (SQLite)
+progress_schema.py      Server-side validation of synced progress (mirror of progress.js validate)
 data/lexicon.json       Hand-written Hebrew/Greek word entries (searchable, browsable)
 data/lexicon_brief.json Generated brief entries for words linked from verses
 data/verses.json        Generated: verse text (KJV + WEB), packs, linked Strong's IDs
@@ -62,6 +80,7 @@ scripts/                Content pipeline (fetch_sources.sh, build_content.py) an
 static/js/recall.js     Typed-recall grading and spaced-review scheduling (pure functions)
 static/js/progress.js   Backup/restore, validation and merge of saved progress (pure functions)
 static/js/reminder.js   Daily review reminder as a calendar file (pure functions)
+static/js/sync.js       Cross-device sync: fetch, merge, upload, retry on conflict
 static/js/verses.js     Memorization UI (learn steps, typed recall, daily review)
 static/js/settings.js   Settings, onboarding, install prompt, service-worker registration
 static/sw.js            Service worker template (versioned and served at /sw.js)

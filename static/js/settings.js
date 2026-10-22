@@ -1,7 +1,7 @@
 /* ===================================================
    LogosDepth — Settings, backup/restore, reminders, onboarding, PWA
    =================================================== */
-/* global Recall, Progress, Reminder, vLoad, vSave, getCards, getSettings, saveSettings, verseList, packList,
+/* global Recall, Progress, Reminder, Sync, vLoad, vSave, getCards, getSettings, saveSettings, verseList, packList,
    renderPicker, startVerse, showView */
 
 const ONBOARD_KEY = 'ld_onboarded';
@@ -82,6 +82,7 @@ function applyImport(mode) {
   if (!r.ok) { say('backupMsg', r.error, 'bad'); return; }
   say('backupMsg', `${mode === 'replace' ? 'Restored' : 'Merged'}: you now have ${r.cards} verse${r.cards === 1 ? '' : 's'} and ${r.xp} XP.`, 'good');
   afterProgressChange();
+  scheduleSync();
 }
 
 function afterProgressChange() {
@@ -279,12 +280,149 @@ function finishOnboarding() {
   if (first) startVerse(first.ref);
 }
 
+// ─── Accounts and sync (only when the server has them switched on) ───
+const CSRF = { 'Content-Type': 'application/json', 'X-LD-CSRF': '1' };
+let syncState = { enabled: false, signedIn: false };
+let syncing = false;
+const syncDebounced = Sync.makeDebouncer(() => { if (syncState.signedIn) runSync(true); }, 4000);
+
+function scheduleSync() { if (syncState.signedIn) syncDebounced(); }
+
+async function api(method, url, body) {
+  const res = await fetch(url, { method, headers: CSRF, credentials: 'same-origin', body: body === undefined ? undefined : JSON.stringify(body) });
+  let json = null;
+  try { json = await res.json(); } catch { /* not JSON */ }
+  return { ok: res.ok, status: res.status, json };
+}
+
+function renderSyncCard() {
+  $('syncCard').classList.toggle('hidden', !syncState.enabled);
+  $('syncSignedOut').classList.toggle('hidden', syncState.signedIn);
+  $('syncSignedIn').classList.toggle('hidden', !syncState.signedIn);
+  if (syncState.signedIn) $('syncWho').textContent = syncState.email;
+}
+
+async function refreshAuth() {
+  try {
+    const cfg = await (await fetch('/api/config')).json();
+    syncState.enabled = !!cfg.accounts;
+    if (syncState.enabled) {
+      const me = await (await fetch('/api/auth/me', { credentials: 'same-origin' })).json();
+      syncState.signedIn = !!me.signedIn;
+      syncState.email = me.email;
+    }
+  } catch { syncState.enabled = false; }
+  renderSyncCard();
+}
+
+async function runSync(quiet) {
+  if (syncing) return;
+  syncing = true;
+  const btn = $('syncNowBtn');
+  if (btn) btn.disabled = true;
+  if (!quiet) say('syncMsg', 'Syncing…');
+  const r = await Sync.syncOnce({ fetch: window.fetch.bind(window), store: localStorage });
+  syncing = false;
+  if (btn) btn.disabled = false;
+  if (r.ok) {
+    afterProgressChange();
+    say('syncMsg', `Synced: ${r.cards} verse${r.cards === 1 ? '' : 's'}, ${r.xp} XP.`, 'good');
+  } else if (r.reason === 'signed-out') {
+    syncState.signedIn = false;
+    renderSyncCard();
+    say('syncMsg', 'You have been signed out. Sign in again to keep syncing.', 'bad');
+  } else if (r.reason === 'offline') {
+    if (!quiet) say('syncMsg', 'You appear to be offline. Your progress is safe on this device and will sync later.', 'bad');
+  } else {
+    say('syncMsg', r.error || 'Sync failed.', 'bad');
+  }
+}
+
+function syncNow() { runSync(false); }
+
+async function requestSignIn() {
+  const email = $('syncEmail').value.trim();
+  if (!email) { say('syncMsg', 'Please enter your email address.', 'bad'); return; }
+  $('syncRequestBtn').disabled = true;
+  say('syncMsg', 'Sending…');
+  try {
+    const r = await api('POST', '/api/auth/request', { email });
+    say('syncMsg', r.ok ? `If that address is valid, a sign-in link is on its way to ${email}. It works once and expires in 15 minutes.` : (r.json && r.json.error) || 'Could not send the link.', r.ok ? 'good' : 'bad');
+  } catch {
+    say('syncMsg', 'You appear to be offline.', 'bad');
+  }
+  $('syncRequestBtn').disabled = false;
+}
+
+async function completeSignIn(token) {
+  history.replaceState(null, '', location.pathname + (location.hash || ''));
+  const r = await api('POST', '/api/auth/verify', { token });
+  showView('settings', document.querySelector('[data-view="settings"]'));
+  if (!r.ok) { say('syncMsg', (r.json && r.json.error) || 'Sign-in failed.', 'bad'); return; }
+  syncState.signedIn = true;
+  syncState.email = r.json.email;
+  renderSyncCard();
+  await runSync(false);
+}
+
+async function signOut() {
+  await api('POST', '/api/auth/logout');
+  syncState.signedIn = false;
+  renderSyncCard();
+  say('syncMsg', 'Signed out. Your progress stays on this device.', 'good');
+}
+
+async function signOutEverywhere() {
+  await api('POST', '/api/auth/logout-all');
+  syncState.signedIn = false;
+  renderSyncCard();
+  say('syncMsg', 'Signed out on every device. Your progress stays on each device.', 'good');
+}
+
+async function downloadAccountData() {
+  const res = await fetch('/api/account/export', { credentials: 'same-origin' });
+  if (!res.ok) { say('syncMsg', 'Could not download your account data.', 'bad'); return; }
+  const blob = new Blob([await res.text()], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'logosdepth-account.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+function askDeleteAccount() {
+  $('deleteAccountChoice').classList.remove('hidden');
+  $('deleteAccountBtn').classList.add('hidden');
+}
+function cancelDeleteAccount() {
+  $('deleteAccountChoice').classList.add('hidden');
+  $('deleteAccountBtn').classList.remove('hidden');
+}
+async function confirmDeleteAccount() {
+  const r = await api('DELETE', '/api/account');
+  cancelDeleteAccount();
+  if (!r.ok) { say('syncMsg', 'Could not delete the account. Please try again.', 'bad'); return; }
+  syncState.signedIn = false;
+  renderSyncCard();
+  say('syncMsg', 'Your account and synced progress were deleted from the server. Progress on this device was kept.', 'good');
+}
+
 // ─── Startup ─────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   if (!Progress.storageAvailable(localStorage)) showStorageBanner();
   updateDueBadge();
 
-  const view = new URLSearchParams(location.search).get('view');
+  const params = new URLSearchParams(location.search);
+  const loginToken = params.get('login');
+  refreshAuth().then(() => {
+    if (loginToken && syncState.enabled) completeSignIn(loginToken);
+    else if (syncState.signedIn) runSync(true);
+  });
+  window.addEventListener('online', () => { if (syncState.signedIn) runSync(true); });
+
+  const view = params.get('view');
   if (view && $(`view-${view}`)) showView(view, document.querySelector(`[data-view="${view}"]`));
 
   document.addEventListener('keydown', e => {
