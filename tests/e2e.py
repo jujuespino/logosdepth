@@ -462,7 +462,7 @@ with sync_playwright() as p:
     # Invalid files are rejected without touching progress
     before = pg.evaluate('localStorage.getItem("ld_verse_srs")')
     pg.set_input_files('#importFile', {'name': 'x.json', 'mimeType': 'application/json', 'buffer': b'not json at all'})
-    pg.wait_for_function('document.getElementById("backupMsg").textContent.length > 0')
+    pg.wait_for_function('document.getElementById("backupMsg").textContent.includes("not valid JSON")')
     check('garbage file rejected', 'not valid JSON' in pg.inner_text('#backupMsg'), pg.inner_text('#backupMsg'))
     pg.set_input_files('#importFile', {'name': 'x.json', 'mimeType': 'application/json',
                                        'buffer': json.dumps({'app': 'other', 'schemaVersion': 1, 'data': {}}).encode()})

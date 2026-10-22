@@ -4,7 +4,7 @@
    Review: type each due verse from memory, spaced over days and weeks
    Grading and scheduling live in recall.js.
    =================================================== */
-/* global Recall, openModal, updateDueBadge, showStorageBanner, scheduleSync */
+/* global Recall, openModal, updateDueBadge, showStorageBanner, scheduleSync, track */
 
 const VERSE_SRS_KEY    = 'ld_verse_srs';
 const VERSE_XP_KEY     = 'ld_verse_xp';
@@ -327,6 +327,7 @@ function stopSpeech() { try { speechSynthesis.cancel(); } catch {} }
 function startVerse(ref, translation) {
   const verse = verseList.find(v => v.ref === ref);
   if (!verse) return;
+  track('verse_started');
   const tr = resolveTranslation(verse, translation || getSettings().translation);
   const text = textFor(verse, tr);
   const phrases = Recall.makePhrases(text);
@@ -343,6 +344,7 @@ function startReview() {
   const keys = Recall.dueRefs(getCards(), Recall.dateKey())
     .filter(k => verseList.some(v => v.ref === parseKey(k).ref));
   if (!keys.length) { exitVerse(); return; }
+  track('review_started', keys.length);
   vs = { mode: 'review', queue: shuffle(keys), qi: 0, results: [], requeued: new Set(),
          xp: 0, typed: null, levelBefore: levelOf(getXp()) };
   showVersePanel('vSession');
@@ -829,6 +831,7 @@ function submitAttempt(passed, grade) {
   const review = vs.mode === 'review';
 
   const { card, counted } = Recall.recordAttempt(before, { passed, hinted }, today);
+  if (counted) track('typed_attempt', !passed ? 'miss' : hinted ? 'hinted' : 'perfect');
   const xp = Recall.xpForAttempt({
     passed, hinted, review, stageBefore: before ? before.stage : -1, counted,
   });
@@ -1000,6 +1003,7 @@ function finishReview() {
   const today = Recall.dateKey();
   const total = vs.results.length;
   const clean = vs.results.filter(r => r.passed && !r.hinted).length;
+  track('review_finished', total);
 
   el('vrStars').textContent = total ? `${clean} / ${total}` : '–';
   el('vrTitle').textContent = 'Review complete';

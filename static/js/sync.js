@@ -64,7 +64,7 @@ const Sync = (() => {
   }
 
   // Coalesces rapid saves into one sync. `run` is called at most once per `delay` ms.
-  function makeDebouncer(run, delay, timers = { set: setTimeout, clear: clearTimeout }) {
+  function makeDebouncer(run, delay, timers = { set: (fn, ms) => setTimeout(fn, ms), clear: id => clearTimeout(id) }) {
     let t = null;
     return () => {
       if (t) timers.clear(t);

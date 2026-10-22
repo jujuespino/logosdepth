@@ -1,12 +1,17 @@
 /* ===================================================
    LogosDepth — Settings, backup/restore, reminders, onboarding, PWA
    =================================================== */
-/* global Recall, Progress, Reminder, Sync, vLoad, vSave, getCards, getSettings, saveSettings, verseList, packList,
+/* global Recall, Progress, Reminder, Sync, Analytics, vLoad, vSave, getCards, getSettings, saveSettings, verseList, packList,
    renderPicker, startVerse, showView */
 
 const ONBOARD_KEY = 'ld_onboarded';
 const BASE_TITLE  = document.title;
 const $ = id => document.getElementById(id);
+
+// ─── Opt-in usage events and feedback (only when the server has beta tools on) ───
+const tracker = Analytics.makeTracker({ store: localStorage, fetch: (...a) => window.fetch(...a), nav: navigator });
+function track(name, value) { tracker.track(name, value); }
+let betaEnabled = false;
 
 // ─── Storage health ──────────────────────────────────
 function showStorageBanner() { $('storageBanner').classList.remove('hidden'); }
@@ -38,6 +43,7 @@ function exportProgress() {
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    track('backup_downloaded');
     const n = Object.keys(data.data.srs).length;
     say('backupMsg', `Backup downloaded (${n} verse${n === 1 ? '' : 's'}, ${data.data.xp} XP).`, 'good');
   } catch {
@@ -119,6 +125,7 @@ function downloadReminder() {
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  track('reminder_downloaded');
   say('reminderMsg', `Open the downloaded file to add a daily event at ${time} to your calendar.`, 'good');
 }
 
@@ -133,6 +140,7 @@ window.addEventListener('beforeinstallprompt', e => {
 window.addEventListener('appinstalled', () => {
   deferredInstall = null;
   $('installBtn').classList.add('hidden');
+  track('app_installed');
   $('installNote').textContent = 'Installed. You can open LogosDepth from your home screen or app list.';
 });
 
@@ -258,6 +266,15 @@ function showOnboarding(step) {
     const msg = document.createElement('div');
     msg.className = 'settings-msg good';
     body.append(row, msg);
+    if (betaEnabled && !Analytics.blockedBySignal(navigator) && !Analytics.isOn(localStorage, navigator)) {
+      const share = document.createElement('label');
+      share.className = 'check-row';
+      const box = document.createElement('input');
+      box.type = 'checkbox';
+      box.id = 'obShare';
+      share.append(box, ' Share anonymous usage to help improve the app (optional; no text you type is sent)');
+      body.appendChild(share);
+    }
     actions.append(
       obButton('← Back', 'gd-back-btn', () => showOnboarding(hasPacks ? 1 : 0)),
       obButton('Start my first verse', 'gs-start-btn', finishOnboarding),
@@ -272,6 +289,12 @@ function showOnboarding(step) {
 }
 
 function finishOnboarding() {
+  const share = $('obShare');
+  if (share && share.checked) {
+    Analytics.setOn(localStorage, true, { nav: navigator });
+    renderBetaCards();
+  }
+  track('onboarding_done', ob.pack);
   closeOnboarding();
   if (packList.some(p => p.id === ob.pack)) saveSettings({ ...getSettings(), pack: ob.pack });
   renderPicker();
@@ -306,13 +329,15 @@ async function refreshAuth() {
   try {
     const cfg = await (await fetch('/api/config')).json();
     syncState.enabled = !!cfg.accounts;
+    betaEnabled = !!cfg.beta;
     if (syncState.enabled) {
       const me = await (await fetch('/api/auth/me', { credentials: 'same-origin' })).json();
       syncState.signedIn = !!me.signedIn;
       syncState.email = me.email;
     }
-  } catch { syncState.enabled = false; }
+  } catch { syncState.enabled = false; betaEnabled = false; }
   renderSyncCard();
+  renderBetaCards();
 }
 
 async function runSync(quiet) {
@@ -361,6 +386,7 @@ async function completeSignIn(token) {
   if (!r.ok) { say('syncMsg', (r.json && r.json.error) || 'Sign-in failed.', 'bad'); return; }
   syncState.signedIn = true;
   syncState.email = r.json.email;
+  track('signed_in');
   renderSyncCard();
   await runSync(false);
 }
@@ -409,6 +435,47 @@ async function confirmDeleteAccount() {
   say('syncMsg', 'Your account and synced progress were deleted from the server. Progress on this device was kept.', 'good');
 }
 
+function renderBetaCards() {
+  $('betaCard').classList.toggle('hidden', !betaEnabled);
+  $('feedbackCard').classList.toggle('hidden', !betaEnabled);
+  const blocked = Analytics.blockedBySignal(navigator);
+  $('analyticsToggle').checked = Analytics.isOn(localStorage, navigator);
+  $('analyticsToggle').disabled = blocked;
+  $('analyticsSignalNote').classList.toggle('hidden', !blocked);
+}
+
+async function toggleAnalytics(on) {
+  if (on) {
+    Analytics.setOn(localStorage, true, { nav: navigator });
+    track('app_open');
+    tracker.flush();
+    say('analyticsMsg', 'Thank you. Anonymous usage sharing is on.', 'good');
+  } else {
+    await tracker.erase();
+    Analytics.setOn(localStorage, false);
+    say('analyticsMsg', 'Usage sharing is off. Your random ID was deleted here and on the server.', 'good');
+  }
+  renderBetaCards();
+}
+
+async function sendFeedback() {
+  const message = $('fbMessage').value.trim();
+  if (message.length < 3) { say('fbMsg', 'Please write a few words first.', 'bad'); return; }
+  $('fbSend').disabled = true;
+  say('fbMsg', 'Sending…');
+  try {
+    const r = await api('POST', '/api/feedback', {
+      kind: $('fbKind').value, message, contact: $('fbContact').value.trim() || undefined,
+      context: `view=${document.querySelector('.view:not(.hidden)')?.id || ''}`,
+    });
+    if (r.ok) { $('fbMessage').value = ''; say('fbMsg', 'Thank you! Your feedback was sent.', 'good'); }
+    else say('fbMsg', (r.json && r.json.error) || 'Could not send feedback.', 'bad');
+  } catch {
+    say('fbMsg', 'You appear to be offline. Please try again when you are back online.', 'bad');
+  }
+  $('fbSend').disabled = false;
+}
+
 // ─── Startup ─────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   if (!Progress.storageAvailable(localStorage)) showStorageBanner();
@@ -417,10 +484,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(location.search);
   const loginToken = params.get('login');
   refreshAuth().then(() => {
+    if (betaEnabled) track('app_open');
     if (loginToken && syncState.enabled) completeSignIn(loginToken);
     else if (syncState.signedIn) runSync(true);
   });
   window.addEventListener('online', () => { if (syncState.signedIn) runSync(true); });
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') tracker.flush(); });
 
   const view = params.get('view');
   if (view && $(`view-${view}`)) showView(view, document.querySelector(`[data-view="${view}"]`));

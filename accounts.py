@@ -21,14 +21,13 @@ import os
 import re
 import secrets
 import smtplib
-import sqlite3
 import time
 from email.message import EmailMessage
-from pathlib import Path
 
-from flask import Blueprint, current_app, g, jsonify, request
+from flask import Blueprint, current_app, jsonify, request
 
 from progress_schema import MAX_BYTES, clean_progress
+from store import client_ip, db, rate_limited
 
 bp = Blueprint("accounts", __name__)
 log = logging.getLogger("logosdepth.accounts")
@@ -37,67 +36,10 @@ LOGIN_TTL = 15 * 60
 SESSION_TTL = 90 * 24 * 3600
 COOKIE = "ld_session"
 EMAIL_RE = re.compile(r"^[^@\s]{1,64}@[^@\s]{1,255}\.[^@\s]{2,}$")
-RATE_LIMITS = {"email": (5, 15 * 60), "ip": (30, 15 * 60)}
-
-SCHEMA = """
-CREATE TABLE IF NOT EXISTS users (
-  id INTEGER PRIMARY KEY,
-  email TEXT NOT NULL UNIQUE,
-  created_at INTEGER NOT NULL
-);
-CREATE TABLE IF NOT EXISTS login_tokens (
-  token_hash TEXT PRIMARY KEY,
-  email TEXT NOT NULL,
-  expires_at INTEGER NOT NULL
-);
-CREATE TABLE IF NOT EXISTS sessions (
-  token_hash TEXT PRIMARY KEY,
-  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  created_at INTEGER NOT NULL,
-  expires_at INTEGER NOT NULL
-);
-CREATE TABLE IF NOT EXISTS progress (
-  user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-  data TEXT NOT NULL,
-  version INTEGER NOT NULL,
-  updated_at INTEGER NOT NULL
-);
-CREATE TABLE IF NOT EXISTS rate_events (
-  bucket TEXT NOT NULL,
-  ts INTEGER NOT NULL
-);
-CREATE INDEX IF NOT EXISTS rate_events_idx ON rate_events(bucket, ts);
-"""
 
 
 def enabled() -> bool:
     return current_app.config.get("ACCOUNTS_ENABLED", os.environ.get("ACCOUNTS_ENABLED") == "1")
-
-
-def _db_path() -> str:
-    return current_app.config.get("DATABASE_PATH") or os.environ.get("DATABASE_PATH") or str(
-        Path(current_app.root_path) / "instance" / "logosdepth.db"
-    )
-
-
-def db() -> sqlite3.Connection:
-    if "db" not in g:
-        path = _db_path()
-        Path(path).parent.mkdir(parents=True, exist_ok=True)
-        conn = sqlite3.connect(path, timeout=10)
-        conn.row_factory = sqlite3.Row
-        conn.execute("PRAGMA foreign_keys = ON")
-        conn.execute("PRAGMA journal_mode = WAL")
-        conn.executescript(SCHEMA)
-        g.db = conn
-    return g.db
-
-
-@bp.teardown_app_request
-def _close_db(_exc):
-    conn = g.pop("db", None)
-    if conn is not None:
-        conn.close()
 
 
 def _hash(token: str) -> str:
@@ -125,26 +67,6 @@ def _guard():
 def _no_store(resp):
     resp.headers["Cache-Control"] = "no-store"
     return resp
-
-
-def _rate_limited(bucket: str, kind: str) -> bool:
-    limit, window = RATE_LIMITS[kind]
-    conn = db()
-    now = _now()
-    conn.execute("DELETE FROM rate_events WHERE ts < ?", (now - 24 * 3600,))
-    n = conn.execute(
-        "SELECT COUNT(*) FROM rate_events WHERE bucket = ? AND ts > ?", (bucket, now - window)
-    ).fetchone()[0]
-    if n >= limit:
-        conn.commit()
-        return True
-    conn.execute("INSERT INTO rate_events (bucket, ts) VALUES (?, ?)", (bucket, now))
-    conn.commit()
-    return False
-
-
-def _client_ip() -> str:
-    return request.remote_addr or "?"
 
 
 # ─── Mail ────────────────────────────────────────────
@@ -194,7 +116,7 @@ def auth_request():
     email = str(_json_body().get("email", "")).strip().lower()
     if not EMAIL_RE.match(email) or len(email) > 254:
         return jsonify({"error": "Please enter a valid email address."}), 400
-    if _rate_limited(f"email:{email}", "email") or _rate_limited(f"ip:{_client_ip()}", "ip"):
+    if rate_limited(f"email:{email}", "email") or rate_limited(f"ip:{client_ip()}", "ip"):
         return jsonify({"error": "Too many requests. Please wait a few minutes and try again."}), 429
 
     token = secrets.token_urlsafe(32)

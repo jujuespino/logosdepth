@@ -41,11 +41,11 @@ def test_disabled_by_default():
     flask_app.config.update(ACCOUNTS_ENABLED=False)
     c = flask_app.test_client()
     assert c.get("/api/auth/me").status_code == 404
-    assert c.get("/api/config").get_json() == {"accounts": False}
+    assert c.get("/api/config").get_json() == {"accounts": False, "beta": False}
 
 
 def test_config_reports_enabled(client):
-    assert client.get("/api/config").get_json() == {"accounts": True}
+    assert client.get("/api/config").get_json() == {"accounts": True, "beta": False}
 
 
 def test_csrf_header_required(client):

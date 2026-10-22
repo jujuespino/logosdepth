@@ -1,9 +1,11 @@
-"""End-to-end test of accounts and cross-device sync. Starts its own accounts-enabled server.
+"""End-to-end test of accounts, cross-device sync, opt-in usage events and feedback.
+Starts its own server with ACCOUNTS_ENABLED and BETA_ENABLED on.
 
   python3 tests/e2e_sync.py        # set CHROME=/path/to/chrome to use a specific browser
 """
 import json
 import os
+import sqlite3
 import subprocess
 import sys
 import tempfile
@@ -38,7 +40,7 @@ def check(name, cond, extra=''):
 
 
 def start_server(tmp):
-    env = dict(os.environ, ACCOUNTS_ENABLED='1', AUTH_RETURN_LINK='1', MAIL_BACKEND='console',
+    env = dict(os.environ, ACCOUNTS_ENABLED='1', BETA_ENABLED='1', AUTH_RETURN_LINK='1', MAIL_BACKEND='console',
                DATABASE_PATH=os.path.join(tmp, 'sync.db'), PORT=PORT, HOST='127.0.0.1')
     proc = subprocess.Popen([sys.executable, str(ROOT / 'app.py')], env=env, cwd=ROOT,
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -137,6 +139,8 @@ with tempfile.TemporaryDirectory() as tmp:
             bdev.click('#syncNowBtn')
             bdev.wait_for_function('document.getElementById("syncMsg").textContent.includes("3 verse")')
             want = {'Psalm 23:1', 'John 3:16', 'Romans 8:1'}
+            check('learning while signed in does not trip the storage warning',
+                  not bdev.is_visible('#storageBanner') and not a.is_visible('#storageBanner'))
             check('A has all three verses', want <= set(srs(a)), list(srs(a)))
             check('B has all three verses', want <= set(srs(bdev)), list(srs(bdev)))
 
@@ -178,7 +182,84 @@ with tempfile.TemporaryDirectory() as tmp:
             fresh = json.loads(urllib.request.urlopen(BASE + 'healthz').read())
             check('server stayed healthy', fresh['status'] == 'ok')
 
-            for name, pg in [('A', a), ('B', bdev), ('C', c)]:
+            # ── Opt-in usage events and feedback ──
+            db_path = os.path.join(tmp, 'sync.db')
+
+            def db_rows(sql):
+                conn = sqlite3.connect(db_path)
+                try:
+                    return conn.execute(sql).fetchall()
+                finally:
+                    conn.close()
+
+            d = device(b)
+            sent = []
+            d.on('request', lambda req: sent.append(req) if req.url.endswith('/api/events') else None)
+            check('beta: usage card and feedback card are shown', d.is_visible('#betaCard') and d.is_visible('#feedbackCard'))
+            check('a11y: usage and feedback cards have no axe violations', not axe_issues(d), axe_issues(d))
+            check('beta: usage sharing is off by default', not d.is_checked('#analyticsToggle'))
+            learn(d, 'Psalm 23:1')
+            d.evaluate('tracker.flush()')
+            d.wait_for_timeout(300)
+            check('beta: nothing is sent before opting in', not sent, [r.url for r in sent])
+            check('beta: no id exists before opting in', d.evaluate('localStorage.getItem("ld_analytics")') is None)
+
+            d.check('#analyticsToggle')
+            d.wait_for_function('localStorage.getItem("ld_analytics") !== null')
+            learn(d, 'John 3:16')
+            d.evaluate('tracker.flush()')
+            d.wait_for_function('true')
+            d.wait_for_timeout(500)
+            install = json.loads(d.evaluate('localStorage.getItem("ld_analytics")'))['id']
+            names = [r[0] for r in db_rows(f"SELECT name || ':' || COALESCE(prop, '') FROM events WHERE install_id = '{install}'")]
+            check('beta: events arrive after opting in', 'verse_started:' in names and 'typed_attempt:perfect' in names, names)
+            dump = json.dumps(db_rows('SELECT * FROM events'))
+            check('beta: no verse text, email or reference was stored',
+                  'Psalm' not in dump and 'John' not in dump and 'example.com' not in dump and 'Lord' not in dump)
+
+            d.uncheck('#analyticsToggle')
+            d.wait_for_function('localStorage.getItem("ld_analytics") === null')
+            d.wait_for_timeout(500)
+            check('beta: opting out erases the server rows',
+                  db_rows(f"SELECT COUNT(*) FROM events WHERE install_id = '{install}'")[0][0] == 0)
+
+            d.fill('#fbMessage', 'The order step was confusing at first.')
+            d.fill('#fbContact', 'reader@example.com')
+            d.select_option('#fbKind', 'confusing')
+            d.get_by_role('button', name='Send', exact=True).click()
+            d.wait_for_function('document.getElementById("fbMsg").textContent.includes("Thank you")')
+            fb = db_rows('SELECT kind, message, contact FROM feedback')
+            check('beta: feedback is stored', fb == [('confusing', 'The order step was confusing at first.', 'reader@example.com')], fb)
+            check('beta: feedback box clears after sending', d.input_value('#fbMessage') == '')
+
+            e = b.new_context(viewport={'width': 1280, 'height': 900})
+            e.add_init_script("try { localStorage.setItem('ld_onboarded', 'true'); } catch (err) {}")
+            e.add_init_script("Object.defineProperty(navigator, 'doNotTrack', {get: () => '1'})")
+            dnt = e.new_page()
+            dnt.goto(BASE + '?view=settings')
+            dnt.wait_for_selector('#analyticsToggle', state='attached')
+            check('beta: Do Not Track disables the toggle and explains why',
+                  dnt.is_disabled('#analyticsToggle') and dnt.is_visible('#analyticsSignalNote'))
+            e.close()
+
+            f = b.new_context(viewport={'width': 1280, 'height': 900})
+            fpg = f.new_page()
+            fpg.goto(BASE)
+            fpg.wait_for_selector('.verse-card', state='attached')
+            fpg.click('[data-view="verses"]')
+            fpg.wait_for_selector('#onboard:not(.hidden)')
+            click = fpg.get_by_role('button', name='Next →')
+            click.click()
+            click.click()
+            check('beta: intro offers an unchecked usage-sharing box', fpg.locator('#obShare').count() == 1
+                  and not fpg.is_checked('#obShare'))
+            check('beta: the box can be ignored (nothing stored yet)', fpg.evaluate('localStorage.getItem("ld_analytics")') is None)
+            fpg.check('#obShare')
+            fpg.get_by_role('button', name='Start my first verse').click()
+            check('beta: ticking the box in the intro opts in', fpg.evaluate('localStorage.getItem("ld_analytics")') is not None)
+            f.close()
+
+            for name, pg in [('A', a), ('B', bdev), ('C', c), ('beta', d)]:
                 check(f'{name}: no JS errors', not pg.errors, pg.errors[:2])
             b.close()
     finally:

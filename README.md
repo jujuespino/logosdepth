@@ -30,12 +30,12 @@ Environment variables (all optional): `HOST` (default `127.0.0.1`), `PORT` (defa
 pytest                         # API and data-validation tests
 ruff check .                   # Python lint
 npm ci                         # once
-npm test                       # unit tests: grading/scheduling (recall.js), backup/merge (progress.js), reminders (reminder.js), sync (sync.js)
+npm test                       # unit tests: grading/scheduling (recall.js), backup/merge (progress.js), reminders (reminder.js), sync (sync.js), usage events (analytics.js)
 npm run lint                   # ESLint
 playwright install chromium    # once
 python app.py &                # the browser test needs a running server
 python tests/e2e.py            # end-to-end browser test (simulates several days, offline use, backup/restore)
-python tests/e2e_sync.py       # accounts and two-device sync (starts its own server on port 5057)
+python tests/e2e_sync.py       # accounts, two-device sync, opt-in usage events, feedback (starts its own server on port 5057)
 python tests/a11y_audit.py     # axe-core accessibility audit of every view and key state (needs npm ci)
 ```
 
@@ -66,21 +66,40 @@ Off by default; the app is local-first and fully usable without them. Set `ACCOU
 
 Security notes: sign-in tokens and session tokens are random, stored hashed, single-use / revocable, and expire (15 minutes / 90 days); session cookies are `HttpOnly` and `SameSite=Lax`; every write requires an `X-LD-CSRF` header; sign-in requests are rate limited per address and per IP; the response never reveals whether an address already has an account. Users can download their data, sign out everywhere, and delete their account (Settings). `AUTH_RETURN_LINK=1` exists only for automated tests and must never be set in production.
 
+### Beta tools (opt-in usage events and feedback)
+
+Off by default. Set `BETA_ENABLED=1` to show **Settings → Help improve LogosDepth** and **Send feedback**.
+
+- **Usage events are opt-in and anonymous.** Nothing is sent until the learner ticks the box (Settings, or the last intro step). Events are a name from a fixed list (`app_open`, `verse_started`, `typed_attempt` with `perfect|hinted|miss`, `review_started`, `review_finished`, and a few more) with at most one short value, tied to a random ID stored only in the browser. The server stores no IP address, user agent, email, verse reference or typed text. A browser Do Not Track / Global Privacy Control signal disables the feature. Turning it off deletes the ID and the server's rows for it; everything is deleted after 180 days regardless.
+- **Feedback** is stored only when the learner presses Send (message, type, optional contact email).
+- **Reading the results** (needs shell access to the server; there is deliberately no web admin page):
+
+```bash
+python3 scripts/metrics.py                 # day-1/3/7/14/30 retention, funnel, outcomes, daily actives
+python3 scripts/metrics.py --feedback      # the feedback inbox
+python3 scripts/metrics.py --json          # machine-readable
+```
+
+Retention and funnel numbers cover only installs that opted in, so treat them as a sample, not the whole user base.
+
 ## Project layout
 
 ```
 app.py                  Flask app and JSON API
+store.py                Shared SQLite connection, schema and rate limiting for the optional server features
+beta.py                 Opt-in anonymous usage events and the feedback form (BETA_ENABLED)
 accounts.py             Optional accounts: email sign-in links, sync storage, export/delete (SQLite)
 progress_schema.py      Server-side validation of synced progress (mirror of progress.js validate)
 data/lexicon.json       Hand-written Hebrew/Greek word entries (searchable, browsable)
 data/lexicon_brief.json Generated brief entries for words linked from verses
 data/verses.json        Generated: verse text (KJV + WEB), packs, linked Strong's IDs
 data/packs.json         Curated: which verses belong to which pack
-scripts/                Content pipeline (fetch_sources.sh, build_content.py) and make_icons.py
+scripts/                Content pipeline (fetch_sources.sh, build_content.py), make_icons.py, metrics.py
 static/js/recall.js     Typed-recall grading and spaced-review scheduling (pure functions)
 static/js/progress.js   Backup/restore, validation and merge of saved progress (pure functions)
 static/js/reminder.js   Daily review reminder as a calendar file (pure functions)
 static/js/sync.js       Cross-device sync: fetch, merge, upload, retry on conflict
+static/js/analytics.js  Opt-in usage events (off unless the learner turns it on)
 static/js/verses.js     Memorization UI (learn steps, typed recall, daily review)
 static/js/settings.js   Settings, onboarding, install prompt, service-worker registration
 static/sw.js            Service worker template (versioned and served at /sw.js)

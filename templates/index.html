@@ -224,6 +224,36 @@
         <div class="settings-msg" id="syncMsg" aria-live="polite"></div>
       </div>
 
+      <div class="settings-card hidden" id="betaCard">
+        <h2>Help improve LogosDepth (beta)</h2>
+        <p>Optional and off by default. If you turn it on, the app sends anonymous usage events such as “started a verse” or “finished a review”, tied to a random ID kept only in this browser. It never sends what you type, which verses you choose, or your email. Turning it off deletes the ID and asks the server to erase what it received.</p>
+        <label class="check-row"><input type="checkbox" id="analyticsToggle" onchange="toggleAnalytics(this.checked)" /> Share anonymous usage</label>
+        <p class="settings-note hidden" id="analyticsSignalNote">Your browser’s privacy signal (Do Not Track or Global Privacy Control) is on, so usage sharing is switched off.</p>
+        <div class="settings-msg" id="analyticsMsg" aria-live="polite"></div>
+      </div>
+
+      <div class="settings-card hidden" id="feedbackCard">
+        <h2>Send feedback</h2>
+        <p>Tell us what is confusing, broken, or missing. We read every message. Add an email only if you would like a reply.</p>
+        <div class="settings-row">
+          <label class="settings-label" for="fbKind">Type</label>
+          <select id="fbKind" class="settings-input">
+            <option value="idea">Idea</option>
+            <option value="bug">Something is broken</option>
+            <option value="confusing">Something is confusing</option>
+            <option value="praise">Something I like</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <textarea id="fbMessage" class="settings-textarea" rows="4" maxlength="2000" aria-label="Your feedback" placeholder="What happened, or what would help?"></textarea>
+        <div class="settings-row">
+          <label class="settings-label" for="fbContact">Email (optional)</label>
+          <input type="email" id="fbContact" class="settings-input" autocomplete="email" />
+          <button class="gs-start-btn" id="fbSend" onclick="sendFeedback()">Send</button>
+        </div>
+        <div class="settings-msg" id="fbMsg" aria-live="polite"></div>
+      </div>
+
       <div class="settings-card">
         <h2>Daily reminder</h2>
         <p>Reviews work best when they are spaced out, so pick a time. This adds a repeating event to your calendar app; it works on any phone or computer.</p>
@@ -510,6 +540,7 @@
 <script src="/static/js/recall.js"></script>
 <script src="/static/js/progress.js"></script>
 <script src="/static/js/sync.js"></script>
+<script src="/static/js/analytics.js"></script>
 <script src="/static/js/reminder.js"></script>
 <script src="/static/js/verses.js"></script>
 <script src="/static/js/settings.js"></script>
