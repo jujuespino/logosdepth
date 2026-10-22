@@ -92,6 +92,17 @@ def axe_issues(pg):
     return pg.evaluate(AXE_RUN)
 
 
+def wait_for(pg, expr, timeout=10000):
+    """Poll a JS expression with evaluate(); wait_for_function evals a string, which the page's CSP forbids."""
+    waited = 0
+    while waited < timeout:
+        if pg.evaluate(f'() => !!({expr})'):
+            return
+        pg.wait_for_timeout(100)
+        waited += 100
+    raise TimeoutError(expr)
+
+
 def msg(pg):
     return pg.inner_text('#syncMsg')
 
@@ -117,7 +128,7 @@ with tempfile.TemporaryDirectory() as tmp:
             check('A: signed in as the right address', EMAIL in a.inner_text('#syncWho'))
             check('a11y: signed-in sync card has no axe violations', not axe_issues(a), axe_issues(a))
             check('A: token removed from the address bar', 'login=' not in a.url, a.url)
-            a.wait_for_function('document.getElementById("syncMsg").textContent.startsWith("Synced")')
+            wait_for(a, 'document.getElementById("syncMsg").textContent.startsWith("Synced")')
             check('A: guest progress uploaded on first sign-in', 'Synced: 1 verse' in msg(a), msg(a))
 
             # ── Device B: fresh browser, signs in, receives A's progress ──
@@ -125,7 +136,7 @@ with tempfile.TemporaryDirectory() as tmp:
             check('B: starts empty', srs(bdev) == {})
             link_b = request_link(bdev)
             bdev.goto(link_b)
-            bdev.wait_for_function('document.getElementById("syncMsg").textContent.startsWith("Synced")')
+            wait_for(bdev, 'document.getElementById("syncMsg").textContent.startsWith("Synced")')
             check('B: received the verse learned on A', 'Psalm 23:1' in srs(bdev), list(srs(bdev)))
             check('B: XP carried over', bdev.evaluate('getXp()') == a.evaluate('getXp()') and a.evaluate('getXp()') > 0)
 
@@ -133,11 +144,11 @@ with tempfile.TemporaryDirectory() as tmp:
             learn(bdev, 'John 3:16')
             learn(a, 'Romans 8:1')
             bdev.click('#syncNowBtn')
-            bdev.wait_for_function('document.getElementById("syncMsg").textContent.startsWith("Synced")')
+            wait_for(bdev, 'document.getElementById("syncMsg").textContent.startsWith("Synced")')
             a.click('#syncNowBtn')
-            a.wait_for_function('document.getElementById("syncMsg").textContent.includes("3 verse")')
+            wait_for(a, 'document.getElementById("syncMsg").textContent.includes("3 verse")')
             bdev.click('#syncNowBtn')
-            bdev.wait_for_function('document.getElementById("syncMsg").textContent.includes("3 verse")')
+            wait_for(bdev, 'document.getElementById("syncMsg").textContent.includes("3 verse")')
             want = {'Psalm 23:1', 'John 3:16', 'Romans 8:1'}
             check('learning while signed in does not trip the storage warning',
                   not bdev.is_visible('#storageBanner') and not a.is_visible('#storageBanner'))
@@ -147,7 +158,7 @@ with tempfile.TemporaryDirectory() as tmp:
             # ── Links are single use ──
             c = device(b)
             c.goto(link)
-            c.wait_for_function('document.getElementById("syncMsg").textContent.length > 0')
+            wait_for(c, 'document.getElementById("syncMsg").textContent.length > 0')
             check('reusing a sign-in link fails with a clear message', 'expired or was already used' in msg(c), msg(c))
             check('...and does not sign in', c.is_visible('#syncEmail'))
             c.errors.clear()  # the browser logs the expected 400 from the rejected link
@@ -178,7 +189,7 @@ with tempfile.TemporaryDirectory() as tmp:
             # a fresh sign-in with the same address starts from nothing on the server
             link2 = request_link(bdev)
             bdev.goto(link2)
-            bdev.wait_for_function('document.getElementById("syncMsg").textContent.startsWith("Synced")')
+            wait_for(bdev, 'document.getElementById("syncMsg").textContent.startsWith("Synced")')
             fresh = json.loads(urllib.request.urlopen(BASE + 'healthz').read())
             check('server stayed healthy', fresh['status'] == 'ok')
 
@@ -205,10 +216,10 @@ with tempfile.TemporaryDirectory() as tmp:
             check('beta: no id exists before opting in', d.evaluate('localStorage.getItem("ld_analytics")') is None)
 
             d.check('#analyticsToggle')
-            d.wait_for_function('localStorage.getItem("ld_analytics") !== null')
+            wait_for(d, 'localStorage.getItem("ld_analytics") !== null')
             learn(d, 'John 3:16')
             d.evaluate('tracker.flush()')
-            d.wait_for_function('true')
+            wait_for(d, 'true')
             d.wait_for_timeout(500)
             install = json.loads(d.evaluate('localStorage.getItem("ld_analytics")'))['id']
             names = [r[0] for r in db_rows(f"SELECT name || ':' || COALESCE(prop, '') FROM events WHERE install_id = '{install}'")]
@@ -218,7 +229,7 @@ with tempfile.TemporaryDirectory() as tmp:
                   'Psalm' not in dump and 'John' not in dump and 'example.com' not in dump and 'Lord' not in dump)
 
             d.uncheck('#analyticsToggle')
-            d.wait_for_function('localStorage.getItem("ld_analytics") === null')
+            wait_for(d, 'localStorage.getItem("ld_analytics") === null')
             d.wait_for_timeout(500)
             check('beta: opting out erases the server rows',
                   db_rows(f"SELECT COUNT(*) FROM events WHERE install_id = '{install}'")[0][0] == 0)
@@ -227,7 +238,7 @@ with tempfile.TemporaryDirectory() as tmp:
             d.fill('#fbContact', 'reader@example.com')
             d.select_option('#fbKind', 'confusing')
             d.get_by_role('button', name='Send', exact=True).click()
-            d.wait_for_function('document.getElementById("fbMsg").textContent.includes("Thank you")')
+            wait_for(d, 'document.getElementById("fbMsg").textContent.includes("Thank you")')
             fb = db_rows('SELECT kind, message, contact FROM feedback')
             check('beta: feedback is stored', fb == [('confusing', 'The order step was confusing at first.', 'reader@example.com')], fb)
             check('beta: feedback box clears after sending', d.input_value('#fbMessage') == '')

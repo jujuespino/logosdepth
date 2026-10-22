@@ -59,6 +59,17 @@ def at_day(pg, n):
     pg.wait_for_selector('.verse-card', state='attached')
 
 
+def wait_for(pg, expr, timeout=10000):
+    """Poll a JS expression with evaluate(); wait_for_function evals a string, which the page's CSP forbids."""
+    waited = 0
+    while waited < timeout:
+        if pg.evaluate(f'() => !!({expr})'):
+            return
+        pg.wait_for_timeout(100)
+        waited += 100
+    raise TimeoutError(expr)
+
+
 def open_verses(pg):
     pg.click('[data-view="verses"]')
 
@@ -462,11 +473,11 @@ with sync_playwright() as p:
     # Invalid files are rejected without touching progress
     before = pg.evaluate('localStorage.getItem("ld_verse_srs")')
     pg.set_input_files('#importFile', {'name': 'x.json', 'mimeType': 'application/json', 'buffer': b'not json at all'})
-    pg.wait_for_function('document.getElementById("backupMsg").textContent.includes("not valid JSON")')
+    wait_for(pg, 'document.getElementById("backupMsg").textContent.includes("not valid JSON")')
     check('garbage file rejected', 'not valid JSON' in pg.inner_text('#backupMsg'), pg.inner_text('#backupMsg'))
     pg.set_input_files('#importFile', {'name': 'x.json', 'mimeType': 'application/json',
                                        'buffer': json.dumps({'app': 'other', 'schemaVersion': 1, 'data': {}}).encode()})
-    pg.wait_for_function('document.getElementById("backupMsg").textContent.includes("LogosDepth backup")')
+    wait_for(pg, 'document.getElementById("backupMsg").textContent.includes("LogosDepth backup")')
     check('wrong-app file rejected', pg.is_hidden('#importChoice'))
     check('rejected files change nothing', pg.evaluate('localStorage.getItem("ld_verse_srs")') == before)
 

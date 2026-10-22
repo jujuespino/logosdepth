@@ -49,6 +49,8 @@ The app is a standard WSGI app. A `Procfile` is included:
 gunicorn app:app --bind 0.0.0.0:$PORT --workers 2
 ```
 
+See [`docs/deploy.md`](docs/deploy.md) for hosting (Render blueprint and Dockerfile included), backups, monitoring, the pre-launch checklist and every environment variable; `python3 scripts/check_deploy.py <url>` smoke-tests a deployment. Public pages: `/about` (including the science), `/privacy`. The page sends a strict Content-Security-Policy (no inline scripts; event wiring is in `static/js/actions.js`).
+
 `GET /healthz` returns `{"status": "ok"}` for uptime checks. JSON and HTML responses are gzipped when the client accepts it. Progress is stored in the browser (`localStorage`); Settings offers a downloadable backup, and optional accounts (below) sync it across devices. The service worker at `/sw.js` is versioned by a hash of the shipped assets, so every deploy refreshes installed copies.
 
 ### Optional accounts and sync
@@ -85,7 +87,7 @@ Retention and funnel numbers cover only installs that opted in, so treat them as
 ## Project layout
 
 ```
-app.py                  Flask app and JSON API
+app.py                  Flask app, JSON API, public pages, security headers
 store.py                Shared SQLite connection, schema and rate limiting for the optional server features
 beta.py                 Opt-in anonymous usage events and the feedback form (BETA_ENABLED)
 accounts.py             Optional accounts: email sign-in links, sync storage, export/delete (SQLite)
@@ -98,6 +100,7 @@ scripts/                Content pipeline (fetch_sources.sh, build_content.py), m
 static/js/recall.js     Typed-recall grading and spaced-review scheduling (pure functions)
 static/js/progress.js   Backup/restore, validation and merge of saved progress (pure functions)
 static/js/reminder.js   Daily review reminder as a calendar file (pure functions)
+static/js/actions.js    Wires data-click / data-input / data-change attributes to functions (no inline handlers)
 static/js/sync.js       Cross-device sync: fetch, merge, upload, retry on conflict
 static/js/analytics.js  Opt-in usage events (off unless the learner turns it on)
 static/js/verses.js     Memorization UI (learn steps, typed recall, daily review)
@@ -107,7 +110,8 @@ static/js/app.js        Dashboard, search, browse, word game
 static/css, static/fonts  Styles and self-hosted fonts
 templates/index.html    Single-page shell
 tests/                  pytest, Node unit tests, Playwright end-to-end test
-docs/                   Evidence review and source registry
+docs/                   Evidence review, source registry, deployment guide
+Dockerfile, render.yaml Deployment configuration
 ```
 
 ## Adding or changing verses

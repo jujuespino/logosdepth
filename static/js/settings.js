@@ -444,8 +444,8 @@ function renderBetaCards() {
   $('analyticsSignalNote').classList.toggle('hidden', !blocked);
 }
 
-async function toggleAnalytics(on) {
-  if (on) {
+async function toggleAnalytics() {
+  if ($('analyticsToggle').checked) {
     Analytics.setOn(localStorage, true, { nav: navigator });
     track('app_open');
     tracker.flush();

@@ -1558,3 +1558,44 @@ body {
   .banner { margin: 0.8rem 1rem 0; }
   .quiz-options { grid-template-columns: 1fr; }
 }
+
+/* ===== PUBLIC PAGES (about, privacy) ===== */
+.doc-page { display: block; overflow: auto; }
+.doc-header {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.8rem;
+  padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); background: var(--bg2);
+}
+.doc-brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+.doc-nav { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; }
+.doc-nav a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; padding: 0.4rem 0; }
+.doc-nav a:hover, .doc-nav a:focus-visible { color: var(--text); text-decoration: underline; }
+.doc-nav .doc-cta, .doc-button {
+  background: var(--gold); color: #1a1405; font-weight: 600; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none;
+}
+.doc-nav .doc-cta:hover { color: #1a1405; text-decoration: none; filter: brightness(1.08); }
+.doc-button { display: inline-block; padding: 0.7rem 1.4rem; }
+.doc-main { max-width: 760px; margin: 0 auto; padding: 2rem 1.2rem 3rem; line-height: 1.7; color: var(--text); }
+.doc-main h1 { font-family: 'Cinzel', serif; color: var(--gold-light); font-size: 1.9rem; line-height: 1.25; margin-bottom: 0.8rem; }
+.doc-main h2 { font-family: 'Cinzel', serif; color: var(--gold-light); font-size: 1.3rem; margin: 2.2rem 0 0.6rem; }
+.doc-main h3 { font-size: 1.05rem; margin: 1.4rem 0 0.4rem; }
+.doc-main p, .doc-main li { font-size: 0.98rem; }
+.doc-main ul, .doc-main ol { padding-left: 1.3rem; margin: 0.5rem 0 1rem; }
+.doc-main li { margin-bottom: 0.45rem; }
+.doc-main a { color: var(--accent); }
+.doc-main a.doc-button { color: #1a1405; text-decoration: none; }
+.doc-lead { font-size: 1.12rem !important; color: var(--text-muted); }
+.doc-note { color: var(--text-muted); font-size: 0.88rem !important; }
+.doc-draft {
+  background: rgba(212,168,67,0.12); border: 1px solid var(--gold); border-radius: 8px;
+  padding: 0.8rem 1rem; margin-bottom: 1.5rem; font-size: 0.92rem;
+}
+.doc-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.92rem; }
+.doc-table th, .doc-table td { text-align: left; vertical-align: top; padding: 0.65rem 0.7rem; border-bottom: 1px solid var(--border); }
+.doc-table th { color: var(--text-muted); font-weight: 600; font-size: 0.82rem; }
+@media (max-width: 640px) {
+  .doc-table thead { display: none; }
+  .doc-table tr { display: block; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+  .doc-table td { display: block; border: 0; padding: 0.2rem 0; }
+}
+.doc-footer { border-top: 1px solid var(--border); padding: 1.2rem 1.5rem; color: var(--text-muted); font-size: 0.82rem; text-align: center; }
+.doc-footer a { color: var(--accent); }

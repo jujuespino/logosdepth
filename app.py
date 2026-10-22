@@ -14,6 +14,24 @@ from beta import bp as beta_bp
 from store import bp as store_bp
 
 app = Flask(__name__)
+if os.environ.get("TRUST_PROXY") == "1":
+    # Behind one reverse proxy (Render, Fly, Heroku, nginx): use its forwarded client IP and scheme, so
+    # rate limits are per visitor, cookies get the Secure flag and HSTS is sent.
+    from werkzeug.middleware.proxy_fix import ProxyFix
+
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
+if os.environ.get("SENTRY_DSN"):
+    try:  # optional: pip install "sentry-sdk[flask]"
+        import sentry_sdk
+
+        sentry_sdk.init(
+            dsn=os.environ["SENTRY_DSN"],
+            send_default_pii=False,
+            traces_sample_rate=0.0,
+            environment=os.environ.get("SENTRY_ENVIRONMENT", "production"),
+        )
+    except ImportError:
+        print("SENTRY_DSN is set but sentry-sdk is not installed; error reporting is off.")
 app.register_blueprint(store_bp)
 app.register_blueprint(accounts_bp)
 app.register_blueprint(beta_bp)
@@ -67,6 +85,46 @@ def index():
         "total": len(LEXICON),
     }
     return render_template("index.html", categories=categories, stats=stats)
+
+
+def _site_context() -> dict:
+    return {
+        "operator": os.environ.get("OPERATOR_NAME", "the site operator"),
+        "contact_email": os.environ.get("CONTACT_EMAIL", ""),
+        "reviewed": os.environ.get("LEGAL_REVIEWED") == "1",
+        "accounts_enabled": os.environ.get("ACCOUNTS_ENABLED") == "1" or bool(app.config.get("ACCOUNTS_ENABLED")),
+        "beta_enabled": beta_enabled(),
+        "updated": "22 October 2026",
+    }
+
+
+@app.route("/about")
+def about():
+    return render_template("about.html", **_site_context())
+
+
+@app.route("/privacy")
+def privacy():
+    return render_template("privacy.html", **_site_context())
+
+
+@app.route("/robots.txt")
+def robots():
+    base = _public_base()
+    lines = ["User-agent: *", "Disallow: /api/", "Allow: /", f"Sitemap: {base}/sitemap.xml", ""]
+    return Response("\n".join(lines), mimetype="text/plain")
+
+
+@app.route("/sitemap.xml")
+def sitemap():
+    base = _public_base()
+    urls = "".join(f"<url><loc>{base}{path}</loc></url>" for path in ("/", "/about", "/privacy"))
+    xml = f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>'
+    return Response(xml, mimetype="application/xml")
+
+
+def _public_base() -> str:
+    return (os.environ.get("PUBLIC_URL") or request.host_url).rstrip("/")
 
 
 @app.route("/api/search")
@@ -258,8 +316,27 @@ def healthz():
     return jsonify({"status": "ok", "lexicon": len(LEXICON), "verses": len(VERSES), "packs": len(PACKS)})
 
 
+CSP = "; ".join([
+    "default-src 'self'",
+    "script-src 'self'",
+    "style-src 'self' 'unsafe-inline'",  # a few style="" attributes remain; scripts are the part that matters
+    "img-src 'self' data:",
+    "font-src 'self'",
+    "connect-src 'self'",
+    "manifest-src 'self'",
+    "worker-src 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+])
+
+
 @app.after_request
 def add_headers(resp):
+    resp.headers.setdefault("Content-Security-Policy", CSP)
+    if request.is_secure:
+        resp.headers.setdefault("Strict-Transport-Security", "max-age=31536000")
     resp.headers.setdefault("X-Content-Type-Options", "nosniff")
     resp.headers.setdefault("X-Frame-Options", "DENY")
     resp.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")

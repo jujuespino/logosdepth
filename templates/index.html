@@ -22,28 +22,28 @@
   </div>
 
   <nav class="sidebar-nav">
-    <button class="nav-btn active" data-view="dashboard" onclick="showView('dashboard', this)">
+    <button class="nav-btn active" data-view="dashboard" data-click="showView" data-arg="dashboard">
       <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       Dashboard
     </button>
-    <button class="nav-btn" data-view="search" onclick="showView('search', this)">
+    <button class="nav-btn" data-view="search" data-click="showView" data-arg="search">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       Search Words
     </button>
-    <button class="nav-btn" data-view="browse" onclick="showView('browse', this)">
+    <button class="nav-btn" data-view="browse" data-click="showView" data-arg="browse">
       <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
       Browse
     </button>
-    <button class="nav-btn" data-view="verses" onclick="showView('verses', this)">
+    <button class="nav-btn" data-view="verses" data-click="showView" data-arg="verses">
       <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
       Memorize Verses
       <span class="nav-badge hidden" id="dueBadge" aria-label="Verses due for review"></span>
     </button>
-    <button class="nav-btn" data-view="game" onclick="showView('game', this)">
+    <button class="nav-btn" data-view="game" data-click="showView" data-arg="game">
       <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       Word Game
     </button>
-    <button class="nav-btn" data-view="settings" onclick="showView('settings', this)">
+    <button class="nav-btn" data-view="settings" data-click="showView" data-arg="settings">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
       Settings
     </button>
@@ -51,9 +51,9 @@
 
   <div class="sidebar-section-label">Language Filter</div>
   <div class="lang-filter">
-    <button class="lang-btn active" data-lang="all" onclick="setLang('all', this)">All</button>
-    <button class="lang-btn hebrew" data-lang="hebrew" onclick="setLang('hebrew', this)">Hebrew</button>
-    <button class="lang-btn greek" data-lang="greek" onclick="setLang('greek', this)">Greek</button>
+    <button class="lang-btn active" data-lang="all" data-click="setLang" data-arg="all">All</button>
+    <button class="lang-btn hebrew" data-lang="hebrew" data-click="setLang" data-arg="hebrew">Hebrew</button>
+    <button class="lang-btn greek" data-lang="greek" data-click="setLang" data-arg="greek">Greek</button>
   </div>
 
   <div class="sidebar-section-label">Categories</div>
@@ -78,7 +78,7 @@
 
   <!-- Top bar -->
   <header class="topbar">
-    <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Open menu">
+    <button class="menu-toggle" data-click="toggleSidebar" aria-label="Open menu">
       <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
     <div class="search-wrap" id="topSearchWrap">
@@ -89,9 +89,9 @@
         class="search-input"
         placeholder='Search English words — e.g. "love", "peace", "faith"…'
         autocomplete="off"
-        oninput="onSearchInput(this.value)"
+        data-input="onSearchInput"
       />
-      <button class="clear-btn" id="clearBtn" onclick="clearSearch()" style="display:none" aria-label="Clear search">✕</button>
+      <button class="clear-btn" id="clearBtn" data-click="clearSearch" style="display:none" aria-label="Clear search">✕</button>
     </div>
   </header>
 
@@ -177,16 +177,16 @@
         <h2>Back up your progress</h2>
         <p>Download a file you can keep or use to move your progress to another device or browser.</p>
         <div class="settings-row">
-          <button class="gs-start-btn" id="exportBtn" onclick="exportProgress()">Download backup</button>
+          <button class="gs-start-btn" id="exportBtn" data-click="exportProgress">Download backup</button>
           <label class="gd-back-btn file-btn" for="importFile">Restore from a backup…</label>
-          <input type="file" id="importFile" accept="application/json,.json" class="visually-hidden" onchange="chooseImportFile(this)" />
+          <input type="file" id="importFile" accept="application/json,.json" class="visually-hidden" data-change="chooseImportFile" />
         </div>
         <div class="settings-choice hidden" id="importChoice">
           <div id="importSummary"></div>
           <div class="settings-row">
-            <button class="gs-start-btn" onclick="applyImport('merge')">Merge with my progress (recommended)</button>
-            <button class="gd-back-btn" onclick="applyImport('replace')">Replace my progress</button>
-            <button class="gd-back-btn" onclick="cancelImport()">Cancel</button>
+            <button class="gs-start-btn" data-click="applyImport" data-arg="merge">Merge with my progress (recommended)</button>
+            <button class="gd-back-btn" data-click="applyImport" data-arg="replace">Replace my progress</button>
+            <button class="gd-back-btn" data-click="cancelImport">Cancel</button>
           </div>
         </div>
         <div class="settings-msg" id="backupMsg" aria-live="polite"></div>
@@ -199,25 +199,25 @@
           <div class="settings-row">
             <label class="settings-label" for="syncEmail">Email</label>
             <input type="email" id="syncEmail" class="settings-input" autocomplete="email" placeholder="you@example.com" />
-            <button class="gs-start-btn" id="syncRequestBtn" onclick="requestSignIn()">Email me a sign-in link</button>
+            <button class="gs-start-btn" id="syncRequestBtn" data-click="requestSignIn">Email me a sign-in link</button>
           </div>
         </div>
         <div id="syncSignedIn" class="hidden">
           <p>Signed in as <strong id="syncWho"></strong>.</p>
           <div class="settings-row">
-            <button class="gs-start-btn" id="syncNowBtn" onclick="syncNow()">Sync now</button>
-            <button class="gd-back-btn" onclick="signOut()">Sign out</button>
-            <button class="gd-back-btn" onclick="signOutEverywhere()">Sign out on all devices</button>
+            <button class="gs-start-btn" id="syncNowBtn" data-click="syncNow">Sync now</button>
+            <button class="gd-back-btn" data-click="signOut">Sign out</button>
+            <button class="gd-back-btn" data-click="signOutEverywhere">Sign out on all devices</button>
           </div>
           <div class="settings-row">
-            <button class="gd-back-btn" onclick="downloadAccountData()">Download my account data</button>
-            <button class="gd-back-btn" id="deleteAccountBtn" onclick="askDeleteAccount()">Delete my account…</button>
+            <button class="gd-back-btn" data-click="downloadAccountData">Download my account data</button>
+            <button class="gd-back-btn" id="deleteAccountBtn" data-click="askDeleteAccount">Delete my account…</button>
           </div>
           <div class="settings-choice hidden" id="deleteAccountChoice">
             <div>This deletes your email and your synced progress from our server. Progress on this device is kept. This cannot be undone.</div>
             <div class="settings-row">
-              <button class="gd-back-btn" onclick="cancelDeleteAccount()">Cancel</button>
-              <button class="gs-start-btn danger-btn" onclick="confirmDeleteAccount()">Yes, delete my account</button>
+              <button class="gd-back-btn" data-click="cancelDeleteAccount">Cancel</button>
+              <button class="gs-start-btn danger-btn" data-click="confirmDeleteAccount">Yes, delete my account</button>
             </div>
           </div>
         </div>
@@ -227,7 +227,7 @@
       <div class="settings-card hidden" id="betaCard">
         <h2>Help improve LogosDepth (beta)</h2>
         <p>Optional and off by default. If you turn it on, the app sends anonymous usage events such as “started a verse” or “finished a review”, tied to a random ID kept only in this browser. It never sends what you type, which verses you choose, or your email. Turning it off deletes the ID and asks the server to erase what it received.</p>
-        <label class="check-row"><input type="checkbox" id="analyticsToggle" onchange="toggleAnalytics(this.checked)" /> Share anonymous usage</label>
+        <label class="check-row"><input type="checkbox" id="analyticsToggle" data-change="toggleAnalytics" /> Share anonymous usage</label>
         <p class="settings-note hidden" id="analyticsSignalNote">Your browser’s privacy signal (Do Not Track or Global Privacy Control) is on, so usage sharing is switched off.</p>
         <div class="settings-msg" id="analyticsMsg" aria-live="polite"></div>
       </div>
@@ -249,7 +249,7 @@
         <div class="settings-row">
           <label class="settings-label" for="fbContact">Email (optional)</label>
           <input type="email" id="fbContact" class="settings-input" autocomplete="email" />
-          <button class="gs-start-btn" id="fbSend" onclick="sendFeedback()">Send</button>
+          <button class="gs-start-btn" id="fbSend" data-click="sendFeedback">Send</button>
         </div>
         <div class="settings-msg" id="fbMsg" aria-live="polite"></div>
       </div>
@@ -260,7 +260,7 @@
         <div class="settings-row">
           <label class="settings-label" for="reminderTime">Time</label>
           <input type="time" id="reminderTime" value="08:00" class="settings-input" />
-          <button class="gs-start-btn" onclick="downloadReminder()">Add to calendar (.ics)</button>
+          <button class="gs-start-btn" data-click="downloadReminder">Add to calendar (.ics)</button>
         </div>
         <div class="settings-msg" id="reminderMsg" aria-live="polite"></div>
       </div>
@@ -268,14 +268,14 @@
       <div class="settings-card" id="installCard">
         <h2>Install the app</h2>
         <p>Add LogosDepth to your home screen to open it like an app, and use it offline.</p>
-        <div class="settings-row"><button class="gs-start-btn hidden" id="installBtn" onclick="installApp()">Install</button></div>
+        <div class="settings-row"><button class="gs-start-btn hidden" id="installBtn" data-click="installApp">Install</button></div>
         <p class="settings-note" id="installNote">On iPhone or iPad: tap Share, then “Add to Home Screen”. On Android or desktop Chrome: use the browser menu’s “Install app”.</p>
       </div>
 
       <div class="settings-card">
         <h2>Intro</h2>
         <p>See the short walkthrough again.</p>
-        <div class="settings-row"><button class="gd-back-btn" onclick="showOnboarding(0)">Show the intro</button></div>
+        <div class="settings-row"><button class="gd-back-btn" data-click="showOnboarding" data-arg="0">Show the intro</button></div>
       </div>
 
       <div class="settings-card">
@@ -288,18 +288,20 @@
           <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>).
           Strong’s tagging of the KJV: CrossWire Bible Society. Fonts: Cinzel, Inter, Noto Serif and Noto Serif Hebrew
           (SIL Open Font License).
+          <a href="/about" target="_blank" rel="noopener">About &amp; the science</a> ·
+          <a href="/privacy" target="_blank" rel="noopener">Privacy</a>
         </p>
       </div>
 
       <div class="settings-card settings-danger">
         <h2>Erase my progress</h2>
         <p>Permanently removes your XP, streak and every verse’s schedule from this device. Download a backup first if you might want it back.</p>
-        <div class="settings-row"><button class="gd-back-btn" id="resetBtn" onclick="askReset()">Erase my progress…</button></div>
+        <div class="settings-row"><button class="gd-back-btn" id="resetBtn" data-click="askReset">Erase my progress…</button></div>
         <div class="settings-choice hidden" id="resetChoice">
           <div>Are you sure? This cannot be undone.</div>
           <div class="settings-row">
-            <button class="gd-back-btn" onclick="cancelReset()">Cancel</button>
-            <button class="gs-start-btn danger-btn" onclick="confirmReset()">Yes, erase everything</button>
+            <button class="gd-back-btn" data-click="cancelReset">Cancel</button>
+            <button class="gs-start-btn danger-btn" data-click="confirmReset">Yes, erase everything</button>
           </div>
         </div>
         <div class="settings-msg" id="resetMsg" aria-live="polite"></div>
@@ -335,7 +337,7 @@
             <div class="review-title" id="vReviewTitle"></div>
             <div class="review-sub" id="vReviewSub"></div>
           </div>
-          <button class="gs-start-btn" id="vReviewBtn" onclick="startReview()">Start review</button>
+          <button class="gs-start-btn" id="vReviewBtn" data-click="startReview">Start review</button>
         </div>
 
         <div class="picker-controls">
@@ -350,7 +352,7 @@
       <div id="vSession" class="hidden">
         <h1 class="sr-only">Practice session</h1>
         <div class="vs-top">
-          <button class="gd-back-btn" onclick="exitVerse()">← All verses</button>
+          <button class="gd-back-btn" data-click="exitVerse">← All verses</button>
           <div class="vs-steps" id="vsSteps"></div>
         </div>
         <div class="vs-card">
@@ -377,10 +379,10 @@
           <div class="recent-tags" id="vrWords"></div>
         </div>
         <div class="vr-buttons">
-          <button class="gs-start-btn hidden" id="vrReview" onclick="startReview()">Start today's review →</button>
-          <button class="gs-start-btn" id="vrNext" onclick="nextVerse()">Next verse →</button>
-          <button class="gd-back-btn" id="vrAgain" onclick="retryVerse()">Practice again</button>
-          <button class="gd-back-btn" onclick="exitVerse()">All verses</button>
+          <button class="gs-start-btn hidden" id="vrReview" data-click="startReview">Start today's review →</button>
+          <button class="gs-start-btn" id="vrNext" data-click="nextVerse">Next verse →</button>
+          <button class="gd-back-btn" id="vrAgain" data-click="retryVerse">Practice again</button>
+          <button class="gd-back-btn" data-click="exitVerse">All verses</button>
         </div>
       </div>
 
@@ -401,8 +403,8 @@
 
       <!-- Mode tabs -->
       <div class="game-mode-tabs">
-        <button class="mode-tab active" id="tabFlashcard" onclick="setGameMode('flashcard', this)">Flashcard</button>
-        <button class="mode-tab" id="tabQuiz" onclick="setGameMode('quiz', this)">Quiz</button>
+        <button class="mode-tab active" id="tabFlashcard" data-click="setGameMode" data-arg="flashcard">Flashcard</button>
+        <button class="mode-tab" id="tabQuiz" data-click="setGameMode" data-arg="quiz">Quiz</button>
       </div>
 
       <!-- Score bar -->
@@ -424,11 +426,11 @@
         <h2 class="gs-title">Ready to Learn?</h2>
         <p class="gs-desc">Pick a language filter, then start — definitions, original scripts, and streak rewards await!</p>
         <div class="gs-lang-row">
-          <button class="gs-lang-btn active" data-lang="all"    onclick="pickGameLang('all',this)">All Words</button>
-          <button class="gs-lang-btn"        data-lang="hebrew" onclick="pickGameLang('hebrew',this)">Hebrew</button>
-          <button class="gs-lang-btn"        data-lang="greek"  onclick="pickGameLang('greek',this)">Greek</button>
+          <button class="gs-lang-btn active" data-lang="all"    data-click="pickGameLang" data-arg="all">All Words</button>
+          <button class="gs-lang-btn"        data-lang="hebrew" data-click="pickGameLang" data-arg="hebrew">Hebrew</button>
+          <button class="gs-lang-btn"        data-lang="greek"  data-click="pickGameLang" data-arg="greek">Greek</button>
         </div>
-        <button class="gs-start-btn" onclick="startGame()">Start Game</button>
+        <button class="gs-start-btn" data-click="startGame">Start Game</button>
       </div>
 
       <!-- PLAY area -->
@@ -436,7 +438,7 @@
 
         <!-- Flashcard -->
         <div id="flashcardArea">
-          <div class="flashcard" id="flashcard" onclick="flipCard()">
+          <div class="flashcard" id="flashcard" data-click="flipCard">
             <div class="flashcard-inner" id="flashcardInner">
               <div class="flashcard-front">
                 <div class="fc-tap-hint">Tap to reveal meaning</div>
@@ -453,8 +455,8 @@
             </div>
           </div>
           <div class="fc-actions hidden" id="fcActions">
-            <button class="fc-btn fc-btn-no"  onclick="markCard(false)">Still Learning</button>
-            <button class="fc-btn fc-btn-yes" onclick="markCard(true)">Got it! ✓</button>
+            <button class="fc-btn fc-btn-no"  data-click="markCard" data-arg="false">Still Learning</button>
+            <button class="fc-btn fc-btn-yes" data-click="markCard" data-arg="true">Got it! ✓</button>
           </div>
         </div>
 
@@ -468,7 +470,7 @@
           </div>
           <div class="quiz-options" id="quizOptions"></div>
           <div class="quiz-feedback hidden" id="quizFeedback"></div>
-          <button class="quiz-next-btn hidden" id="quizNextBtn" onclick="nextQuizQuestion()">Next Word →</button>
+          <button class="quiz-next-btn hidden" id="quizNextBtn" data-click="nextQuizQuestion">Next Word →</button>
         </div>
 
       </div>
@@ -482,8 +484,8 @@
           <div class="gd-stat"><span id="doneBest">0</span><label>Best Streak</label></div>
           <div class="gd-stat"><span id="doneCorrect">0</span><label>Correct</label></div>
         </div>
-        <button class="gs-start-btn" onclick="restartGame()">Play Again</button>
-        <button class="gd-back-btn" onclick="showView('dashboard', document.querySelector('[data-view=\'dashboard\']'))">← Back to Dashboard</button>
+        <button class="gs-start-btn" data-click="restartGame">Play Again</button>
+        <button class="gd-back-btn" data-click="showView" data-arg="dashboard" data-btn="[data-view='dashboard']">← Back to Dashboard</button>
       </div>
 
     </div>
@@ -507,9 +509,9 @@
 </div>
 
 <!-- ===== DETAIL MODAL ===== -->
-<div class="modal-backdrop hidden" id="modalBackdrop" onclick="closeModal()"></div>
+<div class="modal-backdrop hidden" id="modalBackdrop" data-click="closeModal"></div>
 <div class="modal hidden" id="wordModal" role="dialog" aria-modal="true" aria-labelledby="modalOriginal">
-  <button class="modal-close" id="modalCloseBtn" onclick="closeModal()" aria-label="Close">✕</button>
+  <button class="modal-close" id="modalCloseBtn" data-click="closeModal" aria-label="Close">✕</button>
   <div class="modal-lang-badge" id="modalLang"></div>
   <div class="modal-original" id="modalOriginal"></div>
   <div class="modal-translit" id="modalTranslit"></div>
@@ -544,5 +546,6 @@
 <script src="/static/js/reminder.js"></script>
 <script src="/static/js/verses.js"></script>
 <script src="/static/js/settings.js"></script>
+<script src="/static/js/actions.js"></script>
 </body>
 </html>

@@ -106,6 +106,13 @@ with sync_playwright() as p:
     pg.wait_for_selector(".quiz-option")
     audit(pg, "quiz")
 
+    for path, label in (("about", "about page"), ("privacy", "privacy page")):
+        pg.goto(BASE + path)
+        audit(pg, label)
+    pg.set_viewport_size({"width": 390, "height": 844})
+    pg.goto(BASE + "about")
+    audit(pg, "about page (mobile)")
+
     pg2 = b.new_context(viewport={"width": 390, "height": 844}).new_page()
     pg2.goto(BASE)
     pg2.wait_for_selector(".word-card", state="attached")

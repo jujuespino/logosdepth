@@ -1,0 +1,49 @@
+{% extends "doc_base.html" %}
+{% block title %}Privacy — LogosDepth{% endblock %}
+{% block content %}
+{% if not reviewed %}
+<div class="doc-draft" role="note"><strong>Draft.</strong> This page describes what the software does. It has not yet been reviewed by a lawyer and is not a finished legal policy.</div>
+{% endif %}
+<h1>Privacy</h1>
+<p class="doc-lead">LogosDepth is built to work without collecting anything about you. Here is exactly what is stored, where, and how to remove it.</p>
+<p>The site is run by {{ operator }}.{% if contact_email %} Contact: <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>.{% endif %}</p>
+
+<h2>In your browser (always)</h2>
+<ul>
+  <li>Your verses, review schedule, XP, streak and settings are saved in your browser’s local storage. They stay on your device unless you turn on sync.</li>
+  <li>The app works offline using a cached copy of its own files.</li>
+  <li>Fonts and scripts are served by this site. The app makes no requests to ad networks, analytics companies or other third parties.</li>
+  <li>You can download a backup or erase everything from Settings at any time.</li>
+</ul>
+
+<h2>Server logs</h2>
+<p>Like any website, the server and its hosting provider process your IP address and request details to deliver pages and to protect against abuse. These logs are not used to build profiles or for advertising. How long they are kept depends on the hosting provider’s settings.</p>
+
+{% if accounts_enabled %}
+<h2>If you sign in to sync</h2>
+<ul>
+  <li><strong>What we store:</strong> your email address and a copy of your progress (the same data as in your browser).</li>
+  <li><strong>Sign-in:</strong> we email you a one-time link that expires in 15 minutes. There is no password. Sign-in links and session tokens are stored only as hashes. A session cookie keeps you signed in for up to 90 days; it is not used for tracking.</li>
+  <li><strong>Email delivery:</strong> the sign-in email is sent through an email provider chosen by the site operator, who sees your address for that purpose.</li>
+  <li><strong>Your controls:</strong> in Settings you can download your account data, sign out on every device, or delete your account. Deleting removes your email and synced progress from the server; progress on your devices is kept.</li>
+</ul>
+{% endif %}
+
+{% if beta_enabled %}
+<h2>Beta: optional usage sharing and feedback</h2>
+<ul>
+  <li><strong>Usage sharing is off unless you turn it on</strong> (in Settings or at the end of the intro). If you do, the app sends anonymous events such as “started a verse” or “finished a review”, along with a random ID that exists only in your browser. It does not send the text you type, which verses you choose, your email address or any account information. The server does not store your IP address or browser details with these events.</li>
+  <li>If your browser sends Do Not Track or Global Privacy Control, usage sharing stays off.</li>
+  <li>Turning it off deletes the ID in your browser and the events the server holds for it. Events are deleted automatically after 180 days.</li>
+  <li><strong>Feedback</strong> is sent only when you press Send. It includes your message, the type you chose and, if you give one, your email so we can reply.</li>
+</ul>
+{% endif %}
+
+<h2>Other limits</h2>
+<ul>
+  <li>Rate-limit counters (used to stop abuse) are stored as one-way hashes and deleted within a day.</li>
+  <li>LogosDepth is intended for people 13 and older.</li>
+  <li>If this page changes in a way that matters, the date below will change.</li>
+</ul>
+<p class="doc-note">Last updated: {{ updated }}</p>
+{% endblock %}
