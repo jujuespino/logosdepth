@@ -79,6 +79,37 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G37",
+  "original": "ἁγιάζω",
+  "transliteration": "hagiazō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to sanctify",
+  "kjv_translations": [
+   "sanctified",
+   "sanctify",
+   "sanctifieth",
+   "hallowed"
+  ],
+  "usage_count": 29,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G45",
+  "original": "ἄγκυρα",
+  "transliteration": "agkura",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "anchor",
+  "kjv_translations": [
+   "anchors"
+  ],
+  "usage_count": 4,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G47",
   "original": "ἁγνεία",
   "transliteration": "hagneia",
@@ -89,6 +120,21 @@
    "purity"
   ],
   "usage_count": 2,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G48",
+  "original": "ἁγνίζω",
+  "transliteration": "hagnizō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to purify",
+  "kjv_translations": [
+   "purify",
+   "purified"
+  ],
+  "usage_count": 7,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -181,6 +227,23 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G142",
+  "original": "αἴρω",
+  "transliteration": "airō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to take up",
+  "kjv_translations": [
+   "take",
+   "away",
+   "took",
+   "taken"
+  ],
+  "usage_count": 111,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G154",
   "original": "αἰτέω",
   "transliteration": "aiteō",
@@ -210,6 +273,18 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G186",
+  "original": "ἀκλινής",
+  "transliteration": "aklinēs",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "unwavering",
+  "kjv_translations": [],
+  "usage_count": 1,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G189",
   "original": "ἀκοή",
   "transliteration": "akoē",
@@ -223,6 +298,23 @@
    "rumours"
   ],
   "usage_count": 24,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G190",
+  "original": "ἀκολουθέω",
+  "transliteration": "akoloutheō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to follow",
+  "kjv_translations": [
+   "followed",
+   "follow",
+   "followeth",
+   "will"
+  ],
+  "usage_count": 94,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -309,6 +401,18 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G277",
+  "original": "ἀμετακίνητος",
+  "transliteration": "ametakinētos",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "immovable",
+  "kjv_translations": [],
+  "usage_count": 1,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G342",
   "original": "ἀνακαίνωσις",
   "transliteration": "anakainōsis",
@@ -335,6 +439,21 @@
    "refreshed"
   ],
   "usage_count": 15,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G386",
+  "original": "ἀνάστασις",
+  "transliteration": "anastasis",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "resurrection",
+  "kjv_translations": [
+   "resurrection",
+   "again"
+  ],
+  "usage_count": 46,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -393,6 +512,21 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G442",
+  "original": "ἀνθρώπινος",
+  "transliteration": "anthrōpinos",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "human",
+  "kjv_translations": [
+   "mans",
+   "man"
+  ],
+  "usage_count": 7,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G444",
   "original": "ἄνθρωπος",
   "transliteration": "anthrōpos",
@@ -406,6 +540,55 @@
    "mens"
   ],
   "usage_count": 569,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G455",
+  "original": "ἀνοίγω",
+  "transliteration": "anoigō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to open",
+  "kjv_translations": [
+   "opened",
+   "open",
+   "when",
+   "openeth"
+  ],
+  "usage_count": 78,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G514",
+  "original": "ἄξιος",
+  "transliteration": "axios",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "worthy",
+  "kjv_translations": [
+   "worthy",
+   "meet"
+  ],
+  "usage_count": 41,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G533",
+  "original": "ἀπαρνέομαι",
+  "transliteration": "aparneomai",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to deny",
+  "kjv_translations": [
+   "deny",
+   "shalt",
+   "let",
+   "will"
+  ],
+  "usage_count": 16,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -435,6 +618,22 @@
    "dying"
   ],
   "usage_count": 121,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G601",
+  "original": "ἀποκαλύπτω",
+  "transliteration": "apokaluptō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to reveal",
+  "kjv_translations": [
+   "revealed",
+   "reveal",
+   "hast"
+  ],
+  "usage_count": 34,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -486,6 +685,18 @@
    "hast"
   ],
   "usage_count": 144,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G713",
+  "original": "ἀρκετός",
+  "transliteration": "arketos",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "sufficient",
+  "kjv_translations": [],
+  "usage_count": 3,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -581,6 +792,49 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G804",
+  "original": "ἀσφαλής",
+  "transliteration": "asphalēs",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "secure",
+  "kjv_translations": [
+   "certainty"
+  ],
+  "usage_count": 5,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G839",
+  "original": "αὔριον",
+  "transliteration": "aurion",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "tomorrow",
+  "kjv_translations": [
+   "morrow"
+  ],
+  "usage_count": 15,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G853",
+  "original": "ἀφανίζω",
+  "transliteration": "aphanizō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to destroy",
+  "kjv_translations": [
+   "doth",
+   "corrupt"
+  ],
+  "usage_count": 5,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G863",
   "original": "ἀφίημι",
   "transliteration": "aphiēmi",
@@ -594,6 +848,53 @@
    "let"
   ],
   "usage_count": 178,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G899",
+  "original": "βάθος",
+  "transliteration": "bathos",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "depth",
+  "kjv_translations": [
+   "depth",
+   "deep"
+  ],
+  "usage_count": 9,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G907",
+  "original": "βαπτίζω",
+  "transliteration": "baptizō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to baptize",
+  "kjv_translations": [
+   "baptized",
+   "baptize",
+   "baptizing",
+   "being"
+  ],
+  "usage_count": 89,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G949",
+  "original": "βέβαιος",
+  "transliteration": "bebaios",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "firm",
+  "kjv_translations": [
+   "stedfast",
+   "sure"
+  ],
+  "usage_count": 9,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -615,6 +916,74 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G996",
+  "original": "βοήθεια",
+  "transliteration": "boētheia",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "help",
+  "kjv_translations": [],
+  "usage_count": 2,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1014",
+  "original": "βούλομαι",
+  "transliteration": "boulomai",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to plan",
+  "kjv_translations": [
+   "will",
+   "would",
+   "willing",
+   "minded"
+  ],
+  "usage_count": 34,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1019",
+  "original": "βραδύνω",
+  "transliteration": "bradunō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to delay",
+  "kjv_translations": [],
+  "usage_count": 3,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1022",
+  "original": "βραδύτης",
+  "transliteration": "bradutēs",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "slowness",
+  "kjv_translations": [],
+  "usage_count": 1,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1035",
+  "original": "βρῶσις",
+  "transliteration": "brōsis",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "eating",
+  "kjv_translations": [
+   "meat",
+   "rust"
+  ],
+  "usage_count": 11,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G1080",
   "original": "γεννάω",
   "transliteration": "gennaō",
@@ -628,6 +997,23 @@
    "been"
   ],
   "usage_count": 108,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1093",
+  "original": "γῆ",
+  "transliteration": "gē",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "earth, planet",
+  "kjv_translations": [
+   "earth",
+   "land",
+   "ground",
+   "country"
+  ],
+  "usage_count": 253,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -729,6 +1115,37 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G1144",
+  "original": "δάκρυ",
+  "transliteration": "dakru, dakruon",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "teardrop",
+  "kjv_translations": [
+   "tears"
+  ],
+  "usage_count": 11,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1162",
+  "original": "δέησις",
+  "transliteration": "deēsis",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "petition",
+  "kjv_translations": [
+   "prayer",
+   "prayers",
+   "supplication",
+   "supplications"
+  ],
+  "usage_count": 19,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G1163",
   "original": "δεῖ",
   "transliteration": "dei",
@@ -770,6 +1187,22 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G1208",
+  "original": "δεύτερος",
+  "transliteration": "deuteros",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "secondly",
+  "kjv_translations": [
+   "second",
+   "time",
+   "again"
+  ],
+  "usage_count": 46,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G1252",
   "original": "διακρίνω",
   "transliteration": "diakrinō",
@@ -783,6 +1216,22 @@
    "difference"
   ],
   "usage_count": 24,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1271",
+  "original": "διάνοια",
+  "transliteration": "dianoia",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "mind",
+  "kjv_translations": [
+   "mind",
+   "understanding",
+   "minds"
+  ],
+  "usage_count": 14,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -814,6 +1263,23 @@
    "doctrines"
   ],
   "usage_count": 21,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1321",
+  "original": "διδάσκω",
+  "transliteration": "didaskō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to teach",
+  "kjv_translations": [
+   "taught",
+   "teach",
+   "teaching",
+   "teachest"
+  ],
+  "usage_count": 100,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -860,6 +1326,87 @@
    "right"
   ],
   "usage_count": 81,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1344",
+  "original": "δικαιόω",
+  "transliteration": "dikaioō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to justify",
+  "kjv_translations": [
+   "justified",
+   "justify",
+   "being",
+   "justifieth"
+  ],
+  "usage_count": 47,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1358",
+  "original": "διορύσσω",
+  "transliteration": "diorussō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to break in",
+  "kjv_translations": [
+   "through",
+   "break",
+   "broken"
+  ],
+  "usage_count": 5,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1372",
+  "original": "διψάω",
+  "transliteration": "dipsaō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to thirst",
+  "kjv_translations": [
+   "thirst",
+   "thirsty",
+   "athirst"
+  ],
+  "usage_count": 18,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1374",
+  "original": "δίψυχος",
+  "transliteration": "dipsuchos",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "double-minded",
+  "kjv_translations": [
+   "double",
+   "minded"
+  ],
+  "usage_count": 2,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1377",
+  "original": "διώκω",
+  "transliteration": "diōkō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to pursue",
+  "kjv_translations": [
+   "persecuted",
+   "persecute",
+   "follow",
+   "persecutest"
+  ],
+  "usage_count": 50,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -947,6 +1494,39 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G1439",
+  "original": "ἐάω",
+  "transliteration": "eaō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to allow",
+  "kjv_translations": [
+   "suffered",
+   "suffer",
+   "let"
+  ],
+  "usage_count": 16,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1448",
+  "original": "ἐγγίζω",
+  "transliteration": "engizō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to come near",
+  "kjv_translations": [
+   "nigh",
+   "drew",
+   "near",
+   "hand"
+  ],
+  "usage_count": 43,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G1453",
   "original": "ἐγείρω",
   "transliteration": "egeirō",
@@ -974,6 +1554,20 @@
    "temperance"
   ],
   "usage_count": 4,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1476",
+  "original": "ἑδραῖος",
+  "transliteration": "hedraios",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "steadfast",
+  "kjv_translations": [
+   "stedfast"
+  ],
+  "usage_count": 3,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -1040,6 +1634,35 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G1518",
+  "original": "εἰρηνοποιός",
+  "transliteration": "eirēnopoios",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "peacemaker",
+  "kjv_translations": [],
+  "usage_count": 1,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1525",
+  "original": "εἰσέρχομαι",
+  "transliteration": "eiserchomai",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to enter",
+  "kjv_translations": [
+   "enter",
+   "entered",
+   "went",
+   "come"
+  ],
+  "usage_count": 221,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G1538",
   "original": "ἕκαστος",
   "transliteration": "hekastos",
@@ -1057,6 +1680,33 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G1545",
+  "original": "ἔκβασις",
+  "transliteration": "ekbasis",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "way out",
+  "kjv_translations": [],
+  "usage_count": 2,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1563",
+  "original": "ἐκεῖ",
+  "transliteration": "ekei",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "there",
+  "kjv_translations": [
+   "thither",
+   "yonder"
+  ],
+  "usage_count": 97,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G1567",
   "original": "ἐκζητέω",
   "transliteration": "ekzēteō",
@@ -1068,6 +1718,35 @@
    "seek"
   ],
   "usage_count": 8,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1573",
+  "original": "ἐκκακέω",
+  "transliteration": "ekkakeō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to lose heart",
+  "kjv_translations": [
+   "faint",
+   "weary"
+  ],
+  "usage_count": 8,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1590",
+  "original": "ἐκλύω",
+  "transliteration": "ekluō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to faint",
+  "kjv_translations": [
+   "faint"
+  ],
+  "usage_count": 6,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -1113,6 +1792,37 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G1653",
+  "original": "ἐλεέω",
+  "transliteration": "eleeō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to have mercy",
+  "kjv_translations": [
+   "mercy",
+   "obtained",
+   "compassion",
+   "obtain"
+  ],
+  "usage_count": 33,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1655",
+  "original": "ἐλεήμων",
+  "transliteration": "eleēmōn",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "merciful",
+  "kjv_translations": [
+   "merciful"
+  ],
+  "usage_count": 2,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G1679",
   "original": "ἐλπίζω",
   "transliteration": "elpizō",
@@ -1144,6 +1854,38 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G1754",
+  "original": "ἐνεργέω",
+  "transliteration": "energeō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "be active",
+  "kjv_translations": [
+   "worketh",
+   "shew",
+   "forth",
+   "themselves"
+  ],
+  "usage_count": 22,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1764",
+  "original": "ἐνίστημι",
+  "transliteration": "enistēmi",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "be present",
+  "kjv_translations": [
+   "present",
+   "things"
+  ],
+  "usage_count": 7,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G1774",
   "original": "ἐνοικέω",
   "transliteration": "enoikeō",
@@ -1155,6 +1897,23 @@
    "dwell"
   ],
   "usage_count": 6,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1781",
+  "original": "ἐντέλλω",
+  "transliteration": "entellō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to order",
+  "kjv_translations": [
+   "commanded",
+   "command",
+   "give",
+   "charge"
+  ],
+  "usage_count": 24,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -1171,6 +1930,38 @@
    "precept"
   ],
   "usage_count": 77,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1813",
+  "original": "ἐξαλείφω",
+  "transliteration": "exaleiphō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to blot out",
+  "kjv_translations": [
+   "wipe",
+   "away"
+  ],
+  "usage_count": 6,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1843",
+  "original": "ἐξομολογέομαι",
+  "transliteration": "exomologeomai",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to agree",
+  "kjv_translations": [
+   "confess",
+   "confessing",
+   "thank",
+   "will"
+  ],
+  "usage_count": 11,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -1192,6 +1983,38 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G1860",
+  "original": "ἐπαγγελία",
+  "transliteration": "epangelia",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "promise",
+  "kjv_translations": [
+   "promise",
+   "promises"
+  ],
+  "usage_count": 53,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1861",
+  "original": "ἐπαγγέλλω",
+  "transliteration": "epangellō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to profess",
+  "kjv_translations": [
+   "promised",
+   "promise",
+   "made",
+   "professing"
+  ],
+  "usage_count": 18,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G1882",
   "original": "ἐπανόρθωσις",
   "transliteration": "epanorthōsis",
@@ -1200,6 +2023,35 @@
   "definition": "correcting",
   "kjv_translations": [],
   "usage_count": 1,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1904",
+  "original": "ἐπέρχομαι",
+  "transliteration": "eperchomai",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to arrive/invade",
+  "kjv_translations": [
+   "come"
+  ],
+  "usage_count": 11,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1908",
+  "original": "ἐπηρεάζω",
+  "transliteration": "epēreazō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to mistreat",
+  "kjv_translations": [
+   "despitefully",
+   "use"
+  ],
+  "usage_count": 3,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -1217,6 +2069,20 @@
    "whose"
   ],
   "usage_count": 33,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G1967",
+  "original": "ἐπιούσιος",
+  "transliteration": "epiousios",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "daily",
+  "kjv_translations": [
+   "daily"
+  ],
+  "usage_count": 2,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -1343,6 +2209,18 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G2082",
+  "original": "ἐσωτέρω",
+  "transliteration": "esōterō",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "inner",
+  "kjv_translations": [],
+  "usage_count": 2,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G2087",
   "original": "ἕτερος",
   "transliteration": "heteros",
@@ -1407,6 +2285,51 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G2121",
+  "original": "εὔκαιρος",
+  "transliteration": "eukairos",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "opportune",
+  "kjv_translations": [],
+  "usage_count": 2,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2127",
+  "original": "εὐλογέω",
+  "transliteration": "eulogeō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to praise/bless",
+  "kjv_translations": [
+   "blessed",
+   "bless",
+   "blessing"
+  ],
+  "usage_count": 47,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2147",
+  "original": "εὑρίσκω",
+  "transliteration": "ehuriskō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to find/meet",
+  "kjv_translations": [
+   "found",
+   "find",
+   "findeth",
+   "when"
+  ],
+  "usage_count": 196,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G2155",
   "original": "εὔσπλαγχνος",
   "transliteration": "eusplagchnos",
@@ -1432,6 +2355,37 @@
    "gave"
   ],
   "usage_count": 44,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2172",
+  "original": "εὔχομαι",
+  "transliteration": "euchomai",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to pray/wish for",
+  "kjv_translations": [
+   "wish",
+   "pray"
+  ],
+  "usage_count": 8,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2190",
+  "original": "ἐχθρός",
+  "transliteration": "echthros",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "enemy",
+  "kjv_translations": [
+   "enemies",
+   "enemy",
+   "foes"
+  ],
+  "usage_count": 33,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -1518,6 +2472,23 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G2250",
+  "original": "ἡμέρα",
+  "transliteration": "hēmera",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "day",
+  "kjv_translations": [
+   "day",
+   "days",
+   "daily",
+   "time"
+  ],
+  "usage_count": 410,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G2288",
   "original": "θάνατος",
   "transliteration": "thanatos",
@@ -1544,6 +2515,22 @@
    "bury"
   ],
   "usage_count": 11,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2293",
+  "original": "θαρσέω",
+  "transliteration": "tharseō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "take heart",
+  "kjv_translations": [
+   "good",
+   "cheer",
+   "comfort"
+  ],
+  "usage_count": 8,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -1591,6 +2578,54 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G2325",
+  "original": "θερίζω",
+  "transliteration": "therizō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to reap",
+  "kjv_translations": [
+   "reap",
+   "reapeth",
+   "reaping",
+   "reaped"
+  ],
+  "usage_count": 24,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2343",
+  "original": "θησαυρίζω",
+  "transliteration": "thēsaurizō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to store up",
+  "kjv_translations": [
+   "lay",
+   "treasure",
+   "store"
+  ],
+  "usage_count": 9,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2344",
+  "original": "θησαυρός",
+  "transliteration": "thēsauros",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "treasure",
+  "kjv_translations": [
+   "treasure",
+   "treasures"
+  ],
+  "usage_count": 19,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G2347",
   "original": "θλῖψις",
   "transliteration": "thlipsis",
@@ -1604,6 +2639,23 @@
    "tribulations"
   ],
   "usage_count": 46,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2362",
+  "original": "θρόνος",
+  "transliteration": "thronos",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "throne",
+  "kjv_translations": [
+   "throne",
+   "thrones",
+   "seats",
+   "seat"
+  ],
+  "usage_count": 61,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -1636,6 +2688,69 @@
    "done"
   ],
   "usage_count": 14,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2390",
+  "original": "ἰάομαι",
+  "transliteration": "iaomai",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to heal",
+  "kjv_translations": [
+   "healed",
+   "heal",
+   "should",
+   "whole"
+  ],
+  "usage_count": 30,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2398",
+  "original": "ἴδιος",
+  "transliteration": "idios",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "one's own/private",
+  "kjv_translations": [
+   "own",
+   "privately",
+   "apart",
+   "due"
+  ],
+  "usage_count": 112,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2419",
+  "original": "Ἱερουσαλήμ",
+  "transliteration": "Hierousalēm",
+  "language": "Greek",
+  "part_of_speech": "proper name",
+  "definition": "Jerusalem",
+  "kjv_translations": [
+   "jerusalem"
+  ],
+  "usage_count": 82,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2449",
+  "original": "Ἰουδαία",
+  "transliteration": "Ioudaia",
+  "language": "Greek",
+  "part_of_speech": "proper name",
+  "definition": "Judea",
+  "kjv_translations": [
+   "judea",
+   "jewry"
+  ],
+  "usage_count": 43,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -1690,6 +2805,21 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G2513",
+  "original": "καθαρός",
+  "transliteration": "katharos",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "clean",
+  "kjv_translations": [
+   "pure",
+   "clean"
+  ],
+  "usage_count": 28,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G2537",
   "original": "καινός",
   "transliteration": "kainos",
@@ -1700,6 +2830,55 @@
    "new"
   ],
   "usage_count": 44,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2540",
+  "original": "καιρός",
+  "transliteration": "kairos",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "time/right time",
+  "kjv_translations": [
+   "time",
+   "times",
+   "season",
+   "seasons"
+  ],
+  "usage_count": 84,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2549",
+  "original": "κακία",
+  "transliteration": "kakia",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "evil",
+  "kjv_translations": [
+   "malice",
+   "maliciousness"
+  ],
+  "usage_count": 11,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2564",
+  "original": "καλέω",
+  "transliteration": "kaleō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to call, call",
+  "kjv_translations": [
+   "called",
+   "call",
+   "bidden",
+   "calleth"
+  ],
+  "usage_count": 156,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -1737,6 +2916,21 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G2573",
+  "original": "καλῶς",
+  "transliteration": "kalōs",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "well",
+  "kjv_translations": [
+   "well",
+   "good"
+  ],
+  "usage_count": 36,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G2590",
   "original": "καρπός",
   "transliteration": "karpos",
@@ -1766,6 +2960,34 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G2665",
+  "original": "καταπέτασμα",
+  "transliteration": "katapetasma",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "curtain",
+  "kjv_translations": [
+   "veil"
+  ],
+  "usage_count": 7,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2672",
+  "original": "καταράομαι",
+  "transliteration": "kataraomai",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to curse",
+  "kjv_translations": [
+   "curse"
+  ],
+  "usage_count": 6,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G2706",
   "original": "καταφρονέω",
   "transliteration": "kataphroneō",
@@ -1777,6 +2999,23 @@
    "let"
   ],
   "usage_count": 11,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2722",
+  "original": "κατέχω",
+  "transliteration": "katechō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to hold back/fast",
+  "kjv_translations": [
+   "hold",
+   "keep",
+   "fast",
+   "let"
+  ],
+  "usage_count": 20,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -1798,6 +3037,23 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G2749",
+  "original": "κεῖμαι",
+  "transliteration": "keimai",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to lay/be appointed",
+  "kjv_translations": [
+   "laid",
+   "set",
+   "lying",
+   "lieth"
+  ],
+  "usage_count": 27,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G2754",
   "original": "κενοδοξία",
   "transliteration": "kenodoxia",
@@ -1806,6 +3062,21 @@
   "definition": "empty conceit",
   "kjv_translations": [],
   "usage_count": 1,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2756",
+  "original": "κενός",
+  "transliteration": "kenos",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "empty",
+  "kjv_translations": [
+   "vain",
+   "empty"
+  ],
+  "usage_count": 18,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -1837,6 +3108,20 @@
    "stole"
   ],
   "usage_count": 18,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2816",
+  "original": "κληρονομέω",
+  "transliteration": "klēronomeō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to inherit",
+  "kjv_translations": [
+   "inherit"
+  ],
+  "usage_count": 23,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -1884,6 +3169,22 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G2873",
+  "original": "κόπος",
+  "transliteration": "kopos",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "labor",
+  "kjv_translations": [
+   "labour",
+   "labours",
+   "trouble"
+  ],
+  "usage_count": 17,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G2889",
   "original": "κόσμος",
   "transliteration": "kosmos",
@@ -1924,6 +3225,21 @@
    "dominion"
   ],
   "usage_count": 12,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2906",
+  "original": "κραυγή",
+  "transliteration": "kraugē",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "shouting",
+  "kjv_translations": [
+   "cry",
+   "crying"
+  ],
+  "usage_count": 6,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -1974,6 +3290,37 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G2925",
+  "original": "κρούω",
+  "transliteration": "krouō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to knock",
+  "kjv_translations": [
+   "knock",
+   "knocketh"
+  ],
+  "usage_count": 9,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2928",
+  "original": "κρύπτω",
+  "transliteration": "kruptō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to hide",
+  "kjv_translations": [
+   "hid",
+   "himself",
+   "hide"
+  ],
+  "usage_count": 16,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G2937",
   "original": "κτίσις",
   "transliteration": "ktisis",
@@ -1985,6 +3332,23 @@
    "creation"
   ],
   "usage_count": 20,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G2980",
+  "original": "λαλέω",
+  "transliteration": "laleō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to speak",
+  "kjv_translations": [
+   "speak",
+   "spake",
+   "spoken",
+   "speaketh"
+  ],
+  "usage_count": 314,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -2066,6 +3430,23 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G3049",
+  "original": "λογίζομαι",
+  "transliteration": "logizomai",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to count",
+  "kjv_translations": [
+   "think",
+   "imputed",
+   "reckoned",
+   "counted"
+  ],
+  "usage_count": 48,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G3050",
   "original": "λογικός",
   "transliteration": "logikos",
@@ -2090,6 +3471,49 @@
    "henceforth"
   ],
   "usage_count": 13,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G3100",
+  "original": "μαθητεύω",
+  "transliteration": "mathēteuō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to disciple",
+  "kjv_translations": [],
+  "usage_count": 5,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G3107",
+  "original": "μακάριος",
+  "transliteration": "makarios",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "blessed",
+  "kjv_translations": [
+   "blessed",
+   "happy"
+  ],
+  "usage_count": 50,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G3114",
+  "original": "μακροθυμέω",
+  "transliteration": "makrothumeō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to have patience",
+  "kjv_translations": [
+   "patience",
+   "long",
+   "patient"
+  ],
+  "usage_count": 11,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -2125,6 +3549,23 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G3144",
+  "original": "μάρτυς",
+  "transliteration": "martus",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "witness",
+  "kjv_translations": [
+   "witnesses",
+   "witness",
+   "martyr",
+   "record"
+  ],
+  "usage_count": 37,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G3173",
   "original": "μέγας",
   "transliteration": "megas",
@@ -2138,6 +3579,23 @@
    "than"
   ],
   "usage_count": 243,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G3195",
+  "original": "μέλλω",
+  "transliteration": "mellō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to ensue",
+  "kjv_translations": [
+   "should",
+   "come",
+   "would",
+   "will"
+  ],
+  "usage_count": 108,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -2170,6 +3628,23 @@
    "cares"
   ],
   "usage_count": 6,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G3309",
+  "original": "μεριμνάω",
+  "transliteration": "merimnaō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to worry",
+  "kjv_translations": [
+   "thought",
+   "take",
+   "careth",
+   "taking"
+  ],
+  "usage_count": 27,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -2218,6 +3693,23 @@
    "any"
   ],
   "usage_count": 92,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G3404",
+  "original": "μισέω",
+  "transliteration": "miseō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to hate",
+  "kjv_translations": [
+   "hate",
+   "hated",
+   "hateth",
+   "will"
+  ],
+  "usage_count": 42,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -2319,6 +3811,36 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G3528",
+  "original": "νικάω",
+  "transliteration": "nikaō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to conquer",
+  "kjv_translations": [
+   "overcome",
+   "overcometh",
+   "overcame"
+  ],
+  "usage_count": 30,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G3534",
+  "original": "νῖκος",
+  "transliteration": "nikos",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "victory",
+  "kjv_translations": [
+   "victory"
+  ],
+  "usage_count": 4,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G3540",
   "original": "νόημα",
   "transliteration": "noēma",
@@ -2412,6 +3934,20 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G3664",
+  "original": "ὅμοιος",
+  "transliteration": "homoios",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "like",
+  "kjv_translations": [
+   "like"
+  ],
+  "usage_count": 47,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G3670",
   "original": "ὁμολογέω",
   "transliteration": "homologeō",
@@ -2425,6 +3961,20 @@
    "profess"
   ],
   "usage_count": 26,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G3671",
+  "original": "ὁμολογία",
+  "transliteration": "homologia",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "confession",
+  "kjv_translations": [
+   "profession"
+  ],
+  "usage_count": 7,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -2461,6 +4011,22 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G3694",
+  "original": "ὀπίσω",
+  "transliteration": "opisō",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "after",
+  "kjv_translations": [
+   "after",
+   "behind",
+   "back"
+  ],
+  "usage_count": 34,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G3708",
   "original": "ὁράω",
   "transliteration": "horaō",
@@ -2474,6 +4040,23 @@
    "seen"
   ],
   "usage_count": 748,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G3735",
+  "original": "ὄρος",
+  "transliteration": "oros",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "mountain",
+  "kjv_translations": [
+   "mountain",
+   "mount",
+   "mountains",
+   "hill"
+  ],
+  "usage_count": 70,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -2529,6 +4112,48 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G3781",
+  "original": "ὀφειλέτης",
+  "transliteration": "opheiletēs",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "debtor",
+  "kjv_translations": [
+   "debtors",
+   "debtor"
+  ],
+  "usage_count": 7,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G3783",
+  "original": "ὀφείλημα",
+  "transliteration": "opheilēma",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "debt",
+  "kjv_translations": [],
+  "usage_count": 2,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G3788",
+  "original": "ὀφθαλμός",
+  "transliteration": "ophthalmos",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "eye",
+  "kjv_translations": [
+   "eyes",
+   "eye"
+  ],
+  "usage_count": 109,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G3800",
   "original": "ὀψώνιον",
   "transliteration": "opsōnion",
@@ -2539,6 +4164,21 @@
    "wages"
   ],
   "usage_count": 5,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G3804",
+  "original": "πάθημα",
+  "transliteration": "pathēma",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "suffering",
+  "kjv_translations": [
+   "sufferings",
+   "afflictions"
+  ],
+  "usage_count": 17,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -2651,6 +4291,23 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G3900",
+  "original": "παράπτωμα",
+  "transliteration": "paraptōma",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "trespass",
+  "kjv_translations": [
+   "trespasses",
+   "offence",
+   "sins",
+   "offences"
+  ],
+  "usage_count": 25,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G3928",
   "original": "παρέρχομαι",
   "transliteration": "parerchomai",
@@ -2681,6 +4338,23 @@
    "stand"
   ],
   "usage_count": 44,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G3954",
+  "original": "παρρησία",
+  "transliteration": "parrēsia",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "boldness",
+  "kjv_translations": [
+   "boldness",
+   "openly",
+   "confidence",
+   "plainly"
+  ],
+  "usage_count": 31,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -2717,6 +4391,55 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G3983",
+  "original": "πεινάω",
+  "transliteration": "peinaō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to hunger",
+  "kjv_translations": [
+   "hungred",
+   "hunger",
+   "hungry",
+   "hungered"
+  ],
+  "usage_count": 27,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G3985",
+  "original": "πειράζω",
+  "transliteration": "peirazō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to test/tempt, tempt",
+  "kjv_translations": [
+   "tempted",
+   "tempting",
+   "tempt",
+   "tried"
+  ],
+  "usage_count": 41,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G3986",
+  "original": "πειρασμός",
+  "transliteration": "peirasmos",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "temptation/testing, temptation",
+  "kjv_translations": [
+   "temptation",
+   "temptations"
+  ],
+  "usage_count": 21,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G3992",
   "original": "πέμπω",
   "transliteration": "pempō",
@@ -2734,6 +4457,37 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G3996",
+  "original": "πενθέω",
+  "transliteration": "pentheō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to mourn",
+  "kjv_translations": [
+   "mourn",
+   "mourned",
+   "wailing"
+  ],
+  "usage_count": 11,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G3997",
+  "original": "πένθος",
+  "transliteration": "penthos",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "grief",
+  "kjv_translations": [
+   "sorrow",
+   "mourning"
+  ],
+  "usage_count": 5,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G4043",
   "original": "περιπατέω",
   "transliteration": "peripateō",
@@ -2747,6 +4501,23 @@
    "walketh"
   ],
   "usage_count": 99,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G4052",
+  "original": "περισσεύω",
+  "transliteration": "perisseuō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to exceed",
+  "kjv_translations": [
+   "abound",
+   "abundance",
+   "may",
+   "abounded"
+  ],
+  "usage_count": 41,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -2816,6 +4587,37 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G4137",
+  "original": "πληρόω",
+  "transliteration": "plēroō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to fulfill",
+  "kjv_translations": [
+   "fulfilled",
+   "might",
+   "filled",
+   "full"
+  ],
+  "usage_count": 98,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G4139",
+  "original": "πλησίον",
+  "transliteration": "plēsion",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "near/neighbor",
+  "kjv_translations": [
+   "neighbour"
+  ],
+  "usage_count": 17,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G4146",
   "original": "πλουσίως",
   "transliteration": "plousiōs",
@@ -2827,6 +4629,20 @@
    "abundantly"
   ],
   "usage_count": 4,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G4149",
+  "original": "πλοῦτος",
+  "transliteration": "ploutos",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "riches",
+  "kjv_translations": [
+   "riches"
+  ],
+  "usage_count": 22,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -2863,6 +4679,69 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G4172",
+  "original": "πόλις",
+  "transliteration": "polis",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "city",
+  "kjv_translations": [
+   "city",
+   "cities"
+  ],
+  "usage_count": 168,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G4183",
+  "original": "πολύς",
+  "transliteration": "polus",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "much",
+  "kjv_translations": [
+   "many",
+   "much",
+   "great",
+   "things"
+  ],
+  "usage_count": 366,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G4192",
+  "original": "πόνος",
+  "transliteration": "ponos",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "travail",
+  "kjv_translations": [
+   "pain"
+  ],
+  "usage_count": 3,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G4198",
+  "original": "πορεύω",
+  "transliteration": "poreuō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to travel",
+  "kjv_translations": [
+   "went",
+   "way",
+   "goeth",
+   "departed"
+  ],
+  "usage_count": 157,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G4229",
   "original": "πρᾶγμα",
   "transliteration": "pragma",
@@ -2875,6 +4754,20 @@
    "thing"
   ],
   "usage_count": 11,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G4239",
+  "original": "πραΰς",
+  "transliteration": "praus",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "gentle",
+  "kjv_translations": [
+   "meek"
+  ],
+  "usage_count": 4,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -2969,6 +4862,18 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G4340",
+  "original": "πρόσκαιρος",
+  "transliteration": "proskairos",
+  "language": "Greek",
+  "part_of_speech": "adjective",
+  "definition": "temporary",
+  "kjv_translations": [],
+  "usage_count": 4,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G4342",
   "original": "προσκαρτερέω",
   "transliteration": "proskartereō",
@@ -3032,6 +4937,21 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G4434",
+  "original": "πτωχός",
+  "transliteration": "ptōchos",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "poor",
+  "kjv_translations": [
+   "poor",
+   "beggar"
+  ],
+  "usage_count": 34,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G4487",
   "original": "ῥῆμα",
   "transliteration": "rhēma",
@@ -3061,6 +4981,20 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G4540",
+  "original": "Σαμάρεια",
+  "transliteration": "Samareia",
+  "language": "Greek",
+  "part_of_speech": "proper name",
+  "definition": "Samaria",
+  "kjv_translations": [
+   "samaria"
+  ],
+  "usage_count": 11,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G4594",
   "original": "σήμερον",
   "transliteration": "sēmeron",
@@ -3071,6 +5005,20 @@
    "day"
   ],
   "usage_count": 41,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G4597",
+  "original": "σής",
+  "transliteration": "sēs",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "moth",
+  "kjv_translations": [
+   "moth"
+  ],
+  "usage_count": 3,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -3100,6 +5048,20 @@
    "wisdom"
   ],
   "usage_count": 51,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G4716",
+  "original": "σταυρός",
+  "transliteration": "stauros",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "cross",
+  "kjv_translations": [
+   "cross"
+  ],
+  "usage_count": 28,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -3175,6 +5137,20 @@
    "commendeth"
   ],
   "usage_count": 16,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G4930",
+  "original": "συντέλεια",
+  "transliteration": "sunteleia",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "consummation",
+  "kjv_translations": [
+   "end"
+  ],
+  "usage_count": 6,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -3337,6 +5313,23 @@
    "custom"
   ],
   "usage_count": 42,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G5083",
+  "original": "τηρέω",
+  "transliteration": "tēreō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to keep, observe",
+  "kjv_translations": [
+   "keep",
+   "kept",
+   "keepeth",
+   "reserved"
+  ],
+  "usage_count": 76,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -3506,6 +5499,18 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G5297",
+  "original": "ὑποφέρω",
+  "transliteration": "hupopherō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to endure",
+  "kjv_translations": [],
+  "usage_count": 3,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G5302",
   "original": "ὑστερέω",
   "transliteration": "hustereō",
@@ -3519,6 +5524,18 @@
    "wanted"
   ],
   "usage_count": 17,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G5313",
+  "original": "ὕψωμα",
+  "transliteration": "hupsōma",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "height",
+  "kjv_translations": [],
+  "usage_count": 2,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -3624,6 +5641,21 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G5479",
+  "original": "χαρά",
+  "transliteration": "chara",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "joy",
+  "kjv_translations": [
+   "joy",
+   "gladness"
+  ],
+  "usage_count": 62,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G5483",
   "original": "χαρίζω",
   "transliteration": "charizō",
@@ -3671,6 +5703,21 @@
   "source": "STEPBible TBESG"
  },
  {
+  "strongs_id": "G5495",
+  "original": "χείρ",
+  "transliteration": "cheir",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "hand",
+  "kjv_translations": [
+   "hands",
+   "hand"
+  ],
+  "usage_count": 185,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
   "strongs_id": "G5504",
   "original": "χθές",
   "transliteration": "chthes",
@@ -3681,6 +5728,36 @@
    "yesterday"
   ],
   "usage_count": 3,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G5526",
+  "original": "χορτάζω",
+  "transliteration": "chortazō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to feed",
+  "kjv_translations": [
+   "filled"
+  ],
+  "usage_count": 16,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G5532",
+  "original": "χρεία",
+  "transliteration": "chreia",
+  "language": "Greek",
+  "part_of_speech": "noun",
+  "definition": "need",
+  "kjv_translations": [
+   "need",
+   "needeth",
+   "necessity"
+  ],
+  "usage_count": 47,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -3710,6 +5787,20 @@
    "kindness"
   ],
   "usage_count": 11,
+  "brief": true,
+  "source": "STEPBible TBESG"
+ },
+ {
+  "strongs_id": "G5562",
+  "original": "χωρέω",
+  "transliteration": "chōreō",
+  "language": "Greek",
+  "part_of_speech": "verb",
+  "definition": "to make room for",
+  "kjv_translations": [
+   "receive"
+  ],
+  "usage_count": 12,
   "brief": true,
   "source": "STEPBible TBESG"
  },
@@ -3800,6 +5891,23 @@
    "because"
   ],
   "usage_count": 40,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H168",
+  "original": "אֹ֫הֶל",
+  "transliteration": "ohel",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "tent",
+  "kjv_translations": [
+   "tabernacle",
+   "tent",
+   "tents",
+   "tabernacles"
+  ],
+  "usage_count": 344,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -3919,6 +6027,21 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H354",
+  "original": "אַיָּל",
+  "transliteration": "ayyal",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "deer",
+  "kjv_translations": [
+   "hart",
+   "harts"
+  ],
+  "usage_count": 11,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H376",
   "original": "אִישׁ",
   "transliteration": "ish",
@@ -3932,6 +6055,23 @@
    "one"
   ],
   "usage_count": 1617,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H505",
+  "original": "אֶ֫לֶף",
+  "transliteration": "eleph",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "thousand",
+  "kjv_translations": [
+   "thousand",
+   "thousands",
+   "two",
+   "over"
+  ],
+  "usage_count": 498,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -4003,6 +6143,23 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H582",
+  "original": "אֱנוֹשׁ",
+  "transliteration": "enosh",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "human",
+  "kjv_translations": [
+   "men",
+   "man",
+   "certain",
+   "let"
+  ],
+  "usage_count": 563,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H639",
   "original": "אַף",
   "transliteration": "aph",
@@ -4016,6 +6173,37 @@
    "face"
   ],
   "usage_count": 275,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H650",
+  "original": "אָפִיק",
+  "transliteration": "aphiq",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "channel",
+  "kjv_translations": [
+   "rivers",
+   "channels"
+  ],
+  "usage_count": 19,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H676",
+  "original": "אֶצְבַּע",
+  "transliteration": "etsba",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "finger",
+  "kjv_translations": [
+   "finger",
+   "fingers",
+   "toes"
+  ],
+  "usage_count": 31,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -4084,6 +6272,21 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H838",
+  "original": "אֲשׁוּר",
+  "transliteration": "ashur",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "step",
+  "kjv_translations": [
+   "steps",
+   "goings"
+  ],
+  "usage_count": 9,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H935",
   "original": "בּוֹא",
   "transliteration": "bo",
@@ -4117,6 +6320,57 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H953",
+  "original": "בּוֹר",
+  "transliteration": "bor",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "pit",
+  "kjv_translations": [
+   "pit",
+   "dungeon",
+   "well",
+   "cistern"
+  ],
+  "usage_count": 68,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H974",
+  "original": "בָּחַן",
+  "transliteration": "bachan",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to test",
+  "kjv_translations": [
+   "try",
+   "proved",
+   "tried",
+   "trieth"
+  ],
+  "usage_count": 29,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H977",
+  "original": "בָּחַר",
+  "transliteration": "bachar",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to choose",
+  "kjv_translations": [
+   "chosen",
+   "choose",
+   "chose",
+   "hast"
+  ],
+  "usage_count": 170,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H998",
   "original": "בִּינָה",
   "transliteration": "binah",
@@ -4130,6 +6384,55 @@
    "own"
   ],
   "usage_count": 38,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H1004",
+  "original": "בֵּית",
+  "transliteration": "bet",
+  "language": "Hebrew",
+  "part_of_speech": "adjective",
+  "definition": "place",
+  "kjv_translations": [
+   "house",
+   "houses",
+   "thine",
+   "household"
+  ],
+  "usage_count": 2030,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H1065",
+  "original": "בְּכִי",
+  "transliteration": "bekhi",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "weeping",
+  "kjv_translations": [
+   "weeping",
+   "wept",
+   "weep"
+  ],
+  "usage_count": 29,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H1097",
+  "original": "בְּלִי",
+  "transliteration": "beli",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "without",
+  "kjv_translations": [
+   "without",
+   "lack",
+   "none"
+  ],
+  "usage_count": 14,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -4168,6 +6471,38 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H1219",
+  "original": "בָּצַר",
+  "transliteration": "batsar",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to gather/restrain/fortify",
+  "kjv_translations": [
+   "fenced",
+   "defenced",
+   "against",
+   "gather"
+  ],
+  "usage_count": 38,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H1239",
+  "original": "בָּקַר",
+  "transliteration": "baqar",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to enquire",
+  "kjv_translations": [
+   "seek",
+   "enquire"
+  ],
+  "usage_count": 7,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H1242",
   "original": "בֹּ֫קֶר",
   "transliteration": "boqer",
@@ -4181,6 +6516,23 @@
    "came"
   ],
   "usage_count": 200,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H1245",
+  "original": "בָּקַשׁ",
+  "transliteration": "baqash",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to seek",
+  "kjv_translations": [
+   "seek",
+   "sought",
+   "seeketh",
+   "will"
+  ],
+  "usage_count": 225,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -4352,6 +6704,18 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H1752",
+  "original": "דּוּר",
+  "transliteration": "dur",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to dwell",
+  "kjv_translations": [],
+  "usage_count": 1,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H1755",
   "original": "דּוֹר",
   "transliteration": "dor",
@@ -4396,6 +6760,23 @@
    "unwittingly"
   ],
   "usage_count": 93,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H1869",
+  "original": "דָּרַךְ",
+  "transliteration": "darakh",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to tread",
+  "kjv_translations": [
+   "tread",
+   "trodden",
+   "bent",
+   "bend"
+  ],
+  "usage_count": 60,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -4480,6 +6861,23 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H1964",
+  "original": "הֵיכָל",
+  "transliteration": "hekhal",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "temple",
+  "kjv_translations": [
+   "temple",
+   "palace",
+   "palaces",
+   "temples"
+  ],
+  "usage_count": 80,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H1980",
   "original": "הָלַךְ",
   "transliteration": "halakh",
@@ -4510,6 +6908,37 @@
    "hill"
   ],
   "usage_count": 541,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H2135",
+  "original": "זָכָה",
+  "transliteration": "zakhah",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to clean",
+  "kjv_translations": [
+   "clean"
+  ],
+  "usage_count": 8,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H2142",
+  "original": "זָכַר",
+  "transliteration": "zakhar",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to remember",
+  "kjv_translations": [
+   "remember",
+   "remembered",
+   "will",
+   "mention"
+  ],
+  "usage_count": 229,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -4558,6 +6987,23 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H2318",
+  "original": "חָדַשׁ",
+  "transliteration": "chadash",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to renew",
+  "kjv_translations": [
+   "renew",
+   "repair",
+   "renewed",
+   "renewest"
+  ],
+  "usage_count": 10,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H2319",
   "original": "חָדָשׁ",
   "transliteration": "chadash",
@@ -4587,6 +7033,23 @@
    "forth"
   ],
   "usage_count": 61,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H2372",
+  "original": "חָזָה",
+  "transliteration": "chazah",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to see",
+  "kjv_translations": [
+   "see",
+   "seen",
+   "saw",
+   "behold"
+  ],
+  "usage_count": 50,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -4803,6 +7266,22 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H2682",
+  "original": "חָצִיר",
+  "transliteration": "chatsir",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "grass",
+  "kjv_translations": [
+   "grass",
+   "like",
+   "hay"
+  ],
+  "usage_count": 21,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H2691",
   "original": "חָצֵר",
   "transliteration": "chatser",
@@ -4815,6 +7294,23 @@
    "courts"
   ],
   "usage_count": 187,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H2713",
+  "original": "חָקַר",
+  "transliteration": "chaqar",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to search",
+  "kjv_translations": [
+   "search",
+   "searched",
+   "searcheth",
+   "found"
+  ],
+  "usage_count": 27,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -4886,6 +7382,23 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H2889",
+  "original": "טָהוֹר",
+  "transliteration": "tahor",
+  "language": "Hebrew",
+  "part_of_speech": "adjective",
+  "definition": "pure",
+  "kjv_translations": [
+   "clean",
+   "pure",
+   "every",
+   "one"
+  ],
+  "usage_count": 94,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H2896",
   "original": "טוֹב",
   "transliteration": "tov",
@@ -4899,6 +7412,22 @@
    "goodness"
   ],
   "usage_count": 556,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H2916",
+  "original": "טִיט",
+  "transliteration": "tit",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "mud",
+  "kjv_translations": [
+   "mire",
+   "clay",
+   "dirt"
+  ],
+  "usage_count": 13,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -4918,6 +7447,23 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H3001",
+  "original": "יָבֵשׁ",
+  "transliteration": "yavesh",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to wither",
+  "kjv_translations": [
+   "dried",
+   "withered",
+   "dry",
+   "confounded"
+  ],
+  "usage_count": 75,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H3021",
   "original": "יָגֵעַ",
   "transliteration": "yaga",
@@ -4931,6 +7477,23 @@
    "hast"
   ],
   "usage_count": 26,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H3027",
+  "original": "יָד",
+  "transliteration": "yad",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "hand",
+  "kjv_translations": [
+   "hand",
+   "hands",
+   "thine",
+   "mine"
+  ],
+  "usage_count": 1606,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -5007,6 +7570,47 @@
    "daily"
   ],
   "usage_count": 51,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H3121",
+  "original": "יָוֵן",
+  "transliteration": "yaven",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "mire",
+  "kjv_translations": [],
+  "usage_count": 2,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H3161",
+  "original": "יָחַד",
+  "transliteration": "yachad",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "be joined",
+  "kjv_translations": [],
+  "usage_count": 3,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H3176",
+  "original": "יָחַל",
+  "transliteration": "yachal",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to wait, wait",
+  "kjv_translations": [
+   "hope",
+   "waited",
+   "wait",
+   "will"
+  ],
+  "usage_count": 41,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -5206,6 +7810,37 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H3384",
+  "original": "יָרָא",
+  "transliteration": "yara",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to shoot",
+  "kjv_translations": [
+   "teach",
+   "shoot",
+   "will",
+   "shot"
+  ],
+  "usage_count": 80,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H3394",
+  "original": "יָרֵחַ",
+  "transliteration": "yareach",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "moon",
+  "kjv_translations": [
+   "moon"
+  ],
+  "usage_count": 26,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H3427",
   "original": "יָשַׁב",
   "transliteration": "yashav",
@@ -5303,6 +7938,21 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H3556",
+  "original": "כּוֹכָב",
+  "transliteration": "kokhav",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "star",
+  "kjv_translations": [
+   "stars",
+   "star"
+  ],
+  "usage_count": 37,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H3557",
   "original": "כּוּל",
   "transliteration": "kul",
@@ -5367,6 +8017,18 @@
    "when"
   ],
   "usage_count": 207,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H3642",
+  "original": "כָּמַהּ",
+  "transliteration": "kamah",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to pine",
+  "kjv_translations": [],
+  "usage_count": 1,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -5484,6 +8146,23 @@
    "came"
   ],
   "usage_count": 232,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H3925",
+  "original": "לָמַד",
+  "transliteration": "lamad",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to learn, teach",
+  "kjv_translations": [
+   "teach",
+   "learn",
+   "taught",
+   "may"
+  ],
+  "usage_count": 84,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -5861,6 +8540,23 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H5034",
+  "original": "נָבַל",
+  "transliteration": "naval",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "be senseless",
+  "kjv_translations": [
+   "away",
+   "fade",
+   "fadeth",
+   "wither"
+  ],
+  "usage_count": 24,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H5046",
   "original": "נָגַד",
   "transliteration": "nagad",
@@ -5895,6 +8591,23 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H5148",
+  "original": "נָחָה",
+  "transliteration": "nachah",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to lead",
+  "kjv_translations": [
+   "lead",
+   "led",
+   "guide",
+   "will"
+  ],
+  "usage_count": 39,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H5216",
   "original": "נֵר",
   "transliteration": "ner",
@@ -5912,6 +8625,37 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H5273",
+  "original": "נָעִים",
+  "transliteration": "naim",
+  "language": "Hebrew",
+  "part_of_speech": "adjective",
+  "definition": "pleasant",
+  "kjv_translations": [
+   "pleasant",
+   "sweet",
+   "pleasures"
+  ],
+  "usage_count": 13,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H5278",
+  "original": "נֹ֫עַם",
+  "transliteration": "noam",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "pleasantness",
+  "kjv_translations": [
+   "beauty",
+   "pleasant"
+  ],
+  "usage_count": 7,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H5288",
   "original": "נַ֫עַר",
   "transliteration": "naar",
@@ -5925,6 +8669,23 @@
    "man"
   ],
   "usage_count": 238,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H5331",
+  "original": "נֵ֫צַח",
+  "transliteration": "netsach",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "perpetuity",
+  "kjv_translations": [
+   "ever",
+   "will",
+   "never",
+   "perpetual"
+  ],
+  "usage_count": 42,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -6074,6 +8835,18 @@
    "uphold"
   ],
   "usage_count": 48,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H5605",
+  "original": "סָפַף",
+  "transliteration": "saphaph",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to stand",
+  "kjv_translations": [],
+  "usage_count": 1,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -6260,6 +9033,22 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H5889",
+  "original": "עָיֵף",
+  "transliteration": "ayeph",
+  "language": "Hebrew",
+  "part_of_speech": "adjective",
+  "definition": "faint",
+  "kjv_translations": [
+   "weary",
+   "faint",
+   "thirsty"
+  ],
+  "usage_count": 17,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H5927",
   "original": "עָלָה",
   "transliteration": "alah",
@@ -6326,6 +9115,23 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H6030",
+  "original": "עוּן",
+  "transliteration": "un",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to dwell",
+  "kjv_translations": [
+   "answered",
+   "answer",
+   "hear",
+   "will"
+  ],
+  "usage_count": 330,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H6075",
   "original": "עָפַל",
   "transliteration": "aphal",
@@ -6368,6 +9174,20 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H6090",
+  "original": "עֹ֫צֶב",
+  "transliteration": "otsev",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "pain",
+  "kjv_translations": [
+   "sorrow"
+  ],
+  "usage_count": 4,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H6098",
   "original": "עֵצָה",
   "transliteration": "etsah",
@@ -6393,6 +9213,37 @@
   "definition": "strength",
   "kjv_translations": [
    "strength"
+  ],
+  "usage_count": 3,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H6153",
+  "original": "עֶ֫רֶב",
+  "transliteration": "erev",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "evening",
+  "kjv_translations": [
+   "even",
+   "evening",
+   "until",
+   "night"
+  ],
+  "usage_count": 134,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H6165",
+  "original": "עָרַג",
+  "transliteration": "arag",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to long for",
+  "kjv_translations": [
+   "panteth"
   ],
   "usage_count": 3,
   "brief": true,
@@ -6516,6 +9367,20 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H6395",
+  "original": "פָּלָה",
+  "transliteration": "palah",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "be distinguished",
+  "kjv_translations": [
+   "sever"
+  ],
+  "usage_count": 7,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H6403",
   "original": "פָּלַט",
   "transliteration": "palat",
@@ -6546,6 +9411,23 @@
    "because"
   ],
   "usage_count": 2092,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H6485",
+  "original": "פָּקַד",
+  "transliteration": "paqad",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to reckon, list",
+  "kjv_translations": [
+   "numbered",
+   "will",
+   "visit",
+   "punish"
+  ],
+  "usage_count": 295,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -6618,6 +9500,38 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H6723",
+  "original": "צִיָּה",
+  "transliteration": "tsiyyah",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "dryness",
+  "kjv_translations": [
+   "dry",
+   "drought",
+   "wilderness"
+  ],
+  "usage_count": 16,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H6731",
+  "original": "צִיץ",
+  "transliteration": "tsits",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "flower",
+  "kjv_translations": [
+   "flower",
+   "flowers",
+   "plate"
+  ],
+  "usage_count": 15,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H6738",
   "original": "צֵל",
   "transliteration": "tsel",
@@ -6648,6 +9562,23 @@
    "prosperous"
   ],
   "usage_count": 67,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H6770",
+  "original": "צָמֵא",
+  "transliteration": "tsame",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to thirst",
+  "kjv_translations": [
+   "thirsted",
+   "thirsty",
+   "athirst",
+   "thirst"
+  ],
+  "usage_count": 10,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -6715,6 +9646,23 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H6965",
+  "original": "קָמָי",
+  "transliteration": "qamay",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "(Leb)-kamai",
+  "kjv_translations": [
+   "arose",
+   "arise",
+   "rise",
+   "rose"
+  ],
+  "usage_count": 623,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H7098",
   "original": "קָצָה",
   "transliteration": "qatsah",
@@ -6728,6 +9676,23 @@
    "selvedge"
   ],
   "usage_count": 35,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H7121",
+  "original": "קָרָא",
+  "transliteration": "qara",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to call, call to",
+  "kjv_translations": [
+   "called",
+   "call",
+   "cried",
+   "cry"
+  ],
+  "usage_count": 734,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -6885,6 +9850,22 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H7281",
+  "original": "רֶ֫גַע",
+  "transliteration": "rega",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "moment",
+  "kjv_translations": [
+   "moment",
+   "every",
+   "instant"
+  ],
+  "usage_count": 22,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H7311",
   "original": "רוּם",
   "transliteration": "rum",
@@ -6983,6 +9964,23 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H7440",
+  "original": "רִנָּה",
+  "transliteration": "rinnah",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "cry",
+  "kjv_translations": [
+   "cry",
+   "singing",
+   "joy",
+   "rejoicing"
+  ],
+  "usage_count": 33,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H7451",
   "original": "רַע",
   "transliteration": "ra",
@@ -7068,6 +10066,69 @@
   "source": "STEPBible TBESH"
  },
  {
+  "strongs_id": "H7549",
+  "original": "רָקִיעַ",
+  "transliteration": "raqia",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "expanse",
+  "kjv_translations": [
+   "firmament"
+  ],
+  "usage_count": 17,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H7562",
+  "original": "רֶ֫שַׁע",
+  "transliteration": "resah",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "wickedness",
+  "kjv_translations": [
+   "wickedness",
+   "wicked"
+  ],
+  "usage_count": 30,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H7588",
+  "original": "שָׁאוֹן",
+  "transliteration": "shaon",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "roar",
+  "kjv_translations": [
+   "noise",
+   "tumult",
+   "tumultuous",
+   "rushing"
+  ],
+  "usage_count": 17,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H7592",
+  "original": "שָׁאַל",
+  "transliteration": "shaal",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to ask",
+  "kjv_translations": [
+   "asked",
+   "ask",
+   "enquired",
+   "hast"
+  ],
+  "usage_count": 168,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
   "strongs_id": "H7607",
   "original": "שְׁאֵר",
   "transliteration": "sheer",
@@ -7081,6 +10142,21 @@
    "kin"
   ],
   "usage_count": 16,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H7648",
+  "original": "שֹׂ֫בַע",
+  "transliteration": "sova",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "satiety",
+  "kjv_translations": [
+   "full",
+   "fill"
+  ],
+  "usage_count": 8,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -7115,6 +10191,54 @@
    "make"
   ],
   "usage_count": 583,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H7775",
+  "original": "שַׁוְעָה",
+  "transliteration": "shavah",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "cry",
+  "kjv_translations": [
+   "cry"
+  ],
+  "usage_count": 11,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H7797",
+  "original": "שׂוּשׂ",
+  "transliteration": "sus",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to rejoice",
+  "kjv_translations": [
+   "rejoice",
+   "will",
+   "glad",
+   "rejoiced"
+  ],
+  "usage_count": 26,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H7836",
+  "original": "שָׁחַר",
+  "transliteration": "shachar",
+  "language": "Hebrew",
+  "part_of_speech": "verb",
+  "definition": "to seek",
+  "kjv_translations": [
+   "seek",
+   "early",
+   "betimes",
+   "will"
+  ],
+  "usage_count": 13,
   "brief": true,
   "source": "STEPBible TBESH"
  },
@@ -7268,6 +10392,23 @@
    "shalt"
   ],
   "usage_count": 151,
+  "brief": true,
+  "source": "STEPBible TBESH"
+ },
+ {
+  "strongs_id": "H8057",
+  "original": "שִׂמְחָה",
+  "transliteration": "simchah",
+  "language": "Hebrew",
+  "part_of_speech": "noun",
+  "definition": "joy",
+  "kjv_translations": [
+   "joy",
+   "gladness",
+   "mirth",
+   "exceeding"
+  ],
+  "usage_count": 94,
   "brief": true,
   "source": "STEPBible TBESH"
  },

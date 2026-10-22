@@ -37,5 +37,21 @@
   {"id": "character", "title": "Who God Is", "description": "The character and names of God.",
    "refs": ["Genesis 1:1", "John 1:1", "Exodus 3:14", "Isaiah 9:6", "Psalm 46:10", "Lamentations 3:22-23", "Psalm 103:8",
             "Hebrews 13:8", "Numbers 6:24-26", "Psalm 23:1", "1 John 4:8", "Revelation 22:13", "Psalm 145:8", "Psalm 90:2",
-            "Isaiah 40:28", "Deuteronomy 6:4", "Malachi 3:6"]}
+            "Isaiah 40:28", "Deuteronomy 6:4", "Malachi 3:6"]},
+  {"id": "sermon", "title": "Sermon on the Mount", "description": "Jesus's most famous teaching, from the Beatitudes to the Lord's Prayer.",
+   "refs": ["Matthew 5:3", "Matthew 5:4", "Matthew 5:5", "Matthew 5:6", "Matthew 5:7", "Matthew 5:8", "Matthew 5:9",
+            "Matthew 5:14", "Matthew 5:44", "Matthew 6:9-10", "Matthew 6:11-12", "Matthew 6:19-20", "Matthew 6:21",
+            "Matthew 6:34", "Matthew 7:7-8", "Matthew 7:12"]},
+  {"id": "psalms", "title": "More Psalms", "description": "Prayers and songs for every season: longing, repentance, trust and joy.",
+   "refs": ["Psalm 8:3-4", "Psalm 16:11", "Psalm 19:1", "Psalm 25:4-5", "Psalm 27:4", "Psalm 30:5", "Psalm 32:8",
+            "Psalm 40:1-2", "Psalm 42:1", "Psalm 51:10", "Psalm 63:1", "Psalm 84:10", "Psalm 86:11", "Psalm 119:9",
+            "Psalm 130:5", "Psalm 139:14", "Psalm 139:23-24", "Psalm 143:8"]},
+  {"id": "hope", "title": "Hope and Promise", "description": "What God has promised: for hard days, for the future, and for those who trust him.",
+   "refs": ["Romans 15:13", "Romans 5:1", "Romans 8:18", "Romans 8:38-39", "Hebrews 10:23", "Hebrews 6:19",
+            "John 16:33", "John 11:25-26", "1 Corinthians 15:57", "1 Corinthians 15:58", "2 Corinthians 4:18",
+            "Revelation 21:4", "Isaiah 40:8", "Zephaniah 3:17", "2 Peter 3:9", "Psalm 31:24"]},
+  {"id": "walk", "title": "Prayer and Obedience", "description": "Praying, following Jesus, and living out what you believe.",
+   "refs": ["Jeremiah 33:3", "1 John 5:14", "James 4:8", "James 5:16", "Philippians 4:19", "Hebrews 4:16",
+            "Matthew 21:22", "Luke 9:23", "John 14:15", "Galatians 6:9", "1 Corinthians 10:13", "Acts 1:8",
+            "Mark 12:30-31", "Matthew 28:19-20", "Luke 11:9"]}
 ]

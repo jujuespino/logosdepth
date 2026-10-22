@@ -2369,7 +2369,8 @@
   "ref": "Matthew 7:12",
   "text": "Therefore all things whatsoever ye would that men should do to you, do ye even so to them: for this is the law and the prophets.",
   "packs": [
-   "living"
+   "living",
+   "sermon"
   ],
   "translations": {
    "web": "Therefore, whatever you desire for men to do to you, you shall also do to them; for this is the law and the prophets."
@@ -2633,6 +2634,1255 @@
    "H3615",
    "H3290",
    "H1121"
+  ]
+ },
+ {
+  "ref": "Matthew 5:3",
+  "text": "Blessed are the poor in spirit: for their's is the kingdom of heaven.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "“Blessed are the poor in spirit, for theirs is the Kingdom of Heaven."
+  },
+  "words": [
+   "G932",
+   "G4151",
+   "G4434",
+   "G3107",
+   "G3772",
+   "G1510"
+  ]
+ },
+ {
+  "ref": "Matthew 5:4",
+  "text": "Blessed are they that mourn: for they shall be comforted.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "Blessed are those who mourn, for they shall be comforted."
+  },
+  "words": [
+   "G3996",
+   "G3107",
+   "G3870"
+  ]
+ },
+ {
+  "ref": "Matthew 5:5",
+  "text": "Blessed are the meek: for they shall inherit the earth.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "Blessed are the gentle, for they shall inherit the earth."
+  },
+  "words": [
+   "G4239",
+   "G2816",
+   "G3107",
+   "G1093"
+  ]
+ },
+ {
+  "ref": "Matthew 5:6",
+  "text": "Blessed are they which do hunger and thirst after righteousness: for they shall be filled.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "Blessed are those who hunger and thirst for righteousness, for they shall be filled."
+  },
+  "words": [
+   "G1343",
+   "G5526",
+   "G1372",
+   "G3983",
+   "G3107"
+  ]
+ },
+ {
+  "ref": "Matthew 5:7",
+  "text": "Blessed are the merciful: for they shall obtain mercy.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "Blessed are the merciful, for they shall obtain mercy."
+  },
+  "words": [
+   "G1655",
+   "G1653",
+   "G3107"
+  ]
+ },
+ {
+  "ref": "Matthew 5:8",
+  "text": "Blessed are the pure in heart: for they shall see God.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "Blessed are the pure in heart, for they shall see God."
+  },
+  "words": [
+   "G2588",
+   "G2316",
+   "G2513",
+   "G3107",
+   "G3708"
+  ]
+ },
+ {
+  "ref": "Matthew 5:9",
+  "text": "Blessed are the peacemakers: for they shall be called the children of God.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "Blessed are the peacemakers, for they shall be called children of God."
+  },
+  "words": [
+   "G2316",
+   "G1518",
+   "G3107",
+   "G2564",
+   "G5207"
+  ]
+ },
+ {
+  "ref": "Matthew 5:14",
+  "text": "Ye are the light of the world. A city that is set on an hill cannot be hid.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "“You are the light of the world. A city located on a hill can’t be hidden."
+  },
+  "words": [
+   "G2928",
+   "G2749",
+   "G3735",
+   "G5457",
+   "G4172",
+   "G2889",
+   "G1410",
+   "G1510"
+  ]
+ },
+ {
+  "ref": "Matthew 5:44",
+  "text": "But I say unto you, Love your enemies, bless them that curse you, do good to them that hate you, and pray for them which despitefully use you, and persecute you;",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "But I tell you, love your enemies, bless those who curse you, do good to those who hate you, and pray for those who mistreat you and persecute you,"
+  },
+  "words": [
+   "G1908",
+   "G2672",
+   "G2190",
+   "G2573",
+   "G3404",
+   "G2127",
+   "G1377",
+   "G4336",
+   "G25",
+   "G4160"
+  ]
+ },
+ {
+  "ref": "Matthew 6:9-10",
+  "text": "After this manner therefore pray ye: Our Father which art in heaven, Hallowed be thy name. Thy kingdom come. Thy will be done in earth, as it is in heaven.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "Pray like this: “‘Our Father in heaven, may your name be kept holy. Let your Kingdom come. Let your will be done on earth as it is in heaven."
+  },
+  "words": [
+   "G932",
+   "G37",
+   "G2307",
+   "G4336",
+   "G3779",
+   "G3686",
+   "G1093",
+   "G3772",
+   "G3962",
+   "G2064"
+  ]
+ },
+ {
+  "ref": "Matthew 6:11-12",
+  "text": "Give us this day our daily bread. And forgive us our debts, as we forgive our debtors.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "Give us today our daily bread. Forgive us our debts, as we also forgive our debtors."
+  },
+  "words": [
+   "G1967",
+   "G3783",
+   "G3781",
+   "G4594",
+   "G740",
+   "G863",
+   "G1325"
+  ]
+ },
+ {
+  "ref": "Matthew 6:19-20",
+  "text": "Lay not up for yourselves treasures upon earth, where moth and rust doth corrupt, and where thieves break through and steal: But lay up for yourselves treasures in heaven, where neither moth nor rust doth corrupt, and where thieves do not break through nor steal:",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "“Don’t lay up treasures for yourselves on the earth, where moth and rust consume, and where thieves break through and steal; but lay up for yourselves treasures in heaven, where neither moth nor rust consume, and where thieves don’t break through and steal;"
+  },
+  "words": [
+   "G4597",
+   "G1358",
+   "G853",
+   "G2343",
+   "G1035",
+   "G2812",
+   "G2813",
+   "G2344",
+   "G1093",
+   "G3772"
+  ]
+ },
+ {
+  "ref": "Matthew 6:21",
+  "text": "For where your treasure is, there will your heart be also.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "for where your treasure is, there your heart will be also."
+  },
+  "words": [
+   "G2588",
+   "G2344",
+   "G1563",
+   "G1510"
+  ]
+ },
+ {
+  "ref": "Matthew 6:34",
+  "text": "Take therefore no thought for the morrow: for the morrow shall take thought for the things of itself. Sufficient unto the day is the evil thereof.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "Therefore don’t be anxious for tomorrow, for tomorrow will be anxious for itself. Each day’s own evil is sufficient."
+  },
+  "words": [
+   "G713",
+   "G2549",
+   "G839",
+   "G3309",
+   "G2250"
+  ]
+ },
+ {
+  "ref": "Matthew 7:7-8",
+  "text": "Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you: For every one that asketh receiveth; and he that seeketh findeth; and to him that knocketh it shall be opened.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "“Ask, and it will be given you. Seek, and you will find. Knock, and it will be opened for you. For everyone who asks receives. He who seeks finds. To him who knocks it will be opened."
+  },
+  "words": [
+   "G2925",
+   "G154",
+   "G455",
+   "G2212",
+   "G2147",
+   "G2983",
+   "G1325",
+   "G3956"
+  ]
+ },
+ {
+  "ref": "Psalm 8:3-4",
+  "text": "When I consider thy heavens, the work of thy fingers, the moon and the stars, which thou hast ordained; What is man, that thou art mindful of him? and the son of man, that thou visitest him?",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "When I consider your heavens, the work of your fingers, the moon and the stars, which you have ordained, what is man, that you think of him? What is the son of man, that you care for him?"
+  },
+  "words": [
+   "H8064",
+   "H3394",
+   "H676",
+   "H3556",
+   "H3559",
+   "H2142",
+   "H4639",
+   "H6485",
+   "H120",
+   "H582"
+  ]
+ },
+ {
+  "ref": "Psalm 16:11",
+  "text": "Thou wilt shew me the path of life: in thy presence is fulness of joy; at thy right hand there are pleasures for evermore.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "You will show me the path of life. In your presence is fullness of joy. In your right hand there are pleasures forever more."
+  },
+  "words": [
+   "H2416",
+   "H3045",
+   "H7648",
+   "H5273",
+   "H5331",
+   "H734",
+   "H8057",
+   "H3225",
+   "H6440"
+  ]
+ },
+ {
+  "ref": "Psalm 19:1",
+  "text": "The heavens declare the glory of God; and the firmament sheweth his handywork.",
+  "packs": [
+   "psalms"
+  ],
+  "words": [
+   "H3519",
+   "H410",
+   "H8064",
+   "H7549",
+   "H5608",
+   "H4639",
+   "H5046",
+   "H3027"
+  ]
+ },
+ {
+  "ref": "Psalm 25:4-5",
+  "text": "Shew me thy ways, O LORD; teach me thy paths. Lead me in thy truth, and teach me: for thou art the God of my salvation; on thee do I wait all the day.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "Show me your ways, LORD. Teach me your paths. Guide me in your truth, and teach me, for you are the God of my salvation. I wait for you all day long."
+  },
+  "words": [
+   "H6960",
+   "H571",
+   "H3045",
+   "H430",
+   "H3068",
+   "H3468",
+   "H734",
+   "H1869",
+   "H3925",
+   "H1870"
+  ]
+ },
+ {
+  "ref": "Psalm 27:4",
+  "text": "One thing have I desired of the LORD, that will I seek after; that I may dwell in the house of the LORD all the days of my life, to behold the beauty of the LORD, and to enquire in his temple.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "One thing I have asked of the LORD, that I will seek after: that I may dwell in the LORD’s house all the days of my life, to see the LORD’s beauty, and to inquire in his temple."
+  },
+  "words": [
+   "H2416",
+   "H3068",
+   "H1239",
+   "H5278",
+   "H2372",
+   "H1964",
+   "H7592",
+   "H1245",
+   "H259",
+   "H3427"
+  ]
+ },
+ {
+  "ref": "Psalm 30:5",
+  "text": "For his anger endureth but a moment; in his favour is life: weeping may endure for a night, but joy cometh in the morning.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "For his anger is but for a moment. His favor is for a lifetime. Weeping may stay for the night, but joy comes in the morning."
+  },
+  "words": [
+   "H2416",
+   "H7281",
+   "H1065",
+   "H7440",
+   "H7522",
+   "H3885",
+   "H6153",
+   "H1242",
+   "H639"
+  ]
+ },
+ {
+  "ref": "Psalm 32:8",
+  "text": "I will instruct thee and teach thee in the way which thou shalt go: I will guide thee with mine eye.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "I will instruct you and teach you in the way which you shall go. I will counsel you with my eye on you."
+  },
+  "words": [
+   "H7919",
+   "H3289",
+   "H3384",
+   "H1870",
+   "H5869",
+   "H3212"
+  ]
+ },
+ {
+  "ref": "Psalm 40:1-2",
+  "text": "I waited patiently for the LORD; and he inclined unto me, and heard my cry. He brought me up also out of an horrible pit, out of the miry clay, and set my feet upon a rock, and established my goings.",
+  "packs": [
+   "psalms"
+  ],
+  "words": [
+   "H6960",
+   "H8085",
+   "H3068",
+   "H3121",
+   "H838",
+   "H7775",
+   "H2916",
+   "H7588",
+   "H5553",
+   "H953"
+  ]
+ },
+ {
+  "ref": "Psalm 42:1",
+  "text": "As the hart panteth after the water brooks, so panteth my soul after thee, O God.",
+  "packs": [
+   "psalms"
+  ],
+  "words": [
+   "H5315",
+   "H430",
+   "H6165",
+   "H354",
+   "H650",
+   "H4325"
+  ]
+ },
+ {
+  "ref": "Psalm 51:10",
+  "text": "Create in me a clean heart, O God; and renew a right spirit within me.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "Create in me a clean heart, O God. Renew a right spirit within me."
+  },
+  "words": [
+   "H7307",
+   "H3820",
+   "H430",
+   "H2318",
+   "H1254",
+   "H2889",
+   "H3559",
+   "H7130"
+  ]
+ },
+ {
+  "ref": "Psalm 63:1",
+  "text": "O God, thou art my God; early will I seek thee: my soul thirsteth for thee, my flesh longeth for thee in a dry and thirsty land, where no water is;",
+  "packs": [
+   "psalms"
+  ],
+  "words": [
+   "H410",
+   "H5315",
+   "H776",
+   "H430",
+   "H3642",
+   "H6770",
+   "H7836",
+   "H1097",
+   "H6723",
+   "H5889"
+  ]
+ },
+ {
+  "ref": "Psalm 84:10",
+  "text": "For a day in thy courts is better than a thousand. I had rather be a doorkeeper in the house of my God, than to dwell in the tents of wickedness.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "For a day in your courts is better than a thousand. I would rather be a doorkeeper in the house of my God, than to dwell in the tents of wickedness."
+  },
+  "words": [
+   "H430",
+   "H1752",
+   "H5605",
+   "H7562",
+   "H977",
+   "H2691",
+   "H168",
+   "H505",
+   "H2896",
+   "H1004"
+  ]
+ },
+ {
+  "ref": "Psalm 86:11",
+  "text": "Teach me thy way, O LORD; I will walk in thy truth: unite my heart to fear thy name.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "Teach me your way, LORD. I will walk in your truth. Make my heart undivided to fear your name."
+  },
+  "words": [
+   "H571",
+   "H3068",
+   "H3161",
+   "H3384",
+   "H3824",
+   "H3372",
+   "H1980",
+   "H1870",
+   "H8034"
+  ]
+ },
+ {
+  "ref": "Psalm 119:9",
+  "text": "Wherewithal shall a young man cleanse his way? by taking heed thereto according to thy word.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "How can a young man keep his way pure? By living according to your word."
+  },
+  "words": [
+   "H1697",
+   "H2135",
+   "H734",
+   "H5288",
+   "H8104"
+  ]
+ },
+ {
+  "ref": "Psalm 130:5",
+  "text": "I wait for the LORD, my soul doth wait, and in his word do I hope.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "I wait for the LORD. My soul waits. I hope in his word."
+  },
+  "words": [
+   "H6960",
+   "H5315",
+   "H1697",
+   "H3068",
+   "H3176"
+  ]
+ },
+ {
+  "ref": "Psalm 139:14",
+  "text": "I will praise thee; for I am fearfully and wonderfully made: marvellous are thy works; and that my soul knoweth right well.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "I will give thanks to you, for I am fearfully and wonderfully made. Your works are wonderful. My soul knows that very well."
+  },
+  "words": [
+   "H5315",
+   "H3045",
+   "H6395",
+   "H6381",
+   "H3034",
+   "H4639",
+   "H3966",
+   "H3372"
+  ]
+ },
+ {
+  "ref": "Psalm 139:23-24",
+  "text": "Search me, O God, and know my heart: try me, and know my thoughts: And see if there be any wicked way in me, and lead me in the way everlasting.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "Search me, God, and know my heart. Try me, and know my thoughts. See if there is any wicked way in me, and lead me in the everlasting way."
+  },
+  "words": [
+   "H410",
+   "H5769",
+   "H3045",
+   "H8312",
+   "H6090",
+   "H2713",
+   "H974",
+   "H5148",
+   "H3824",
+   "H1870"
+  ]
+ },
+ {
+  "ref": "Psalm 143:8",
+  "text": "Cause me to hear thy lovingkindness in the morning; for in thee do I trust: cause me to know the way wherein I should walk; for I lift up my soul unto thee.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "Cause me to hear your loving kindness in the morning, for I trust in you. Cause me to know the way in which I should walk, for I lift up my soul to you."
+  },
+  "words": [
+   "H982",
+   "H2617",
+   "H5315",
+   "H3045",
+   "H8085",
+   "H1242",
+   "H5375",
+   "H1870",
+   "H3212"
+  ]
+ },
+ {
+  "ref": "Romans 15:13",
+  "text": "Now the God of hope fill you with all joy and peace in believing, that ye may abound in hope, through the power of the Holy Ghost.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "Now may the God of hope fill you with all joy and peace in believing, that you may abound in hope in the power of the Holy Spirit."
+  },
+  "words": [
+   "G1680",
+   "G1515",
+   "G1411",
+   "G40",
+   "G4151",
+   "G2316",
+   "G4052",
+   "G5479",
+   "G4137",
+   "G4100"
+  ]
+ },
+ {
+  "ref": "Romans 5:1",
+  "text": "Therefore being justified by faith, we have peace with God through our Lord Jesus Christ:",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "Being therefore justified by faith, we have peace with God through our Lord Jesus Christ;"
+  },
+  "words": [
+   "G1515",
+   "G4102",
+   "G5547",
+   "G2962",
+   "G2424",
+   "G2316",
+   "G1344",
+   "G2192"
+  ]
+ },
+ {
+  "ref": "Romans 8:18",
+  "text": "For I reckon that the sufferings of this present time are not worthy to be compared with the glory which shall be revealed in us.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "For I consider that the sufferings of this present time are not worthy to be compared with the glory which will be revealed toward us."
+  },
+  "words": [
+   "G1391",
+   "G3804",
+   "G601",
+   "G514",
+   "G3049",
+   "G2540",
+   "G3195",
+   "G3568"
+  ]
+ },
+ {
+  "ref": "Romans 8:38-39",
+  "text": "For I am persuaded, that neither death, nor life, nor angels, nor principalities, nor powers, nor things present, nor things to come, Nor height, nor depth, nor any other creature, shall be able to separate us from the love of God, which is in Christ Jesus our Lord.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "For I am persuaded that neither death, nor life, nor angels, nor principalities, nor things present, nor things to come, nor powers, nor height, nor depth, nor any other created thing will be able to separate us from God’s love which is in Christ Jesus our Lord."
+  },
+  "words": [
+   "G26",
+   "G1411",
+   "G2222",
+   "G5547",
+   "G2962",
+   "G2424",
+   "G2316",
+   "G5313",
+   "G1764",
+   "G899"
+  ]
+ },
+ {
+  "ref": "Hebrews 10:23",
+  "text": "Let us hold fast the profession of our faith without wavering; (for he is faithful that promised;)",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "let’s hold fast the confession of our hope without wavering; for he who promised is faithful."
+  },
+  "words": [
+   "G1680",
+   "G186",
+   "G3671",
+   "G1861",
+   "G2722",
+   "G4103"
+  ]
+ },
+ {
+  "ref": "Hebrews 6:19",
+  "text": "Which hope we have as an anchor of the soul, both sure and stedfast, and which entereth into that within the veil;",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "This hope we have as an anchor of the soul, a hope both sure and steadfast and entering into that which is within the veil,"
+  },
+  "words": [
+   "G5590",
+   "G2082",
+   "G45",
+   "G804",
+   "G2665",
+   "G949",
+   "G1525",
+   "G2192"
+  ]
+ },
+ {
+  "ref": "John 16:33",
+  "text": "These things I have spoken unto you, that in me ye might have peace. In the world ye shall have tribulation: but be of good cheer; I have overcome the world.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "I have told you these things, that in me you may have peace. In the world you have trouble; but cheer up! I have overcome the world.”"
+  },
+  "words": [
+   "G1515",
+   "G2293",
+   "G3528",
+   "G2347",
+   "G2889",
+   "G2980",
+   "G2192"
+  ]
+ },
+ {
+  "ref": "John 11:25-26",
+  "text": "Jesus said unto her, I am the resurrection, and the life: he that believeth in me, though he were dead, yet shall he live: And whosoever liveth and believeth in me shall never die. Believest thou this?",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "Jesus said to her, “I am the resurrection and the life. He who believes in me will still live, even if he dies. Whoever lives and believes in me will never die. Do you believe this?”"
+  },
+  "words": [
+   "G2222",
+   "G2424",
+   "G386",
+   "G599",
+   "G2198",
+   "G4100",
+   "G3956",
+   "G3004",
+   "G1510"
+  ]
+ },
+ {
+  "ref": "1 Corinthians 15:57",
+  "text": "But thanks be to God, which giveth us the victory through our Lord Jesus Christ.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "But thanks be to God, who gives us the victory through our Lord Jesus Christ."
+  },
+  "words": [
+   "G5485",
+   "G5547",
+   "G2962",
+   "G2424",
+   "G2316",
+   "G3534",
+   "G1325"
+  ]
+ },
+ {
+  "ref": "1 Corinthians 15:58",
+  "text": "Therefore, my beloved brethren, be ye stedfast, unmoveable, always abounding in the work of the Lord, forasmuch as ye know that your labour is not in vain in the Lord.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "Therefore, my beloved brothers, be steadfast, immovable, always abounding in the Lord’s work, because you know that your labor is not in vain in the Lord."
+  },
+  "words": [
+   "G2962",
+   "G277",
+   "G1476",
+   "G2873",
+   "G2756",
+   "G4052",
+   "G3842",
+   "G27",
+   "G2041",
+   "G1492"
+  ]
+ },
+ {
+  "ref": "2 Corinthians 4:18",
+  "text": "While we look not at the things which are seen, but at the things which are not seen: for the things which are seen are temporal; but the things which are not seen are eternal.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "while we don’t look at the things which are seen, but at the things which are not seen. For the things which are seen are temporal, but the things which are not seen are eternal."
+  },
+  "words": [
+   "G166",
+   "G4340",
+   "G4648",
+   "G991"
+  ]
+ },
+ {
+  "ref": "Revelation 21:4",
+  "text": "And God shall wipe away all tears from their eyes; and there shall be no more death, neither sorrow, nor crying, neither shall there be any more pain: for the former things are passed away.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "He will wipe away every tear from their eyes. Death will be no more; neither will there be mourning, nor crying, nor pain any more. The first things have passed away.”"
+  },
+  "words": [
+   "G2316",
+   "G4192",
+   "G3997",
+   "G1813",
+   "G2906",
+   "G1144",
+   "G2089",
+   "G4413",
+   "G3788",
+   "G2288"
+  ]
+ },
+ {
+  "ref": "Isaiah 40:8",
+  "text": "The grass withereth, the flower fadeth: but the word of our God shall stand for ever.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "The grass withers, the flower fades; but the word of our God stands forever.”"
+  },
+  "words": [
+   "H5769",
+   "H1697",
+   "H430",
+   "H6731",
+   "H2682",
+   "H5034",
+   "H3001",
+   "H6965"
+  ]
+ },
+ {
+  "ref": "Zephaniah 3:17",
+  "text": "The LORD thy God in the midst of thee is mighty; he will save, he will rejoice over thee with joy; he will rest in his love, he will joy over thee with singing.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "The LORD, your God, is among you, a mighty one who will save. He will rejoice over you with joy. He will calm you in his love. He will rejoice over you with singing."
+  },
+  "words": [
+   "H430",
+   "H3068",
+   "H7797",
+   "H7440",
+   "H160",
+   "H1523",
+   "H2790",
+   "H8057",
+   "H1368",
+   "H3467"
+  ]
+ },
+ {
+  "ref": "2 Peter 3:9",
+  "text": "The Lord is not slack concerning his promise, as some men count slackness; but is longsuffering to us-ward, not willing that any should perish, but that all should come to repentance.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "The Lord is not slow concerning his promise, as some count slowness; but he is patient with us, not wishing that anyone should perish, but that all should come to repentance."
+  },
+  "words": [
+   "G3341",
+   "G2962",
+   "G1022",
+   "G1019",
+   "G3114",
+   "G5562",
+   "G2233",
+   "G1014",
+   "G1860",
+   "G622"
+  ]
+ },
+ {
+  "ref": "Psalm 31:24",
+  "text": "Be of good courage, and he shall strengthen your heart, all ye that hope in the LORD.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "Be strong, and let your heart take courage, all you who hope in the LORD."
+  },
+  "words": [
+   "H3068",
+   "H3176",
+   "H553",
+   "H3824",
+   "H2388"
+  ]
+ },
+ {
+  "ref": "Jeremiah 33:3",
+  "text": "Call unto me, and I will answer thee, and shew thee great and mighty things, which thou knowest not.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "‘Call to me, and I will answer you, and will show you great and difficult things, which you don’t know.’"
+  },
+  "words": [
+   "H3045",
+   "H1219",
+   "H6030",
+   "H5046",
+   "H1419",
+   "H7121"
+  ]
+ },
+ {
+  "ref": "1 John 5:14",
+  "text": "And this is the confidence that we have in him, that, if we ask any thing according to his will, he heareth us:",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "This is the boldness which we have toward him, that if we ask anything according to his will, he listens to us."
+  },
+  "words": [
+   "G3954",
+   "G2307",
+   "G154",
+   "G191",
+   "G2192",
+   "G1510"
+  ]
+ },
+ {
+  "ref": "James 4:8",
+  "text": "Draw nigh to God, and he will draw nigh to you. Cleanse your hands, ye sinners; and purify your hearts, ye double minded.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "Draw near to God, and he will draw near to you. Cleanse your hands, you sinners. Purify your hearts, you double-minded."
+  },
+  "words": [
+   "G2588",
+   "G2316",
+   "G1374",
+   "G48",
+   "G2511",
+   "G1448",
+   "G268",
+   "G5495"
+  ]
+ },
+ {
+  "ref": "James 5:16",
+  "text": "Confess your faults one to another, and pray one for another, that ye may be healed. The effectual fervent prayer of a righteous man availeth much.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "Confess your sins to one another and pray for one another, that you may be healed. The insistent prayer of a righteous person is powerfully effective."
+  },
+  "words": [
+   "G2172",
+   "G1843",
+   "G1162",
+   "G1754",
+   "G3900",
+   "G2390",
+   "G2480",
+   "G1342",
+   "G4183"
+  ]
+ },
+ {
+  "ref": "Philippians 4:19",
+  "text": "But my God shall supply all your need according to his riches in glory by Christ Jesus.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "My God will supply every need of yours according to his riches in glory in Christ Jesus."
+  },
+  "words": [
+   "G1391",
+   "G5547",
+   "G2424",
+   "G2316",
+   "G4149",
+   "G5532",
+   "G4137",
+   "G3956"
+  ]
+ },
+ {
+  "ref": "Hebrews 4:16",
+  "text": "Let us therefore come boldly unto the throne of grace, that we may obtain mercy, and find grace to help in time of need.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "Let’s therefore draw near with boldness to the throne of grace, that we may receive mercy and may find grace for help in time of need."
+  },
+  "words": [
+   "G1656",
+   "G5485",
+   "G2121",
+   "G996",
+   "G3954",
+   "G2362",
+   "G4334",
+   "G2147",
+   "G2983"
+  ]
+ },
+ {
+  "ref": "Matthew 21:22",
+  "text": "And all things, whatsoever ye shall ask in prayer, believing, ye shall receive.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "All things, whatever you ask in prayer, believing, you will receive.”"
+  },
+  "words": [
+   "G4335",
+   "G154",
+   "G4100",
+   "G2983",
+   "G3956"
+  ]
+ },
+ {
+  "ref": "Luke 9:23",
+  "text": "And he said to them all, If any man will come after me, let him deny himself, and take up his cross daily, and follow me.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "He said to all, “If anyone desires to come after me, let him deny himself, take up his cross, and follow me."
+  },
+  "words": [
+   "G533",
+   "G4716",
+   "G3694",
+   "G190",
+   "G142",
+   "G2309",
+   "G2250",
+   "G2064",
+   "G3956",
+   "G3004"
+  ]
+ },
+ {
+  "ref": "John 14:15",
+  "text": "If ye love me, keep my commandments.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "If you love me, keep my commandments."
+  },
+  "words": [
+   "G5083",
+   "G1785",
+   "G25"
+  ]
+ },
+ {
+  "ref": "Galatians 6:9",
+  "text": "And let us not be weary in well doing: for in due season we shall reap, if we faint not.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "Let’s not be weary in doing good, for we will reap in due season if we don’t give up."
+  },
+  "words": [
+   "G1590",
+   "G1573",
+   "G2325",
+   "G2540",
+   "G2570",
+   "G2398",
+   "G4160"
+  ]
+ },
+ {
+  "ref": "1 Corinthians 10:13",
+  "text": "There hath no temptation taken you but such as is common to man: but God is faithful, who will not suffer you to be tempted above that ye are able; but will with the temptation also make a way to escape, that ye may be able to bear it.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "No temptation has taken you except what is common to man. God is faithful, who will not allow you to be tempted above what you are able, but will with the temptation also make the way of escape, that you may be able to endure it."
+  },
+  "words": [
+   "G2316",
+   "G1545",
+   "G5297",
+   "G442",
+   "G1439",
+   "G3986",
+   "G3985",
+   "G4103",
+   "G1410",
+   "G2983"
+  ]
+ },
+ {
+  "ref": "Acts 1:8",
+  "text": "But ye shall receive power, after that the Holy Ghost is come upon you: and ye shall be witnesses unto me both in Jerusalem, and in all Judaea, and in Samaria, and unto the uttermost part of the earth.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "But you will receive power when the Holy Spirit has come upon you. You will be witnesses to me in Jerusalem, in all Judea and Samaria, and to the uttermost parts of the earth.”"
+  },
+  "words": [
+   "G1411",
+   "G40",
+   "G4151",
+   "G1904",
+   "G4540",
+   "G3144",
+   "G2449",
+   "G2078",
+   "G2419",
+   "G1093"
+  ]
+ },
+ {
+  "ref": "Mark 12:30-31",
+  "text": "And thou shalt love the Lord thy God with all thy heart, and with all thy soul, and with all thy mind, and with all thy strength: this is the first commandment. And the second is like, namely this, Thou shalt love thy neighbour as thyself. There is none other commandment greater than these.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "You shall love the Lord your God with all your heart, with all your soul, with all your mind, and with all your strength.’ This is the first commandment. The second is like this: ‘You shall love your neighbor as yourself.’ There is no other commandment greater than these.”"
+  },
+  "words": [
+   "G5590",
+   "G2588",
+   "G2962",
+   "G2316",
+   "G2479",
+   "G1271",
+   "G4139",
+   "G1208",
+   "G3664",
+   "G1785"
+  ]
+ },
+ {
+  "ref": "Matthew 28:19-20",
+  "text": "Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Ghost: Teaching them to observe all things whatsoever I have commanded you: and, lo, I am with you alway, even unto the end of the world. Amen.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "Go and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit, teaching them to observe all things that I commanded you. Behold, I am with you always, even to the end of the age.” Amen."
+  },
+  "words": [
+   "G165",
+   "G40",
+   "G4151",
+   "G3100",
+   "G4930",
+   "G1781",
+   "G5083",
+   "G907",
+   "G1321",
+   "G4198"
+  ]
+ },
+ {
+  "ref": "Luke 11:9",
+  "text": "And I say unto you, Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "“I tell you, keep asking, and it will be given you. Keep seeking, and you will find. Keep knocking, and it will be opened to you."
+  },
+  "words": [
+   "G2925",
+   "G154",
+   "G455",
+   "G2212",
+   "G2147",
+   "G1325",
+   "G3004"
   ]
  }
 ]
