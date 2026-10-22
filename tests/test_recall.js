@@ -55,23 +55,41 @@ test('accuracy counts correct words', () => {
   assert.strictEqual(g.passed, false);
   assert.ok(g.accuracy > 0.2 && g.accuracy < 0.4, String(g.accuracy));
 });
-test('every shipped verse: exact passes, one dropped word fails, adjacent swap fails', () => {
+test('every shipped verse (KJV and WEB): exact passes, one dropped word fails, adjacent swap fails', () => {
   const verses = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'verses.json'), 'utf8'));
-  assert.ok(verses.length >= 25);
+  assert.ok(verses.length >= 100);
+  let texts = 0;
   for (const v of verses) {
-    assert.strictEqual(R.gradeRecall(v.text, v.text).passed, true, v.ref + ' exact');
-    const w = v.text.split(/\s+/);
-    const dropped = w.slice(0, 2).concat(w.slice(3)).join(' ');
-    assert.strictEqual(R.gradeRecall(dropped, v.text).passed, false, v.ref + ' dropped');
-    // swap two adjacent, different words
-    for (let i = 0; i < w.length - 1; i++) {
-      if (R.normWord(w[i]) !== R.normWord(w[i + 1])) {
-        const s = w.slice(); [s[i], s[i + 1]] = [s[i + 1], s[i]];
-        assert.strictEqual(R.gradeRecall(s.join(' '), v.text).passed, false, v.ref + ' swap@' + i);
-        break;
+    const versions = [['kjv', v.text]];
+    if (v.translations && v.translations.web) versions.push(['web', v.translations.web]);
+    for (const [name, text] of versions) {
+      texts++;
+      const label = `${v.ref} (${name})`;
+      assert.strictEqual(R.gradeRecall(text, text).passed, true, label + ' exact');
+      const w = R.splitWords(text).map(x => x.raw);
+      const dropped = w.slice(0, 2).concat(w.slice(3)).join(' ');
+      assert.strictEqual(R.gradeRecall(dropped, text).passed, false, label + ' dropped');
+      // swap two adjacent, different words
+      for (let i = 0; i < w.length - 1; i++) {
+        if (R.normWord(w[i]) !== R.normWord(w[i + 1])) {
+          const s = w.slice(); [s[i], s[i + 1]] = [s[i + 1], s[i]];
+          assert.strictEqual(R.gradeRecall(s.join(' '), text).passed, false, label + ' swap@' + i);
+          break;
+        }
       }
     }
   }
+  assert.ok(texts > 200, String(texts));
+});
+
+test('dashes and hyphens separate words', () => {
+  const web = 'But now faith, hope, and love remain\u2014these three. And self-control.';
+  assert.strictEqual(R.gradeRecall('But now faith hope and love remain these three And self control', web).passed, true);
+  assert.strictEqual(R.gradeRecall('But now faith, hope, and love remain\u2014these three. And self-control.', web).passed, true);
+  assert.strictEqual(R.gradeRecall('But now faith hope and love remain three And self control', web).passed, false);
+});
+test('curly and straight apostrophes are equivalent', () => {
+  assert.strictEqual(R.gradeRecall("For God didn't give us a spirit of fear", 'For God didn\u2019t give us a spirit of fear').passed, true);
 });
 
 // ── Hint ──

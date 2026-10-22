@@ -37,6 +37,25 @@ const getCards  = () => vLoad(VERSE_SRS_KEY, {});
 const saveCards = cards => vSave(VERSE_SRS_KEY, cards);
 const el = id => document.getElementById(id);
 
+// ─── Settings and translations ───────────────────────
+const VERSE_SETTINGS_KEY = 'ld_verse_settings';
+const getSettings  = () => ({ translation: 'kjv', pack: 'all', ...vLoad(VERSE_SETTINGS_KEY, {}) });
+const saveSettings = s => vSave(VERSE_SETTINGS_KEY, s);
+const TRANSLATION_LABEL = { kjv: 'KJV', web: 'WEB' };
+let packList = [];
+
+// Progress is tracked per translation: the words differ, so recalling one doesn't prove the other.
+// Some verses (e.g. psalms whose WEB text carries a superscription) exist in KJV only; they fall back to KJV.
+function resolveTranslation(v, wanted) {
+  return wanted === 'web' && v.translations && v.translations.web ? 'web' : 'kjv';
+}
+const textFor = (v, t) => (t === 'web' ? v.translations.web : v.text);
+const cardKey = (ref, t) => (t === 'web' ? `${ref}|web` : ref);
+function parseKey(key) {
+  const [ref, t] = key.split('|');
+  return { ref, translation: t === 'web' ? 'web' : 'kjv' };
+}
+
 // ─── Text helpers ────────────────────────────────────
 const TOKEN_RE = /^([^\p{L}\p{N}]*)(.*?)([^\p{L}\p{N}]*)$/u;
 
@@ -128,8 +147,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function loadVerses() {
   try {
-    const res = await fetch('/api/verses');
-    verseList = await res.json();
+    const [vres, pres] = await Promise.all([fetch('/api/verses'), fetch('/api/packs')]);
+    verseList = await vres.json();
+    packList  = await pres.json();
     renderPicker();
   } catch {
     el('verseGrid').textContent = 'Could not load verses. Is the server running?';
@@ -146,17 +166,22 @@ function renderPicker() {
   el('vXpLabel').textContent  = `${into} / ${XP_PER_LEVEL} XP`;
   el('vXpFill').style.width   = `${into}%`;
   el('vStreak').textContent   = currentStreak();
+  const settings = getSettings();
+  const keyOf = v => cardKey(v.ref, resolveTranslation(v, settings.translation));
   el('vMastered').textContent =
-    `${verseList.filter(v => Recall.isMastered(cards[v.ref])).length}/${verseList.length}`;
+    `${verseList.filter(v => Recall.isMastered(cards[keyOf(v)])).length}/${verseList.length}`;
 
   renderReviewCard(cards, today);
+  renderControls(settings);
 
   const todayIdx = verseList.length ? Math.floor(Date.now() / 864e5) % verseList.length : -1;
   const grid = el('verseGrid');
   grid.innerHTML = '';
 
   verseList.forEach((v, i) => {
-    const card = cards[v.ref];
+    if (settings.pack !== 'all' && !(v.packs || []).includes(settings.pack)) return;
+    const tr = resolveTranslation(v, settings.translation);
+    const card = cards[cardKey(v.ref, tr)];
     const days = Math.min(Recall.recallDays(card), Recall.MASTERY_DAYS);
 
     const btn = document.createElement('button');
@@ -174,7 +199,7 @@ function renderPicker() {
 
     const preview = document.createElement('div');
     preview.className = 'verse-card-preview';
-    preview.textContent = v.text.split(/\s+/).slice(0, 7).join(' ') + '…';
+    preview.textContent = textFor(v, tr).split(/\s+/).slice(0, 7).join(' ') + '…';
 
     const foot = document.createElement('div');
     foot.className = 'verse-card-foot';
@@ -186,7 +211,7 @@ function renderPicker() {
     const status = document.createElement('span');
     status.className = 'verse-status';
     if (!card) {
-      status.textContent = 'New';
+      status.textContent = settings.translation === 'web' && tr === 'kjv' ? 'New · KJV only' : 'New';
     } else if (Recall.isDue(card, today)) {
       status.textContent = 'Due today';
       status.classList.add('due');
@@ -204,14 +229,43 @@ function renderPicker() {
       btn.append(tag);
     }
     btn.append(foot);
-    btn.onclick = () => startVerse(v.ref);
+    btn.onclick = () => startVerse(v.ref, tr);
     grid.appendChild(btn);
   });
 }
 
+function renderControls(settings) {
+  const chips = el('packChips');
+  chips.innerHTML = '';
+  const make = (id, label, count) => {
+    const b = document.createElement('button');
+    b.className = 'pack-chip' + (settings.pack === id ? ' active' : '');
+    b.textContent = count != null ? `${label} · ${count}` : label;
+    b.setAttribute('aria-pressed', settings.pack === id ? 'true' : 'false');
+    b.onclick = () => { saveSettings({ ...getSettings(), pack: id }); renderPicker(); };
+    chips.appendChild(b);
+  };
+  make('all', 'All', verseList.length);
+  packList.forEach(p => make(p.id, p.title, p.count));
+
+  const toggle = el('translationToggle');
+  toggle.innerHTML = '';
+  Object.entries(TRANSLATION_LABEL).forEach(([id, label]) => {
+    const b = document.createElement('button');
+    b.className = 'translation-btn' + (settings.translation === id ? ' active' : '');
+    b.textContent = label;
+    b.setAttribute('aria-pressed', settings.translation === id ? 'true' : 'false');
+    b.onclick = () => { saveSettings({ ...getSettings(), translation: id }); renderPicker(); };
+    toggle.appendChild(b);
+  });
+  const nameKey = settings.translation === 'web' ? 'World English Bible (public domain)' : 'King James Version (1769, public domain)';
+  toggle.title = nameKey;
+}
+
 function renderReviewCard(cards, today) {
-  const known = verseList.filter(v => cards[v.ref]);
-  const due   = Recall.dueRefs(cards, today).filter(r => verseList.some(v => v.ref === r));
+  const exists = key => verseList.some(v => v.ref === parseKey(key).ref);
+  const known = Object.keys(cards).filter(exists);
+  const due   = Recall.dueRefs(cards, today).filter(exists);
   const btn   = el('vReviewBtn');
 
   if (due.length) {
@@ -219,7 +273,7 @@ function renderReviewCard(cards, today) {
     el('vReviewSub').textContent   = 'Type each one from memory. Short, spaced-out practice is what makes it stick.';
     btn.classList.remove('hidden');
   } else if (known.length) {
-    const next = known.map(v => cards[v.ref]).sort((a, b) => a.due.localeCompare(b.due))[0];
+    const next = known.map(k => cards[k]).sort((a, b) => a.due.localeCompare(b.due))[0];
     el('vReviewTitle').textContent = 'You\'re all caught up';
     el('vReviewSub').textContent   = `Next review ${Recall.describeDue(next, today)}.`;
     btn.classList.add('hidden');
@@ -238,10 +292,12 @@ function showVersePanel(name) {
 
 function stopSpeech() { try { speechSynthesis.cancel(); } catch {} }
 
-function startVerse(ref) {
+function startVerse(ref, translation) {
   const verse = verseList.find(v => v.ref === ref);
   if (!verse) return;
-  vs = { mode: 'learn', verse, tokens: tokenize(verse.text), step: 0,
+  const tr = resolveTranslation(verse, translation || getSettings().translation);
+  const text = textFor(verse, tr);
+  vs = { mode: 'learn', verse, translation: tr, key: cardKey(ref, tr), text, tokens: tokenize(text), step: 0,
          mistakes: 0, hints: 0, xp: 0, first: null, typed: null,
          newlyMastered: false, levelBefore: levelOf(getXp()) };
   showVersePanel('vSession');
@@ -250,10 +306,10 @@ function startVerse(ref) {
 }
 
 function startReview() {
-  const refs = Recall.dueRefs(getCards(), Recall.dateKey())
-    .filter(r => verseList.some(v => v.ref === r));
-  if (!refs.length) { exitVerse(); return; }
-  vs = { mode: 'review', queue: shuffle(refs), qi: 0, results: [], requeued: new Set(),
+  const keys = Recall.dueRefs(getCards(), Recall.dateKey())
+    .filter(k => verseList.some(v => v.ref === parseKey(k).ref));
+  if (!keys.length) { exitVerse(); return; }
+  vs = { mode: 'review', queue: shuffle(keys), qi: 0, results: [], requeued: new Set(),
          xp: 0, typed: null, levelBefore: levelOf(getXp()) };
   showVersePanel('vSession');
   reviewNext();
@@ -266,16 +322,20 @@ function exitVerse() {
   showVersePanel('vPicker');
 }
 
-function retryVerse() { if (vs && vs.mode === 'learn') startVerse(vs.verse.ref); }
+function retryVerse() { if (vs && vs.mode === 'learn') startVerse(vs.verse.ref, vs.translation); }
 
 function nextVerse() {
   const cards = getCards();
+  const settings = getSettings();
+  const keyOf = v => cardKey(v.ref, resolveTranslation(v, settings.translation));
   const idx = verseList.findIndex(v => v.ref === vs.verse.ref);
-  const order = verseList.slice(idx + 1).concat(verseList.slice(0, idx + 1));
-  const next = order.find(v => !cards[v.ref])
-    || order.find(v => !Recall.isMastered(cards[v.ref]))
-    || order[0];
-  startVerse(next.ref);
+  const inPack = v => settings.pack === 'all' || (v.packs || []).includes(settings.pack);
+  const order = verseList.slice(idx + 1).concat(verseList.slice(0, idx + 1)).filter(inPack);
+  const pool = order.length ? order : verseList;
+  const next = pool.find(v => !cards[keyOf(v)])
+    || pool.find(v => !Recall.isMastered(cards[keyOf(v)]))
+    || pool[0];
+  startVerse(next.ref, settings.translation);
 }
 
 function renderSteps() {
@@ -312,7 +372,7 @@ function addButton(parent, label, cls, onClick) {
 }
 
 function renderStep() {
-  el('vsRef').textContent = vs.verse.ref;
+  el('vsRef').textContent = vs.verse.ref + (vs.translation === 'web' ? ' · WEB' : '');
   renderSteps();
   setMsg('');
   el('vsBank').innerHTML = '';
@@ -357,14 +417,14 @@ function renderRead() {
     'Read the verse slowly, and say it aloud if you can. When you feel ready, we\'ll play with it.';
   const text = el('vsText');
   text.className = 'vs-text vs-text-read';
-  text.textContent = vs.verse.text;
+  text.textContent = vs.text;
 
   const actions = el('vsActions');
   if ('speechSynthesis' in window) {
     addButton(actions, '🔊 Listen', 'gd-back-btn', () => {
       try {
         speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(vs.verse.text);
+        const u = new SpeechSynthesisUtterance(vs.text);
         u.rate = 0.85;
         speechSynthesis.speak(u);
       } catch {}
@@ -566,7 +626,7 @@ function showTypedHint() {
   if (!vs.typed) return;
   vs.typed.hinted = true;
   const hint = el('vsHint');
-  hint.textContent = Recall.makeHint(vs.verse.text);
+  hint.textContent = Recall.makeHint(vs.text);
   hint.classList.remove('hidden');
   setMsg('Cue used: this attempt won\'t count toward mastery, and the verse will come back sooner.');
   el('vsInput').focus();
@@ -581,16 +641,16 @@ function checkTyped() {
     input.focus();
     return;
   }
-  const grade = Recall.gradeRecall(input.value, vs.verse.text);
+  const grade = Recall.gradeRecall(input.value, vs.text);
   submitAttempt(grade.passed, grade);
 }
 
 function submitAttempt(passed, grade) {
   const hinted = vs.typed.hinted;
-  const ref    = vs.verse.ref;
+  const key    = vs.key;
   const today  = Recall.dateKey();
   const cards  = getCards();
-  const before = cards[ref];
+  const before = cards[key];
   const review = vs.mode === 'review';
 
   const { card, counted } = Recall.recordAttempt(before, { passed, hinted }, today);
@@ -598,7 +658,7 @@ function submitAttempt(passed, grade) {
     passed, hinted, review, stageBefore: before ? before.stage : -1, counted,
   });
 
-  cards[ref] = card;
+  cards[key] = card;
   saveCards(cards);
   if (xp) vSave(VERSE_XP_KEY, getXp() + xp);
   if (counted && passed) bumpDailyStreak();
@@ -607,7 +667,7 @@ function submitAttempt(passed, grade) {
   if (counted) {
     if (!vs.first) vs.first = { passed, hinted };
     if (!Recall.isMastered(before) && Recall.isMastered(card)) vs.newlyMastered = true;
-    if (review) vs.results.push({ ref, passed, hinted, card });
+    if (review) vs.results.push({ ref: vs.verse.ref, key, translation: vs.translation, passed, hinted, card });
   }
 
   el('vsInput').disabled = true;
@@ -635,9 +695,9 @@ function submitAttempt(passed, grade) {
   actions.innerHTML = '';
   if (review) {
     addButton(actions, 'Next →', 'gs-start-btn', () => {
-      if (!passed && counted && !vs.requeued.has(ref)) {
-        vs.requeued.add(ref);
-        vs.queue.push(ref); // one more try at the end of this session
+      if (!passed && counted && !vs.requeued.has(key)) {
+        vs.requeued.add(key);
+        vs.queue.push(key); // one more try at the end of this session
       }
       reviewNext();
     });
@@ -655,7 +715,7 @@ function drawFeedback(grade) {
   text.innerHTML = '';
 
   if (!grade) {
-    text.textContent = vs.verse.text;
+    text.textContent = vs.text;
     return;
   }
 
@@ -693,7 +753,7 @@ function drawFeedback(grade) {
 // ─── Finish: learning ────────────────────────────────
 function finishLearning() {
   const today = Recall.dateKey();
-  const card  = getCards()[vs.verse.ref];
+  const card  = getCards()[vs.key];
   const days  = Math.min(Recall.recallDays(card), Recall.MASTERY_DAYS);
   const first = vs.first;
 
@@ -706,8 +766,8 @@ function finishLearning() {
 
   el('vrStars').textContent = '●'.repeat(days) + '○'.repeat(Recall.MASTERY_DAYS - days);
   el('vrTitle').textContent = title;
-  el('vrRef').textContent   = `${vs.verse.ref} · recalled on ${days} of ${Recall.MASTERY_DAYS} days`;
-  el('vrText').textContent  = vs.verse.text;
+  el('vrRef').textContent   = `${vs.verse.ref}${vs.translation === 'web' ? ' (WEB)' : ''} · recalled on ${days} of ${Recall.MASTERY_DAYS} days`;
+  el('vrText').textContent  = vs.text;
 
   const newLevel = levelOf(getXp());
   const bits = [vs.xp ? `+${vs.xp} XP` : 'No XP this round'];
@@ -732,7 +792,7 @@ function finishLearning() {
   });
   el('vrWordsWrap').classList.toggle('hidden', vs.verse.lexicon.length === 0);
 
-  const othersDue = Recall.dueRefs(getCards(), today).filter(r => r !== vs.verse.ref).length;
+  const othersDue = Recall.dueRefs(getCards(), today).filter(k => k !== vs.key).length;
   el('vrReview').classList.toggle('hidden', othersDue === 0);
   el('vrNext').classList.remove('hidden');
   el('vrAgain').classList.remove('hidden');
@@ -744,9 +804,12 @@ function finishLearning() {
 // ─── Review session ──────────────────────────────────
 function reviewNext() {
   if (vs.qi >= vs.queue.length) { finishReview(); return; }
-  const ref = vs.queue[vs.qi++];
-  vs.verse  = verseList.find(v => v.ref === ref);
-  vs.tokens = tokenize(vs.verse.text);
+  const { ref, translation } = parseKey(vs.queue[vs.qi++]);
+  vs.verse       = verseList.find(v => v.ref === ref);
+  vs.translation = resolveTranslation(vs.verse, translation);
+  vs.key         = cardKey(ref, vs.translation);
+  vs.text        = textFor(vs.verse, vs.translation);
+  vs.tokens      = tokenize(vs.text);
   renderStep();
   window.scrollTo({ top: 0 });
 }
@@ -761,7 +824,7 @@ function finishReview() {
   el('vrRef').textContent   = total ? 'Recalled without a cue' : 'Daily review';
   el('vrText').textContent  = vs.results.map(r => {
     const how = r.passed && !r.hinted ? '✓ recalled' : r.passed ? 'recalled with a cue' : 'missed';
-    return `${r.ref} — ${how} · next ${Recall.describeDue(r.card, today)}`;
+    return `${r.ref}${r.translation === 'web' ? ' (WEB)' : ''} — ${how} · next ${Recall.describeDue(r.card, today)}`;
   }).join('\n');
 
   const newLevel = levelOf(getXp());

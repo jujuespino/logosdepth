@@ -1262,6 +1262,52 @@ body {
 .d-said { font-weight: 400; font-size: 0.7em; color: var(--text-muted); }
 .d-extra { color: var(--text-muted); text-decoration: line-through; }
 
+/* Pack filter + translation switch */
+.picker-controls {
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+.pack-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; flex: 1 1 320px; }
+.pack-chip {
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.pack-chip:hover { background: var(--bg3); color: var(--text); }
+.pack-chip.active { background: rgba(212,168,67,0.14); border-color: var(--gold); color: var(--gold-light); font-weight: 600; }
+
+.translation-toggle {
+  display: inline-flex;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 3px;
+}
+.translation-btn {
+  padding: 0.3rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+.translation-btn.active { background: var(--gold); color: #000; }
+
 /* Session */
 .vs-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
 .vs-steps { display: flex; gap: 0.4rem; flex-wrap: wrap; }

@@ -98,8 +98,28 @@ def test_verses_sorted_short_first_with_resolved_lexicon(client):
     lengths = [len(v["text"].split()) for v in verses]
     assert lengths == sorted(lengths)
     john = next(v for v in verses if v["ref"] == "John 3:16")
-    assert {e["strongs_id"] for e in john["lexicon"]} >= {"G26", "G4102"}
+    # Exact words in the verse: "loved" is agapao (G25), "believeth" is pisteuo (G4100), "everlasting" aionios (G166)
+    assert {e["strongs_id"] for e in john["lexicon"]} >= {"G25", "G4100", "G166", "G2316"}
+    assert "G26" not in {e["strongs_id"] for e in john["lexicon"]}
     assert all(isinstance(e, dict) for v in verses for e in v["lexicon"])
+    assert john["translations"]["web"] and "kjv" not in john["translations"]
+    assert "start" in john["packs"]
+
+
+def test_verses_without_web_still_served(client):
+    verses = client.get("/api/verses").get_json()
+    psalm = next(v for v in verses if v["ref"] == "Psalm 23:1")
+    assert psalm["text"].startswith("The LORD is my shepherd")
+    assert "web" not in psalm["translations"]
+
+
+def test_packs_endpoint(client):
+    packs = client.get("/api/packs").get_json()
+    assert len(packs) >= 8
+    start = next(p for p in packs if p["id"] == "start")
+    assert start["count"] >= 10
+    total = len(client.get("/api/verses").get_json())
+    assert all(0 < p["count"] <= total for p in packs)
 
 
 def test_unknown_route_404(client):

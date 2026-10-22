@@ -248,8 +248,9 @@ function openModal(entry) {
   const modal   = document.getElementById('wordModal');
   const backdrop = document.getElementById('modalBackdrop');
 
+  const tag = entry.category || entry.part_of_speech || 'Word study';
   document.getElementById('modalLang').innerHTML =
-    `<span class="badge badge-${entry.language.toLowerCase()}">${entry.language} · ${entry.category}</span>`;
+    `<span class="badge badge-${entry.language.toLowerCase()}">${entry.language} · ${tag}</span>`;
 
   const origEl = document.getElementById('modalOriginal');
   origEl.textContent = entry.original;
@@ -260,8 +261,9 @@ function openModal(entry) {
     ? `Pronunciation: ${entry.pronunciation}` : '';
   document.getElementById('modalStrongs').textContent  = entry.strongs_id;
   document.getElementById('modalDef').textContent      = entry.definition;
-  document.getElementById('modalExtended').textContent = entry.extended_definition || '';
-  document.getElementById('modalCat').textContent      = entry.category || '—';
+  document.getElementById('modalExtended').textContent = entry.extended_definition ||
+    (entry.brief ? `Brief entry: original form and gloss from ${entry.source} (Tyndale House, Cambridge; CC BY 4.0).` : '');
+  document.getElementById('modalCat').textContent      = entry.category || entry.part_of_speech || '—';
   document.getElementById('modalKjv').textContent      = (entry.kjv_translations || []).join(', ') || '—';
   document.getElementById('modalUsage').textContent    = entry.usage_count
     ? `~${entry.usage_count.toLocaleString()}×` : '—';

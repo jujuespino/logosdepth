@@ -21,8 +21,9 @@ const Recall = (() => {
     return w.toLowerCase().replace(NON_WORD, '');
   }
 
+  // Dashes and hyphens separate words, so "self-control" and "self control" are equivalent.
   function splitWords(text) {
-    return text.split(/\s+/).filter(Boolean)
+    return text.replace(/[\u2010-\u2015-]+/g, ' ').split(/\s+/).filter(Boolean)
       .map(raw => ({ raw, key: normWord(raw) }))
       .filter(w => w.key);
   }

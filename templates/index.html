@@ -180,6 +180,11 @@
           <button class="gs-start-btn" id="vReviewBtn" onclick="startReview()">Start review</button>
         </div>
 
+        <div class="picker-controls">
+          <div class="pack-chips" id="packChips" role="group" aria-label="Verse packs"></div>
+          <div class="translation-toggle" id="translationToggle" role="group" aria-label="Translation"></div>
+        </div>
+
         <div class="verse-grid" id="verseGrid"></div>
       </div>
 
@@ -209,7 +214,7 @@
         <div class="vr-text" id="vrText"></div>
         <div class="vr-xp" id="vrXp"></div>
         <div class="vr-words hidden" id="vrWordsWrap">
-          <div class="vr-words-label">Words behind this verse — tap to explore</div>
+          <div class="vr-words-label">Words in this verse, from the original text — tap to explore</div>
           <div class="recent-tags" id="vrWords"></div>
         </div>
         <div class="vr-buttons">
@@ -357,7 +362,7 @@
       <span class="modal-meta-val" id="modalKjv"></span>
     </div>
     <div>
-      <span class="modal-meta-label">OT/NT Occurrences</span>
+      <span class="modal-meta-label">Times in the KJV</span>
       <span class="modal-meta-val" id="modalUsage"></span>
     </div>
   </div>

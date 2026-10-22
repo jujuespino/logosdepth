@@ -5,7 +5,8 @@ Memorize scripture word-for-word and keep it, using methods with strong scientif
 ## What it does
 
 - **Memorize Verses:** learn a verse in five short steps (Read, Fill In, Order, Recall, Type It), then review it on a spaced schedule. A verse is *mastered* after you recall it unaided on three different days.
-- **Word study:** search and browse 83 Hebrew and Greek words (Strong's numbers, transliteration, definitions, KJV renderings), linked from the verses you learn.
+- **Content:** 137 verses in 10 packs (KJV, and WEB for 130 of them), each linked to the exact Hebrew/Greek words in it.
+- **Word study:** search and browse 83 hand-written Hebrew and Greek word entries (Strong's numbers, transliteration, definitions, KJV renderings). Words found in verses but not in that set get brief entries.
 - **Word Game:** flashcards and a quiz for the original-language vocabulary.
 
 The learning design follows the evidence summarized in [`docs/memory-science.md`](docs/memory-science.md); sources are catalogued in [`docs/sources.md`](docs/sources.md).
@@ -51,8 +52,11 @@ gunicorn app:app --bind 0.0.0.0:$PORT --workers 2
 
 ```
 app.py                  Flask app and JSON API
-data/lexicon.json       Hebrew/Greek word entries
-data/verses.json        Memorization verses (ref, text, linked Strong's IDs)
+data/lexicon.json       Hand-written Hebrew/Greek word entries (searchable, browsable)
+data/lexicon_brief.json Generated brief entries for words linked from verses
+data/verses.json        Generated: verse text (KJV + WEB), packs, linked Strong's IDs
+data/packs.json         Curated: which verses belong to which pack
+scripts/                Content pipeline (fetch_sources.sh, build_content.py)
 static/js/recall.js     Typed-recall grading and spaced-review scheduling (pure functions)
 static/js/verses.js     Memorization UI (learn steps, typed recall, daily review)
 static/js/app.js        Dashboard, search, browse, word game
@@ -62,17 +66,18 @@ tests/                  pytest, Node unit tests, Playwright end-to-end test
 docs/                   Evidence review and source registry
 ```
 
-## Adding a verse
+## Adding or changing verses
 
-Add an object to `data/verses.json`:
+`data/verses.json` and `data/lexicon_brief.json` are **generated**; edit `data/packs.json` instead and rebuild:
 
-```json
-{"ref": "Psalm 23:1", "text": "The LORD is my shepherd; I shall not want.", "words": ["H3068"]}
+```bash
+scripts/fetch_sources.sh                       # downloads the public datasets into scripts/sources/ (needs npm, curl)
+python3 scripts/build_content.py --check       # report problems without writing
+python3 scripts/build_content.py               # regenerate the data files
+pytest                                         # validate
 ```
 
-- `text` must be copied from a trusted source for the translation you use (see `NOTICE.md`).
-- `words` lists Strong's IDs from `data/lexicon.json`; unknown IDs fail the data tests.
-- Run `pytest` to validate.
+The build pulls verse text from public datasets rather than from memory, so wording is exact: KJV (1769) text, KJV with Strong's tags (to find the exact original words in each verse), the World English Bible, and the STEPBible brief lexicons. Verses outside 5-55 words are rejected, and WEB is omitted where it can't be aligned word-for-word (e.g. psalms whose WEB verse 1 includes the superscription).
 
 ## How scheduling works
 
