@@ -8,6 +8,7 @@ Memorize scripture word-for-word and keep it, using methods with strong scientif
 - **Content:** 137 verses in 10 packs (KJV, and WEB for 130 of them), each linked to the exact Hebrew/Greek words in it.
 - **Word study:** search and browse 83 hand-written Hebrew and Greek word entries (Strong's numbers, transliteration, definitions, KJV renderings). Words found in verses but not in that set get brief entries.
 - **Word Game:** flashcards and a quiz for the original-language vocabulary.
+- **Works offline and installs as an app (PWA).** Settings has backup/restore of your progress (merge-safe), a daily calendar reminder (.ics), and an intro walkthrough.
 
 The learning design follows the evidence summarized in [`docs/memory-science.md`](docs/memory-science.md); sources are catalogued in [`docs/sources.md`](docs/sources.md).
 
@@ -29,11 +30,11 @@ Environment variables (all optional): `HOST` (default `127.0.0.1`), `PORT` (defa
 pytest                         # API and data-validation tests
 ruff check .                   # Python lint
 npm ci                         # once
-npm test                       # unit tests for grading and scheduling (static/js/recall.js)
+npm test                       # unit tests: grading/scheduling (recall.js), backup/merge (progress.js), reminders (reminder.js)
 npm run lint                   # ESLint
 playwright install chromium    # once
 python app.py &                # the browser test needs a running server
-python tests/e2e.py            # end-to-end browser test (simulates several days)
+python tests/e2e.py            # end-to-end browser test (simulates several days, offline use, backup/restore)
 ```
 
 CI runs all of the above on every push (`.github/workflows/ci.yml`).
@@ -46,7 +47,7 @@ The app is a standard WSGI app. A `Procfile` is included:
 gunicorn app:app --bind 0.0.0.0:$PORT --workers 2
 ```
 
-`GET /healthz` returns `{"status": "ok"}` for uptime checks. Progress is currently stored in the browser (`localStorage`); there are no accounts yet.
+`GET /healthz` returns `{"status": "ok"}` for uptime checks. JSON and HTML responses are gzipped when the client accepts it. Progress is stored in the browser (`localStorage`); there are no accounts yet, so Settings offers a downloadable backup. The service worker at `/sw.js` is versioned by a hash of the shipped assets, so every deploy refreshes installed copies.
 
 ## Project layout
 
@@ -56,9 +57,13 @@ data/lexicon.json       Hand-written Hebrew/Greek word entries (searchable, brow
 data/lexicon_brief.json Generated brief entries for words linked from verses
 data/verses.json        Generated: verse text (KJV + WEB), packs, linked Strong's IDs
 data/packs.json         Curated: which verses belong to which pack
-scripts/                Content pipeline (fetch_sources.sh, build_content.py)
+scripts/                Content pipeline (fetch_sources.sh, build_content.py) and make_icons.py
 static/js/recall.js     Typed-recall grading and spaced-review scheduling (pure functions)
+static/js/progress.js   Backup/restore, validation and merge of saved progress (pure functions)
+static/js/reminder.js   Daily review reminder as a calendar file (pure functions)
 static/js/verses.js     Memorization UI (learn steps, typed recall, daily review)
+static/js/settings.js   Settings, onboarding, install prompt, service-worker registration
+static/sw.js            Service worker template (versioned and served at /sw.js)
 static/js/app.js        Dashboard, search, browse, word game
 static/css, static/fonts  Styles and self-hosted fonts
 templates/index.html    Single-page shell

@@ -1262,6 +1262,109 @@ body {
 .d-said { font-weight: 400; font-size: 0.7em; color: var(--text-muted); }
 .d-extra { color: var(--text-muted); text-decoration: line-through; }
 
+/* Settings, banner, onboarding */
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.nav-btn { position: relative; }
+.nav-badge {
+  margin-left: auto;
+  min-width: 1.4rem;
+  padding: 1px 7px;
+  border-radius: 20px;
+  background: var(--gold);
+  color: #000;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-align: center;
+}
+.banner {
+  margin: 0.8rem 1.8rem 0;
+  padding: 0.8rem 1rem;
+  background: rgba(232,93,93,0.12);
+  border: 1px solid rgba(232,93,93,0.5);
+  border-radius: 10px;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+.settings-container { max-width: 680px; }
+.settings-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.settings-card h2 { font-family: 'Cinzel', serif; font-size: 1rem; color: var(--gold-light); }
+.settings-card p { font-size: 0.86rem; color: var(--text-muted); line-height: 1.6; }
+.settings-note { font-size: 0.78rem !important; }
+.settings-note a { color: var(--accent); }
+.settings-row { display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap; }
+.settings-row .gs-start-btn { margin-top: 0; padding: 0.65rem 1.3rem; font-size: 0.85rem; }
+.settings-label { font-size: 0.82rem; color: var(--text-muted); }
+.settings-input {
+  padding: 0.55rem 0.7rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font: inherit;
+}
+.settings-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0.9rem;
+  background: var(--bg3);
+  border-radius: 10px;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+.settings-msg { min-height: 1.2rem; font-size: 0.84rem; }
+.settings-msg.good { color: #48bb78; }
+.settings-msg.bad { color: #e85d5d; }
+.file-btn { cursor: pointer; display: inline-flex; align-items: center; }
+.file-btn:focus-within, .visually-hidden:focus + .file-btn { outline: 2px solid var(--gold); }
+.settings-danger { border-color: rgba(232,93,93,0.35); }
+.danger-btn { background: #e85d5d !important; color: #000 !important; }
+.load-error { grid-column: 1 / -1; text-align: center; padding: 2rem 1rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 1rem; align-items: center; }
+
+.onboard {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(560px, 94vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--bg2);
+  border: 1px solid rgba(212,168,67,0.35);
+  border-radius: 14px;
+  padding: 1.6rem;
+  z-index: 301;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+#onboardBackdrop { z-index: 300; }
+.onboard-dots { display: flex; gap: 6px; justify-content: center; }
+.onboard-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+.onboard-dot.active { background: var(--gold); }
+.onboard-title { font-family: 'Cinzel', serif; font-size: 1.3rem; color: var(--gold-light); text-align: center; }
+.onboard-body { font-size: 0.92rem; line-height: 1.6; color: var(--text); display: flex; flex-direction: column; gap: 0.8rem; }
+.onboard-list { padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.7rem; }
+.onboard-packs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+.onboard-pack {
+  display: flex; flex-direction: column; gap: 0.2rem; text-align: left;
+  padding: 0.7rem 0.8rem; background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+  color: var(--text); font: inherit; cursor: pointer;
+}
+.onboard-pack.active { border-color: var(--gold); background: rgba(212,168,67,0.1); }
+.onboard-pack-title { font-size: 0.82rem; font-weight: 600; color: var(--gold-light); }
+.onboard-pack-desc { font-size: 0.74rem; color: var(--text-muted); }
+.onboard-actions { display: flex; gap: 0.7rem; justify-content: flex-end; flex-wrap: wrap; }
+.onboard-actions .gs-start-btn { margin-top: 0; padding: 0.65rem 1.4rem; font-size: 0.88rem; }
+
 /* Pack filter + translation switch */
 .picker-controls {
   display: flex;
@@ -1438,5 +1541,7 @@ body {
   .vs-text { font-size: 1.1rem; }
   .vs-input { font-size: 1rem; }
   .review-card .gs-start-btn { width: 100%; }
+  .onboard-packs { grid-template-columns: 1fr; }
+  .banner { margin: 0.8rem 1rem 0; }
   .quiz-options { grid-template-columns: 1fr; }
 }

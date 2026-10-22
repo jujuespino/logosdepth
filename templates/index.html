@@ -4,7 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LogosDepth — Bible Word Translator</title>
-  <link rel="icon" href="data:," />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#0d1117" />
+  <link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" href="/static/icons/icon-192.png" />
   <link rel="preload" href="/static/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="/static/css/fonts.css" />
   <link rel="stylesheet" href="/static/css/style.css" />
@@ -34,10 +37,15 @@
     <button class="nav-btn" data-view="verses" onclick="showView('verses', this)">
       <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
       Memorize Verses
+      <span class="nav-badge hidden" id="dueBadge" aria-label="Verses due for review"></span>
     </button>
     <button class="nav-btn" data-view="game" onclick="showView('game', this)">
       <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       Word Game
+    </button>
+    <button class="nav-btn" data-view="settings" onclick="showView('settings', this)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      Settings
     </button>
   </nav>
 
@@ -86,6 +94,12 @@
       <button class="clear-btn" id="clearBtn" onclick="clearSearch()" style="display:none">✕</button>
     </div>
   </header>
+
+  <div class="banner hidden" id="storageBanner" role="alert">
+    Your browser is blocking site storage, so your progress can't be saved here. Allow site data for this page
+    (or leave private browsing), and use <strong>Settings → Download backup</strong> to keep a copy.
+  </div>
+  <noscript><div class="banner">LogosDepth needs JavaScript to run.</div></noscript>
 
   <!-- ===== VIEW: DASHBOARD ===== -->
   <section class="view" id="view-dashboard">
@@ -147,6 +161,86 @@
       <div class="no-results-hint">Try a different English word like "love", "faith", "covenant", or "grace".</div>
     </div>
     <div class="loading-state hidden" id="loadingState">Searching…</div>
+  </section>
+
+  <!-- ===== VIEW: SETTINGS ===== -->
+  <section class="view hidden" id="view-settings">
+    <div class="game-container settings-container">
+      <div class="game-header">
+        <div class="game-title-row"><span class="game-star-icon">✦</span><h1 class="game-title">Settings</h1></div>
+        <p class="game-subtitle">Your progress is saved in this browser. Back it up, set a reminder, or install the app.</p>
+      </div>
+
+      <div class="settings-card">
+        <h2>Back up your progress</h2>
+        <p>Download a file you can keep or use to move your progress to another device or browser.</p>
+        <div class="settings-row">
+          <button class="gs-start-btn" id="exportBtn" onclick="exportProgress()">Download backup</button>
+          <label class="gd-back-btn file-btn" for="importFile">Restore from a backup…</label>
+          <input type="file" id="importFile" accept="application/json,.json" class="visually-hidden" onchange="chooseImportFile(this)" />
+        </div>
+        <div class="settings-choice hidden" id="importChoice">
+          <div id="importSummary"></div>
+          <div class="settings-row">
+            <button class="gs-start-btn" onclick="applyImport('merge')">Merge with my progress (recommended)</button>
+            <button class="gd-back-btn" onclick="applyImport('replace')">Replace my progress</button>
+            <button class="gd-back-btn" onclick="cancelImport()">Cancel</button>
+          </div>
+        </div>
+        <div class="settings-msg" id="backupMsg" aria-live="polite"></div>
+      </div>
+
+      <div class="settings-card">
+        <h2>Daily reminder</h2>
+        <p>Reviews work best when they are spaced out, so pick a time. This adds a repeating event to your calendar app; it works on any phone or computer.</p>
+        <div class="settings-row">
+          <label class="settings-label" for="reminderTime">Time</label>
+          <input type="time" id="reminderTime" value="08:00" class="settings-input" />
+          <button class="gs-start-btn" onclick="downloadReminder()">Add to calendar (.ics)</button>
+        </div>
+        <div class="settings-msg" id="reminderMsg" aria-live="polite"></div>
+      </div>
+
+      <div class="settings-card" id="installCard">
+        <h2>Install the app</h2>
+        <p>Add LogosDepth to your home screen to open it like an app, and use it offline.</p>
+        <div class="settings-row"><button class="gs-start-btn hidden" id="installBtn" onclick="installApp()">Install</button></div>
+        <p class="settings-note" id="installNote">On iPhone or iPad: tap Share, then “Add to Home Screen”. On Android or desktop Chrome: use the browser menu’s “Install app”.</p>
+      </div>
+
+      <div class="settings-card">
+        <h2>Intro</h2>
+        <p>See the short walkthrough again.</p>
+        <div class="settings-row"><button class="gd-back-btn" onclick="showOnboarding(0)">Show the intro</button></div>
+      </div>
+
+      <div class="settings-card">
+        <h2>Credits</h2>
+        <p class="settings-note">
+          Scripture: King James Version (1769, public domain in the US) and the World English Bible (public domain).
+          Original-language word data: curated entries written for this project; brief entries from
+          <a href="https://github.com/STEPBible/STEPBible-Data" target="_blank" rel="noopener">STEPBible</a>
+          (Tyndale House, Cambridge; TBESG and TBESH, licensed
+          <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>).
+          Strong’s tagging of the KJV: CrossWire Bible Society. Fonts: Cinzel, Inter, Noto Serif and Noto Serif Hebrew
+          (SIL Open Font License).
+        </p>
+      </div>
+
+      <div class="settings-card settings-danger">
+        <h2>Erase my progress</h2>
+        <p>Permanently removes your XP, streak and every verse’s schedule from this device. Download a backup first if you might want it back.</p>
+        <div class="settings-row"><button class="gd-back-btn" id="resetBtn" onclick="askReset()">Erase my progress…</button></div>
+        <div class="settings-choice hidden" id="resetChoice">
+          <div>Are you sure? This cannot be undone.</div>
+          <div class="settings-row">
+            <button class="gd-back-btn" onclick="cancelReset()">Cancel</button>
+            <button class="gs-start-btn danger-btn" onclick="confirmReset()">Yes, erase everything</button>
+          </div>
+        </div>
+        <div class="settings-msg" id="resetMsg" aria-live="polite"></div>
+      </div>
+    </div>
   </section>
 
   <!-- ===== VIEW: MEMORIZE VERSES ===== -->
@@ -338,6 +432,15 @@
 
 </main>
 
+<!-- ===== ONBOARDING ===== -->
+<div class="modal-backdrop hidden" id="onboardBackdrop"></div>
+<div class="onboard hidden" id="onboard" role="dialog" aria-modal="true" aria-labelledby="onboardTitle">
+  <div class="onboard-dots" id="onboardDots" aria-hidden="true"></div>
+  <h2 class="onboard-title" id="onboardTitle"></h2>
+  <div class="onboard-body" id="onboardBody"></div>
+  <div class="onboard-actions" id="onboardActions"></div>
+</div>
+
 <!-- ===== DETAIL MODAL ===== -->
 <div class="modal-backdrop hidden" id="modalBackdrop" onclick="closeModal()"></div>
 <div class="modal hidden" id="wordModal">
@@ -370,6 +473,9 @@
 
 <script src="/static/js/app.js"></script>
 <script src="/static/js/recall.js"></script>
+<script src="/static/js/progress.js"></script>
+<script src="/static/js/reminder.js"></script>
 <script src="/static/js/verses.js"></script>
+<script src="/static/js/settings.js"></script>
 </body>
 </html>

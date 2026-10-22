@@ -198,6 +198,17 @@ const Recall = (() => {
     return { card: c, counted: true };
   }
 
+  // Merge two copies of the same verse's card (e.g. from two devices, or an imported backup).
+  // The copy with the later activity decides stage and due date; recall days are unioned so no
+  // earned recall day is ever lost, and lapses keep the higher count.
+  function mergeCards(a, b) {
+    if (!a) return b ? { ...b, days: [...b.days] } : null;
+    if (!b) return { ...a, days: [...a.days] };
+    const [base] = (a.lastDate || '') >= (b.lastDate || '') ? [a, b] : [b, a];
+    const days = [...new Set([...a.days, ...b.days])].sort();
+    return { ...base, days, lapses: Math.max(a.lapses || 0, b.lapses || 0) };
+  }
+
   const isDue = (card, today) => !!card && card.due <= today;
   const isMastered = card => !!card && card.days.length >= MASTERY_DAYS;
   const recallDays = card => (card ? card.days.length : 0);
@@ -227,7 +238,7 @@ const Recall = (() => {
     INTERVAL_DAYS, MASTERY_DAYS,
     normWord, splitWords, editDistance, gradeRecall, makeHint, makePhrases,
     dateKey, addDays, daysBetween,
-    recordAttempt, isDue, isMastered, recallDays, dueRefs, describeDue, xpForAttempt,
+    recordAttempt, mergeCards, isDue, isMastered, recallDays, dueRefs, describeDue, xpForAttempt,
   };
 })();
 

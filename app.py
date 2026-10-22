@@ -1,10 +1,12 @@
+import gzip
+import hashlib
 import json
 import os
 import random
 from datetime import date
 from pathlib import Path
 
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, Response, jsonify, render_template, request
 
 app = Flask(__name__)
 
@@ -173,6 +175,66 @@ def packs():
     ])
 
 
+STATIC_DIR = Path(__file__).resolve().parent / "static"
+
+
+def _static_files() -> list[Path]:
+    return sorted(p for p in STATIC_DIR.rglob("*") if p.is_file() and p.name != "sw.js")
+
+
+def _asset_version() -> str:
+    """Changes whenever any shipped asset changes, so installed copies update on the next visit."""
+    h = hashlib.sha1()
+    for p in [*_static_files(), Path(__file__).resolve().parent / "templates" / "index.html"]:
+        h.update(str(p.relative_to(Path(__file__).resolve().parent)).encode())
+        h.update(p.read_bytes())
+    return h.hexdigest()[:12]
+
+
+ASSET_VERSION = _asset_version()
+PRECACHE_URLS = ["/", "/manifest.webmanifest"] + [
+    "/static/" + p.relative_to(STATIC_DIR).as_posix() for p in _static_files() if p.suffix != ".txt"
+]
+
+
+@app.route("/manifest.webmanifest")
+def web_manifest():
+    manifest = {
+        "id": "/",
+        "name": "LogosDepth",
+        "short_name": "LogosDepth",
+        "description": "Memorize scripture word-for-word and go deeper into the original Hebrew and Greek.",
+        "start_url": "/?view=verses",
+        "scope": "/",
+        "display": "standalone",
+        "background_color": "#0d1117",
+        "theme_color": "#0d1117",
+        "categories": ["education", "lifestyle"],
+        "icons": [
+            {"src": "/static/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+            {"src": "/static/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+            {
+                "src": "/static/icons/icon-maskable-512.png",
+                "sizes": "512x512",
+                "type": "image/png",
+                "purpose": "maskable",
+            },
+        ],
+    }
+    return Response(json.dumps(manifest), mimetype="application/manifest+json")
+
+
+@app.route("/sw.js")
+def service_worker():
+    """Served from the site root so the worker can control every page. Versioned by asset hash."""
+    body = (STATIC_DIR / "sw.js").read_text(encoding="utf-8")
+    body = body.replace("__VERSION__", ASSET_VERSION).replace("__PRECACHE__", json.dumps(PRECACHE_URLS))
+    resp = Response(body, mimetype="application/javascript")
+    resp.headers["Cache-Control"] = "no-cache"
+    resp.headers["Service-Worker-Allowed"] = "/"
+    return resp
+
+
 @app.route("/healthz")
 def healthz():
     """Liveness probe for hosting platforms and uptime monitors."""
@@ -187,6 +249,29 @@ def add_headers(resp):
     resp.headers.setdefault("Permissions-Policy", "camera=(), geolocation=()")
     if request.path.startswith("/static/fonts/"):
         resp.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+    return _gzip(resp)
+
+
+_COMPRESSIBLE = {"application/json", "text/html", "application/javascript", "application/manifest+json"}
+
+
+def _gzip(resp):
+    """Compress JSON/HTML/JS responses when the client accepts it (the verses API is ~450 KB raw, ~80 KB gzipped)."""
+    if (
+        resp.direct_passthrough
+        or not 200 <= resp.status_code < 300
+        or "Content-Encoding" in resp.headers
+        or resp.mimetype not in _COMPRESSIBLE
+        or "gzip" not in request.headers.get("Accept-Encoding", "")
+    ):
+        return resp
+    data = resp.get_data()
+    if len(data) < 1024:
+        return resp
+    resp.set_data(gzip.compress(data, compresslevel=6))
+    resp.headers["Content-Encoding"] = "gzip"
+    resp.headers["Content-Length"] = str(len(resp.get_data()))
+    resp.headers.add("Vary", "Accept-Encoding")
     return resp
 
 

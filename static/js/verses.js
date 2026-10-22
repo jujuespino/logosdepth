@@ -4,7 +4,7 @@
    Review: type each due verse from memory, spaced over days and weeks
    Grading and scheduling live in recall.js.
    =================================================== */
-/* global Recall, openModal */
+/* global Recall, openModal, updateDueBadge, showStorageBanner */
 
 const VERSE_SRS_KEY    = 'ld_verse_srs';
 const VERSE_XP_KEY     = 'ld_verse_xp';
@@ -37,7 +37,12 @@ function vLoad(key, fallback) {
   try { const v = JSON.parse(localStorage.getItem(key)); return v ?? fallback; } catch { return fallback; }
 }
 function vSave(key, val) {
-  try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
+  try {
+    localStorage.setItem(key, JSON.stringify(val));
+  } catch {
+    // Storage is blocked or full: the app keeps working, but tell the learner their progress won't persist.
+    if (typeof showStorageBanner === 'function') showStorageBanner();
+  }
 }
 
 const getCards  = () => vLoad(VERSE_SRS_KEY, {});
@@ -160,7 +165,17 @@ async function loadVerses() {
     packList  = await pres.json();
     renderPicker();
   } catch {
-    el('verseGrid').textContent = 'Could not load verses. Is the server running?';
+    const grid = el('verseGrid');
+    grid.innerHTML = '';
+    const msg = document.createElement('div');
+    msg.className = 'load-error';
+    msg.textContent = 'Couldn\'t load the verses. Check your connection and try again.';
+    const retry = document.createElement('button');
+    retry.className = 'gs-start-btn';
+    retry.textContent = 'Try again';
+    retry.onclick = loadVerses;
+    msg.appendChild(retry);
+    grid.appendChild(msg);
   }
 }
 
@@ -240,6 +255,14 @@ function renderPicker() {
     btn.onclick = () => startVerse(v.ref, tr);
     grid.appendChild(btn);
   });
+
+  if (!grid.children.length) {
+    const empty = document.createElement('div');
+    empty.className = 'load-error';
+    empty.textContent = 'No verses in this pack yet.';
+    grid.appendChild(empty);
+  }
+  if (typeof updateDueBadge === 'function') updateDueBadge();
 }
 
 function renderControls(settings) {

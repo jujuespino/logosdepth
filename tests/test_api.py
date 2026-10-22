@@ -124,3 +124,59 @@ def test_packs_endpoint(client):
 
 def test_unknown_route_404(client):
     assert client.get("/nope").status_code == 404
+
+
+# ── PWA, service worker, compression ──
+def test_manifest(client):
+    r = client.get("/manifest.webmanifest")
+    assert r.status_code == 200 and r.mimetype == "application/manifest+json"
+    m = r.get_json()
+    assert m["name"] == "LogosDepth" and m["display"] == "standalone" and m["start_url"].startswith("/")
+    assert {i["purpose"] for i in m["icons"]} >= {"any", "maskable"}
+    for icon in m["icons"]:
+        assert client.get(icon["src"]).status_code == 200, icon["src"]
+
+
+def test_service_worker_is_versioned_and_scoped_to_root(client):
+    import app as app_module
+
+    r = client.get("/sw.js")
+    body = r.get_data(as_text=True)
+    assert r.status_code == 200 and r.mimetype == "application/javascript"
+    assert r.headers["Service-Worker-Allowed"] == "/" and r.headers["Cache-Control"] == "no-cache"
+    assert app_module.ASSET_VERSION in body
+    assert "__VERSION__" not in body and "__PRECACHE__" not in body
+    precache = app_module.PRECACHE_URLS
+    assert "/" in precache and "/static/css/style.css" in precache and "/static/js/verses.js" in precache
+    assert "/static/sw.js" not in precache, "the worker must not precache itself"
+    assert all(client.get(u).status_code == 200 for u in precache), "every precached URL must exist"
+
+
+def test_asset_version_changes_when_an_asset_changes(tmp_path, monkeypatch):
+    import app as app_module
+
+    before = app_module._asset_version()
+    assert before == app_module.ASSET_VERSION
+    extra = app_module.STATIC_DIR / "css" / "_probe.css"
+    extra.write_text("/* probe */")
+    try:
+        assert app_module._asset_version() != before
+    finally:
+        extra.unlink()
+    assert app_module._asset_version() == before
+
+
+def test_json_is_gzipped_when_accepted(client):
+    import gzip
+    import json
+
+    r = client.get("/api/verses", headers={"Accept-Encoding": "gzip, deflate"})
+    assert r.headers["Content-Encoding"] == "gzip" and "Accept-Encoding" in r.headers["Vary"]
+    assert len(r.get_data()) < 150_000
+    assert len(json.loads(gzip.decompress(r.get_data()))) >= 100
+    assert int(r.headers["Content-Length"]) == len(r.get_data())
+
+
+def test_no_compression_without_accept_header_or_for_tiny_bodies(client):
+    assert "Content-Encoding" not in client.get("/api/verses").headers
+    assert "Content-Encoding" not in client.get("/healthz", headers={"Accept-Encoding": "gzip"}).headers

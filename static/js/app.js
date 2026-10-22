@@ -1,6 +1,7 @@
 /* ===================================================
    LogosDepth — Frontend Logic
    =================================================== */
+/* global maybeShowOnboarding */
 
 const RECENT_KEY = 'ld_recent';
 const MAX_RECENT = 8;
@@ -29,6 +30,7 @@ function showView(name, btn) {
   if (name !== 'search') {
     resetSearchState();
   }
+  if (name === 'verses' && typeof maybeShowOnboarding === 'function') maybeShowOnboarding();
 }
 
 function toggleSidebar() {

@@ -35,8 +35,12 @@ def day(n):
     return (D0 + timedelta(days=n)).strftime('%Y-%m-%d')
 
 
-def new_page(browser, n=0, width=1280, height=900):
-    ctx = browser.new_context(viewport={'width': width, 'height': height})
+def new_page(browser, n=0, width=1280, height=900, onboarded=True, init_script=None, **ctx_opts):
+    ctx = browser.new_context(viewport={'width': width, 'height': height}, **ctx_opts)
+    if onboarded:  # most tests aren't about the first-run walkthrough
+        ctx.add_init_script("try { localStorage.setItem('ld_onboarded', 'true'); } catch (e) {}")
+    if init_script:
+        ctx.add_init_script(init_script)
     pg = ctx.new_page()
     pg.errors = []
     pg.on('pageerror', lambda e: pg.errors.append(str(e)[:160]))
@@ -429,6 +433,152 @@ with sync_playwright() as p:
     check('single-phrase verse has no Phrases step', 'phrases' not in ids and ids[0] == 'read', ids)
     check('scenario 9: no JS errors', not pg.errors, pg.errors[:2])
     pg.context.close()
+
+    # ───────────── Scenario 10: settings, backup/restore, reset, reminder, badge ─────────────
+    pg = new_page(b)
+    open_verses(pg)
+    pg.evaluate('startVerse("Psalm 23:1"); goToStep("type")')
+    submit(pg, verse_text(pg, 'Psalm 23:1'))
+    click_btn(pg, 'Continue →')
+    pg.locator('#vResult button', has_text='All verses').click()
+    check('learned verse is due tomorrow, so no badge yet', pg.is_hidden('#dueBadge'))
+    at_day(pg, 1)
+    check('badge shows 1 due', pg.inner_text('#dueBadge') == '1', pg.inner_text('#dueBadge'))
+    check('tab title shows the due count', pg.title().startswith('(1)'), pg.title())
+    at_day(pg, 0)
+
+    pg.click('[data-view="settings"]')
+    check('settings view opens', pg.is_visible('#view-settings'))
+    with pg.expect_download() as dl:
+        pg.click('#exportBtn')
+    backup_path = dl.value.path()
+    backup = json.load(open(backup_path))
+    check('backup is a LogosDepth v1 file', backup['app'] == 'logosdepth' and backup['schemaVersion'] == 1)
+    check('backup contains the learned verse', 'Psalm 23:1' in backup['data']['srs'] and backup['data']['xp'] == 25)
+    check('backup message shown', 'Backup downloaded' in pg.inner_text('#backupMsg'), pg.inner_text('#backupMsg'))
+    check('download is named with the date', dl.value.suggested_filename.startswith('logosdepth-progress-')
+          and dl.value.suggested_filename.endswith('.json'), dl.value.suggested_filename)
+
+    # Invalid files are rejected without touching progress
+    before = pg.evaluate('localStorage.getItem("ld_verse_srs")')
+    pg.set_input_files('#importFile', {'name': 'x.json', 'mimeType': 'application/json', 'buffer': b'not json at all'})
+    pg.wait_for_function('document.getElementById("backupMsg").textContent.length > 0')
+    check('garbage file rejected', 'not valid JSON' in pg.inner_text('#backupMsg'), pg.inner_text('#backupMsg'))
+    pg.set_input_files('#importFile', {'name': 'x.json', 'mimeType': 'application/json',
+                                       'buffer': json.dumps({'app': 'other', 'schemaVersion': 1, 'data': {}}).encode()})
+    pg.wait_for_function('document.getElementById("backupMsg").textContent.includes("LogosDepth backup")')
+    check('wrong-app file rejected', pg.is_hidden('#importChoice'))
+    check('rejected files change nothing', pg.evaluate('localStorage.getItem("ld_verse_srs")') == before)
+
+    # Erase, then restore (replace)
+    pg.click('#resetBtn')
+    check('reset asks for confirmation', pg.is_visible('#resetChoice'))
+    pg.get_by_role('button', name='Cancel').last.click()
+    check('cancelling keeps progress', pg.evaluate('localStorage.getItem("ld_verse_srs")') == before)
+    pg.click('#resetBtn')
+    pg.get_by_role('button', name='Yes, erase everything').click()
+    check('erase removes all progress keys',
+          pg.evaluate('["ld_verse_srs","ld_verse_xp","ld_verse_streak","ld_verse_settings"].every(k => localStorage.getItem(k) === null)'))
+    pg.set_input_files('#importFile', backup_path)
+    pg.wait_for_selector('#importChoice:not(.hidden)')
+    check('import summary describes the backup', '1 verse' in pg.inner_text('#importSummary')
+          and '25 XP' in pg.inner_text('#importSummary'), pg.inner_text('#importSummary'))
+    pg.get_by_role('button', name='Replace my progress').click()
+    check('replace restores the card and XP', card(pg, 'Psalm 23:1') is not None and xp(pg) == 25)
+
+    # Merging a backup into newer local progress never loses anything
+    pg.evaluate("""() => {
+        const c = getCards(); c['Psalm 23:1'].days.push('2026-11-09'); c['Psalm 23:1'].lastDate = '2026-11-09';
+        c['Psalm 23:1'].stage = 3; saveCards(c); vSave('ld_verse_xp', 90);
+    }""")
+    pg.set_input_files('#importFile', backup_path)
+    pg.wait_for_selector('#importChoice:not(.hidden)')
+    pg.get_by_role('button', name='Merge with my progress (recommended)').click()
+    merged = card(pg, 'Psalm 23:1')
+    check('merge keeps the newer schedule and all recall days', merged['stage'] == 3 and len(merged['days']) == 2, merged)
+    check('merge keeps the larger XP', xp(pg) == 90, xp(pg))
+
+    # Reminder .ics
+    pg.fill('#reminderTime', '07:45')
+    with pg.expect_download() as dl2:
+        pg.get_by_role('button', name='Add to calendar (.ics)').click()
+    ics = open(dl2.value.path(), encoding='utf-8').read()
+    check('reminder is a daily 07:45 event', 'RRULE:FREQ=DAILY' in ics and 'T074500' in ics, ics[:200])
+    check('reminder links back into the app', '/?view=verses' in ics.replace('\r\n ', ''))
+    check('scenario 10: no JS errors', not pg.errors, pg.errors[:2])
+    pg.context.close()
+
+    # Storage blocked: banner appears and the app still works
+    pg = new_page(b, init_script="Storage.prototype.setItem = function () { throw new Error('blocked'); };")
+    check('blocked storage shows the banner', pg.is_visible('#storageBanner'))
+    open_verses(pg)
+    check('app still loads verses with storage blocked', pg.locator('.verse-card').count() >= 100)
+    pg.context.close()
+
+    # ───────────── Scenario 11: first-run onboarding ─────────────
+    pg = new_page(b, onboarded=False)
+    pg.click('[data-view="verses"]')
+    check('onboarding opens on first visit to Memorize', pg.is_visible('#onboard'))
+    check('step 1 explains how it works', 'Welcome' in pg.inner_text('#onboardTitle') and 'three different days' in pg.inner_text('#onboardBody'))
+    pg.get_by_role('button', name='Next →').click()
+    check('step 2 offers packs', 'start' in pg.inner_text('#onboardTitle').lower() and pg.locator('.onboard-pack').count() >= 9)
+    pg.locator('.onboard-pack', has_text='The Gospel').click()
+    check('chosen pack is highlighted', 'active' in pg.locator('.onboard-pack', has_text='The Gospel').get_attribute('class'))
+    pg.get_by_role('button', name='Next →').click()
+    check('step 3 is the optional reminder', 'habit' in pg.inner_text('#onboardTitle').lower())
+    pg.get_by_role('button', name='Start my first verse').click()
+    check('overlay closes and a gospel verse starts', pg.is_hidden('#onboard') and pg.is_visible('#vSession'))
+    started = pg.evaluate('vs.verse.packs')
+    check('first verse comes from the chosen pack', 'gospel' in started, started)
+    check('pack choice is remembered', pg.evaluate('getSettings().pack') == 'gospel')
+    check('onboarding is remembered', pg.evaluate('localStorage.getItem("ld_onboarded")') == 'true')
+    pg.evaluate('exitVerse()')
+    pg.click('[data-view="dashboard"]')
+    pg.click('[data-view="verses"]')
+    check('onboarding does not reappear', pg.is_hidden('#onboard'))
+    pg.context.close()
+
+    pg = new_page(b, onboarded=False)
+    pg.click('[data-view="verses"]')
+    pg.keyboard.press('Escape')
+    check('Escape dismisses the intro and remembers it', pg.is_hidden('#onboard')
+          and pg.evaluate('localStorage.getItem("ld_onboarded")') == 'true')
+    pg.click('[data-view="settings"]')
+    pg.get_by_role('button', name='Show the intro').click()
+    check('Settings can reopen the intro', pg.is_visible('#onboard'))
+    pg.context.close()
+
+    # ───────────── Scenario 12: deep link, manifest and real offline use ─────────────
+    ctx = b.new_context(viewport={'width': 1280, 'height': 900})
+    ctx.add_init_script("try { localStorage.setItem('ld_onboarded', 'true'); } catch (e) {}")
+    pg = ctx.new_page()
+    pg.errors = []
+    pg.on('pageerror', lambda e: pg.errors.append(str(e)[:160]))
+    pg.goto(BASE + '?view=verses')
+    pg.wait_for_selector('.verse-card', state='attached')
+    check('?view=verses opens the Memorize view', pg.is_visible('#view-verses') and pg.is_hidden('#view-dashboard'))
+    mani = pg.evaluate('fetch(document.querySelector("link[rel=manifest]").href).then(r => r.json())')
+    check('manifest has name, standalone display and a maskable icon',
+          mani['name'] == 'LogosDepth' and mani['display'] == 'standalone'
+          and any(i['purpose'] == 'maskable' for i in mani['icons']), mani)
+    icon_status = pg.evaluate('Promise.all(document.querySelector("link[rel=manifest]") ? ["/static/icons/icon-192.png","/static/icons/icon-512.png"].map(u => fetch(u).then(r => r.status)) : [])')
+    check('manifest icons are served', icon_status == [200, 200], icon_status)
+    pg.evaluate('navigator.serviceWorker.ready.then(() => true)')
+    pg.reload()
+    pg.wait_for_selector('.verse-card', state='attached')
+    check('page is controlled by the service worker', pg.evaluate('!!navigator.serviceWorker.controller'))
+    ctx.set_offline(True)
+    pg.reload()
+    pg.wait_for_selector('.verse-card', state='attached', timeout=15000)
+    check('offline: page and verses still load', pg.locator('.verse-card').count() >= 100)
+    check('offline: fonts and styles still apply', pg.evaluate('getComputedStyle(document.body).backgroundColor') == 'rgb(13, 17, 23)')
+    pg.evaluate('startVerse("Psalm 23:1"); goToStep("type")')
+    submit(pg, verse_text(pg, 'Psalm 23:1'))
+    check('offline: can learn and grade a verse', 'Perfect recall' in pg.inner_text('#vsMsg'))
+    check('offline: progress is saved locally', card(pg, 'Psalm 23:1') is not None)
+    ctx.set_offline(False)
+    check('scenario 12: no JS errors', not pg.errors, pg.errors[:2])
+    ctx.close()
 
     # ───────────── Scenario 7: mobile layout with the typing UI ─────────────
     pg = new_page(b, 0, width=390, height=800)
