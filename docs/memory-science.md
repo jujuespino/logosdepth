@@ -13,7 +13,7 @@ An evidence review for LogosDepth, compiled 22 Oct 2026.
 - PubMed, PMC, Europe PMC and Crossref were **unreachable** from the research environment (blocked by the sandbox network policy). I could not open a single abstract directly.
 - Everything below was gathered through web searches restricted to `ncbi.nlm.nih.gov`. **Every effect size is therefore secondhand**: taken from search-result summaries or from later papers citing the original. Treat numbers as pointers, and check the linked record before quoting them.
 - Where I only have a DOI (no PubMed link surfaced), I give the DOI.
-- Topics **not** searched: stress/cortisol, caffeine and supplements, nutrition, working-memory training, interference/reconsolidation theory in depth, multimedia/cognitive-load design, bilingual effects.
+- Topics **not** searched: nutrition, working-memory training, interference/reconsolidation theory in depth, multimedia/cognitive-load design, bilingual effects.
 - No study I found tested **Bible-verse memorization** directly (see "Scripture-specific evidence").
 
 **Confidence legend:** 🟢 strong and replicated · 🟡 moderate or mixed · 🔴 weak, indirect or contested · ⛔ not supported
@@ -107,10 +107,9 @@ An evidence review for LogosDepth, compiled 22 Oct 2026.
 - A [university study](https://pubmed.ncbi.nlm.nih.gov/30564174) found a testing effect for **short-answer** but not **multiple-choice** practice; a [2024 head-to-head](https://pmc.ncbi.nlm.nih.gov/articles/PMC11684041/) found **no difference**. Kang, McDermott & Roediger (2007) is the usual citation for format effects.
 - **Honest summary:** typed or spoken recall is *probably* at least as good and often better than picking from a bank, and it is a better rehearsal for real-life recall. But the evidence is not decisive.
 
-### 9. Consolidation: sleep, exercise
+### 9. Consolidation: sleep
 
 - **Sleep 🟡.** Diekelmann & Born (2010, *Nat Rev Neurosci*; DOI 10.1038/nrn2762) and Klinzing, Niethard & Born (2019, *Nat Neurosci*; DOI 10.1038/s41593-019-0467-3) are the main reviews of "active systems consolidation". A [meta-analysis of sleep deprivation](https://pmc.ncbi.nlm.nih.gov/articles/PMC8893218/) found a small harm after learning (**g ≈ 0.28**), larger on immediate tests and for procedural tasks. An [age meta-analysis](https://pubmed.ncbi.nlm.nih.gov/28161367/) found sleep-based benefits in young but **not** older adults. A [recent study](https://pubmed.ncbi.nlm.nih.gov/42165620/) found wake selectively hurt *weakly* learned items. Nocturnal sleep may beat naps for related pairs ([study](https://pmc.ncbi.nlm.nih.gov/articles/PMC4168137/)). I found no pooled sleep-vs-wake effect size for declarative memory.
-- **Acute exercise 🔴🟡.** [Meta-analysis](https://pmc.ncbi.nlm.nih.gov/articles/PMC13281107/) evidence is inconsistent: exercise *before* encoding looks modestly helpful (d ≈ 0.23 in one summary); results for exercise *during* encoding range from null to slightly negative. Low priority.
 
 ### 10. Motivation and game design
 
