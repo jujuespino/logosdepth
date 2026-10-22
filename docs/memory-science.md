@@ -157,6 +157,8 @@ An evidence review for LogosDepth, compiled 22 Oct 2026.
 
 ## Proposed build order (my synthesis, not a validated protocol)
 
+**Status (22 Oct 2026):** items 1, 2, 3 and 8 are implemented (`static/js/recall.js`, `static/js/verses.js`; unit tests in `tests/test_recall.js`, browser tests in `tests/e2e.py`). Design choices that are **not** evidence-based and should be revisited: the interval ladder (1, 3, 7, 14, 30, 60, 120 days), the spelling leniency in typed grading (longer words may have one or two letter slips; words of five letters or fewer must match exactly), and the XP amounts. Items 4–7, 9 and 10 are not built.
+
 1. **Spaced review scheduler (highest impact).** After a verse is learned, queue reviews spaced over days to weeks (e.g., next day, ~3 days, ~1 week, ~2 weeks, ~1 month; reset the interval after a miss). A 2021 meta-analysis found spaced retrieval beats massed retrieval (g ≈ 0.74) but **no clear advantage for expanding over equal spacing**, so don't over-engineer the interval pattern; real spacing and a genuine recall attempt at each review are what matter. The Cepeda ridgeline supports gaps that are a fraction of the target retention horizon; the exact schedule is a design choice and should be tuned and ideally A/B tested. A daily "Today's review" page, interleaving due verses.
 2. **Typed (or spoken) recall step.** Final step: show the reference and first words (or first letters of each word), learner types the verse; grade leniently on spelling/punctuation, strictly on word order; always show the exact text afterward.
 3. **Redefine mastery.** 3 stars = successful unaided recall on ≥ 3 separate days (per successive relearning), with the original session counting as day 1.

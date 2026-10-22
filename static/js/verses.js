@@ -1,25 +1,28 @@
 /* ===================================================
    LogosDepth — Scripture memorization (verses)
-   Steps: Read -> Fill In -> Order -> Recall
+   Learn:  Read -> Fill In -> Order -> Recall -> Type It
+   Review: type each due verse from memory, spaced over days and weeks
+   Grading and scheduling live in recall.js.
    =================================================== */
 
-const VERSE_PROGRESS_KEY = 'ld_verse_progress';
-const VERSE_XP_KEY       = 'ld_verse_xp';
-const VERSE_STREAK_KEY   = 'ld_verse_streak';
-const XP_PER_LEVEL       = 100;
+const VERSE_SRS_KEY    = 'ld_verse_srs';
+const VERSE_XP_KEY     = 'ld_verse_xp';
+const VERSE_STREAK_KEY = 'ld_verse_streak';
+const XP_PER_LEVEL     = 100;
 
 const VERSE_STEPS = [
   { id: 'read',  label: 'Read' },
   { id: 'fill1', label: 'Fill In', pct: 0.25 },
   { id: 'order', label: 'Order' },
   { id: 'fill2', label: 'Recall',  pct: 0.7 },
+  { id: 'type',  label: 'Type It' },
 ];
 
 const CHEERS  = ['Nice!', 'Great job!', 'You\'re getting it!', 'Well done!', 'Keep it up!'];
 const NUDGES  = ['Not quite — try another one!', 'Almost! Look at the sentence again.', 'Close! Give it another go.'];
 
 let verseList = [];
-let vs = null; // current practice session
+let vs = null; // current session: learning one verse, or a review queue
 
 // ─── Storage (always optional) ───────────────────────
 function vLoad(key, fallback) {
@@ -28,6 +31,10 @@ function vLoad(key, fallback) {
 function vSave(key, val) {
   try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
 }
+
+const getCards  = () => vLoad(VERSE_SRS_KEY, {});
+const saveCards = cards => vSave(VERSE_SRS_KEY, cards);
+const el = id => document.getElementById(id);
 
 // ─── Text helpers ────────────────────────────────────
 const TOKEN_RE = /^([^\p{L}\p{N}]*)(.*?)([^\p{L}\p{N}]*)$/u;
@@ -88,28 +95,35 @@ function difficultyOf(text) {
   return n <= 10 ? 'Starter' : n <= 20 ? 'Steady' : 'Challenge';
 }
 
-// ─── Progress / XP / streak ──────────────────────────
-function getXp() { return vLoad(VERSE_XP_KEY, 0); }
+// ─── XP / streak ─────────────────────────────────────
+const getXp    = () => vLoad(VERSE_XP_KEY, 0);
+const levelOf  = xp => Math.floor(xp / XP_PER_LEVEL) + 1;
 
 function bumpDailyStreak() {
-  const today     = new Date().toLocaleDateString('en-CA');
-  const yesterday = new Date(Date.now() - 864e5).toLocaleDateString('en-CA');
+  const today = Recall.dateKey();
   const s = vLoad(VERSE_STREAK_KEY, { last: '', count: 0 });
   if (s.last === today) return s;
-  const next = { last: today, count: s.last === yesterday ? s.count + 1 : 1 };
+  const next = { last: today, count: s.last === Recall.addDays(today, -1) ? s.count + 1 : 1 };
   vSave(VERSE_STREAK_KEY, next);
   return next;
 }
 
 function currentStreak() {
   const s = vLoad(VERSE_STREAK_KEY, { last: '', count: 0 });
-  const today     = new Date().toLocaleDateString('en-CA');
-  const yesterday = new Date(Date.now() - 864e5).toLocaleDateString('en-CA');
-  return (s.last === today || s.last === yesterday) ? s.count : 0;
+  const today = Recall.dateKey();
+  return (s.last === today || s.last === Recall.addDays(today, -1)) ? s.count : 0;
 }
 
 // ─── Load + picker ───────────────────────────────────
-document.addEventListener('DOMContentLoaded', loadVerses);
+document.addEventListener('DOMContentLoaded', () => {
+  loadVerses();
+  el('vsInput').addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && vs && vs.typed && !e.target.disabled) {
+      e.preventDefault();
+      checkTyped();
+    }
+  });
+});
 
 async function loadVerses() {
   try {
@@ -117,31 +131,35 @@ async function loadVerses() {
     verseList = await res.json();
     renderPicker();
   } catch {
-    document.getElementById('verseGrid').textContent = 'Could not load verses. Is the server running?';
+    el('verseGrid').textContent = 'Could not load verses. Is the server running?';
   }
 }
 
 function renderPicker() {
-  const progress = vLoad(VERSE_PROGRESS_KEY, {});
-  const xp       = getXp();
-  const level    = Math.floor(xp / XP_PER_LEVEL) + 1;
-  const into     = xp % XP_PER_LEVEL;
+  const cards = getCards();
+  const today = Recall.dateKey();
+  const xp    = getXp();
+  const into  = xp % XP_PER_LEVEL;
 
-  document.getElementById('vLevel').textContent    = `Level ${level}`;
-  document.getElementById('vXpLabel').textContent  = `${into} / ${XP_PER_LEVEL} XP`;
-  document.getElementById('vXpFill').style.width   = `${into}%`;
-  document.getElementById('vStreak').textContent   = currentStreak();
-  document.getElementById('vMastered').textContent =
-    `${verseList.filter(v => (progress[v.ref] || 0) >= 3).length}/${verseList.length}`;
+  el('vLevel').textContent    = `Level ${levelOf(xp)}`;
+  el('vXpLabel').textContent  = `${into} / ${XP_PER_LEVEL} XP`;
+  el('vXpFill').style.width   = `${into}%`;
+  el('vStreak').textContent   = currentStreak();
+  el('vMastered').textContent =
+    `${verseList.filter(v => Recall.isMastered(cards[v.ref])).length}/${verseList.length}`;
+
+  renderReviewCard(cards, today);
 
   const todayIdx = verseList.length ? Math.floor(Date.now() / 864e5) % verseList.length : -1;
-  const grid = document.getElementById('verseGrid');
+  const grid = el('verseGrid');
   grid.innerHTML = '';
 
   verseList.forEach((v, i) => {
-    const stars = progress[v.ref] || 0;
-    const card = document.createElement('button');
-    card.className = 'verse-card';
+    const card = cards[v.ref];
+    const days = Math.min(Recall.recallDays(card), Recall.MASTERY_DAYS);
+
+    const btn = document.createElement('button');
+    btn.className = 'verse-card';
 
     const top = document.createElement('div');
     top.className = 'verse-card-top';
@@ -159,71 +177,128 @@ function renderPicker() {
 
     const foot = document.createElement('div');
     foot.className = 'verse-card-foot';
-    const starEl = document.createElement('span');
-    starEl.className = 'verse-stars';
-    starEl.textContent = '★'.repeat(stars) + '☆'.repeat(3 - stars);
-    starEl.setAttribute('aria-label', `${stars} of 3 stars`);
-    foot.append(starEl);
+    const stars = document.createElement('span');
+    stars.className = 'verse-stars';
+    stars.textContent = '★'.repeat(days) + '☆'.repeat(Recall.MASTERY_DAYS - days);
+    stars.setAttribute('aria-label',
+      `Recalled on ${days} of ${Recall.MASTERY_DAYS} days needed for mastery`);
+    const status = document.createElement('span');
+    status.className = 'verse-status';
+    if (!card) {
+      status.textContent = 'New';
+    } else if (Recall.isDue(card, today)) {
+      status.textContent = 'Due today';
+      status.classList.add('due');
+    } else {
+      status.textContent = (Recall.isMastered(card) ? 'Mastered · ' : '') +
+        `review ${Recall.describeDue(card, today)}`;
+    }
+    foot.append(stars, status);
+
+    btn.append(top, preview);
     if (i === todayIdx) {
-      const tag = document.createElement('span');
+      const tag = document.createElement('div');
       tag.className = 'verse-today';
       tag.textContent = '✦ Today\'s pick';
-      foot.append(tag);
+      btn.append(tag);
     }
-
-    card.append(top, preview, foot);
-    card.onclick = () => startVerse(v.ref);
-    grid.appendChild(card);
+    btn.append(foot);
+    btn.onclick = () => startVerse(v.ref);
+    grid.appendChild(btn);
   });
 }
 
-// ─── Session ─────────────────────────────────────────
+function renderReviewCard(cards, today) {
+  const known = verseList.filter(v => cards[v.ref]);
+  const due   = Recall.dueRefs(cards, today).filter(r => verseList.some(v => v.ref === r));
+  const btn   = el('vReviewBtn');
+
+  if (due.length) {
+    el('vReviewTitle').textContent = `Today's review: ${due.length} verse${due.length === 1 ? '' : 's'} due`;
+    el('vReviewSub').textContent   = 'Type each one from memory. Short, spaced-out practice is what makes it stick.';
+    btn.classList.remove('hidden');
+  } else if (known.length) {
+    const next = known.map(v => cards[v.ref]).sort((a, b) => a.due.localeCompare(b.due))[0];
+    el('vReviewTitle').textContent = 'You\'re all caught up';
+    el('vReviewSub').textContent   = `Next review ${Recall.describeDue(next, today)}.`;
+    btn.classList.add('hidden');
+  } else {
+    el('vReviewTitle').textContent = 'Spaced reviews';
+    el('vReviewSub').textContent   = 'Learn a verse below and its reviews will be scheduled for you.';
+    btn.classList.add('hidden');
+  }
+}
+
+// ─── Session plumbing ────────────────────────────────
 function showVersePanel(name) {
   ['vPicker', 'vSession', 'vResult'].forEach(id =>
-    document.getElementById(id).classList.toggle('hidden', id !== name));
+    el(id).classList.toggle('hidden', id !== name));
 }
+
+function stopSpeech() { try { speechSynthesis.cancel(); } catch {} }
 
 function startVerse(ref) {
   const verse = verseList.find(v => v.ref === ref);
   if (!verse) return;
-  vs = { verse, tokens: tokenize(verse.text), step: 0, mistakes: 0, hints: 0 };
+  vs = { mode: 'learn', verse, tokens: tokenize(verse.text), step: 0,
+         mistakes: 0, hints: 0, xp: 0, first: null, typed: null,
+         newlyMastered: false, levelBefore: levelOf(getXp()) };
   showVersePanel('vSession');
-  document.getElementById('vsRef').textContent = verse.ref;
   renderStep();
   window.scrollTo({ top: 0 });
 }
 
+function startReview() {
+  const refs = Recall.dueRefs(getCards(), Recall.dateKey())
+    .filter(r => verseList.some(v => v.ref === r));
+  if (!refs.length) { exitVerse(); return; }
+  vs = { mode: 'review', queue: shuffle(refs), qi: 0, results: [], requeued: new Set(),
+         xp: 0, typed: null, levelBefore: levelOf(getXp()) };
+  showVersePanel('vSession');
+  reviewNext();
+}
+
 function exitVerse() {
+  stopSpeech();
   vs = null;
   renderPicker();
   showVersePanel('vPicker');
 }
 
-function retryVerse() { if (vs) startVerse(vs.verse.ref); }
+function retryVerse() { if (vs && vs.mode === 'learn') startVerse(vs.verse.ref); }
 
 function nextVerse() {
-  const progress = vLoad(VERSE_PROGRESS_KEY, {});
+  const cards = getCards();
   const idx = verseList.findIndex(v => v.ref === vs.verse.ref);
   const order = verseList.slice(idx + 1).concat(verseList.slice(0, idx + 1));
-  const next = order.find(v => (progress[v.ref] || 0) < 3) || order[0];
+  const next = order.find(v => !cards[v.ref])
+    || order.find(v => !Recall.isMastered(cards[v.ref]))
+    || order[0];
   startVerse(next.ref);
 }
 
 function renderSteps() {
-  const wrap = document.getElementById('vsSteps');
+  const wrap = el('vsSteps');
   wrap.innerHTML = '';
+  if (vs.mode === 'review') {
+    const el1 = document.createElement('span');
+    el1.className = 'vs-step current';
+    el1.textContent = `Review ${vs.qi} of ${vs.queue.length}`;
+    wrap.appendChild(el1);
+    return;
+  }
   VERSE_STEPS.forEach((s, i) => {
-    const el = document.createElement('span');
-    el.className = 'vs-step' + (i < vs.step ? ' done' : i === vs.step ? ' current' : '');
-    el.textContent = `${i + 1}. ${s.label}`;
-    wrap.appendChild(el);
+    const s1 = document.createElement('span');
+    s1.className = 'vs-step' + (i < vs.step ? ' done' : i === vs.step ? ' current' : '');
+    s1.textContent = `${i + 1}. ${s.label}`;
+    wrap.appendChild(s1);
   });
 }
 
 function setMsg(text, kind) {
-  const el = document.getElementById('vsMsg');
-  el.textContent = text || '';
-  el.className = 'vs-msg' + (kind ? ` ${kind}` : '');
+  const m = el('vsMsg');
+  m.textContent = text || '';
+  m.className = 'vs-msg' + (kind ? ` ${kind}` : '');
 }
 
 function addButton(parent, label, cls, onClick) {
@@ -236,49 +311,54 @@ function addButton(parent, label, cls, onClick) {
 }
 
 function renderStep() {
+  el('vsRef').textContent = vs.verse.ref;
   renderSteps();
   setMsg('');
-  document.getElementById('vsBank').innerHTML = '';
-  document.getElementById('vsActions').innerHTML = '';
-  document.getElementById('vsText').className = 'vs-text';
+  el('vsBank').innerHTML = '';
+  el('vsActions').innerHTML = '';
+  el('vsText').className = 'vs-text';
+  el('vsText').textContent = '';
+  el('vsInput').classList.add('hidden');
+  el('vsHint').classList.add('hidden');
+
+  if (vs.mode === 'review') { renderTyped(); return; }
 
   const step = VERSE_STEPS[vs.step];
-  if (step.id === 'read')  renderRead();
+  if (step.id === 'read')       renderRead();
   else if (step.id === 'order') renderOrder();
-  else renderFill(step.pct);
+  else if (step.id === 'type')  renderTyped();
+  else                          renderFill(step.pct);
 }
 
 function advanceStep() {
   vs.step++;
-  if (vs.step >= VERSE_STEPS.length) finishVerse();
-  else renderStep();
+  renderStep();
 }
 
-// Shown after each interactive step is complete.
+// Shown after each guided step is complete.
 function stepDone() {
   setMsg(pick(CHEERS) + ' Step complete ✓', 'good');
-  const actions = document.getElementById('vsActions');
+  const actions = el('vsActions');
   actions.innerHTML = '';
-  document.getElementById('vsBank').innerHTML = '';
-  const last = vs.step === VERSE_STEPS.length - 1;
-  addButton(actions, last ? 'Finish ✦' : 'Next step →', 'gs-start-btn', advanceStep);
+  el('vsBank').innerHTML = '';
+  addButton(actions, 'Next step →', 'gs-start-btn', advanceStep);
 }
 
-function shake(el) {
-  el.classList.remove('shake');
-  void el.offsetWidth; // restart the animation
-  el.classList.add('shake');
+function shake(node) {
+  node.classList.remove('shake');
+  void node.offsetWidth; // restart the animation
+  node.classList.add('shake');
 }
 
 // ── Step: Read ──
 function renderRead() {
-  document.getElementById('vsInstruction').textContent =
-    'Read the verse slowly, out loud if you can. When you feel ready, we\'ll play with it.';
-  const text = document.getElementById('vsText');
+  el('vsInstruction').textContent =
+    'Read the verse slowly, and say it aloud if you can. When you feel ready, we\'ll play with it.';
+  const text = el('vsText');
   text.className = 'vs-text vs-text-read';
   text.textContent = vs.verse.text;
 
-  const actions = document.getElementById('vsActions');
+  const actions = el('vsActions');
   if ('speechSynthesis' in window) {
     addButton(actions, '🔊 Listen', 'gd-back-btn', () => {
       try {
@@ -290,14 +370,14 @@ function renderRead() {
     });
   }
   addButton(actions, 'I\'ve read it →', 'gs-start-btn', () => {
-    try { speechSynthesis.cancel(); } catch {}
+    stopSpeech();
     advanceStep();
   });
 }
 
 // ── Step: Fill in the blanks ──
 function renderFill(pct) {
-  document.getElementById('vsInstruction').textContent =
+  el('vsInstruction').textContent =
     'Tap the word that belongs in the highlighted blank.';
   const blanks = pickBlanks(vs.tokens, pct);
   vs.fill = {
@@ -309,12 +389,12 @@ function renderFill(pct) {
   };
   drawFill();
 
-  addButton(document.getElementById('vsActions'), '💡 Hint', 'gd-back-btn', fillHint);
+  addButton(el('vsActions'), '💡 Hint', 'gd-back-btn', fillHint);
 }
 
 function drawFill() {
   const f = vs.fill;
-  const text = document.getElementById('vsText');
+  const text = el('vsText');
   text.innerHTML = '';
 
   vs.tokens.forEach((t, i) => {
@@ -336,7 +416,7 @@ function drawFill() {
     text.append(part, ' ');
   });
 
-  const bank = document.getElementById('vsBank');
+  const bank = el('vsBank');
   bank.innerHTML = '';
   f.bank.forEach(chip => {
     const b = document.createElement('button');
@@ -361,13 +441,13 @@ function fillActive(chip) {
   drawFill();
 }
 
-function pickFillChip(chip, el) {
+function pickFillChip(chip, node) {
   const f = vs.fill;
   if (chip.key === vs.tokens[f.active].key) {
     fillActive(chip);
   } else {
     vs.mistakes++;
-    shake(el);
+    shake(node);
     setMsg(pick(NUDGES), 'bad');
   }
 }
@@ -385,7 +465,7 @@ function fillHint() {
 function renderOrder() {
   const units = makeUnits(vs.tokens);
   const phrases = units.length !== vs.tokens.length;
-  document.getElementById('vsInstruction').textContent = phrases
+  el('vsInstruction').textContent = phrases
     ? 'Tap the phrases in the right order to rebuild the verse.'
     : 'Tap the words in the right order to rebuild the verse.';
 
@@ -396,12 +476,12 @@ function renderOrder() {
   vs.order = { units, pos: 0, bank };
   drawOrder();
 
-  addButton(document.getElementById('vsActions'), '💡 Hint', 'gd-back-btn', orderHint);
+  addButton(el('vsActions'), '💡 Hint', 'gd-back-btn', orderHint);
 }
 
 function drawOrder() {
   const o = vs.order;
-  const text = document.getElementById('vsText');
+  const text = el('vsText');
   text.className = 'vs-text vs-text-order';
   text.innerHTML = '';
   o.units.slice(0, o.pos).forEach(u => {
@@ -417,7 +497,7 @@ function drawOrder() {
     text.append(cursor);
   }
 
-  const bank = document.getElementById('vsBank');
+  const bank = el('vsBank');
   bank.innerHTML = '';
   o.bank.forEach(chip => {
     const b = document.createElement('button');
@@ -437,13 +517,13 @@ function placeOrderChip(chip) {
   else setMsg(pick(CHEERS), 'good');
 }
 
-function pickOrderChip(chip, el) {
+function pickOrderChip(chip, node) {
   const o = vs.order;
   if (chip.key === normUnit(o.units[o.pos])) {
     placeOrderChip(chip);
   } else {
     vs.mistakes++;
-    shake(el);
+    shake(node);
     setMsg(pick(NUDGES), 'bad');
   }
 }
@@ -457,40 +537,190 @@ function orderHint() {
   placeOrderChip(chip);
 }
 
-// ─── Finish ──────────────────────────────────────────
-function finishVerse() {
-  const errors = vs.mistakes + vs.hints;
-  const stars  = errors <= 2 ? 3 : errors <= 6 ? 2 : 1;
+// ── Step: Type it from memory (also the whole of a review) ──
+function renderTyped() {
+  const review = vs.mode === 'review';
+  el('vsInstruction').textContent = (review ? 'Type this verse from memory. ' : 'Last step: type the whole verse from memory. ') +
+    'Capitals and punctuation don\'t matter, but the words and their order do.';
 
-  const progress = vLoad(VERSE_PROGRESS_KEY, {});
-  const before   = progress[vs.verse.ref] || 0;
-  const improved = stars > before;
-  if (improved) {
-    progress[vs.verse.ref] = stars;
-    vSave(VERSE_PROGRESS_KEY, progress);
+  vs.typed = { hinted: false };
+  const input = el('vsInput');
+  input.value = '';
+  input.disabled = false;
+  input.classList.remove('hidden');
+  el('vsHint').classList.add('hidden');
+  el('vsHint').textContent = '';
+  el('vsText').className = 'vs-text';
+  el('vsText').textContent = '';
+
+  const actions = el('vsActions');
+  actions.innerHTML = '';
+  addButton(actions, 'Show first letters', 'gd-back-btn', showTypedHint);
+  addButton(actions, 'I don\'t remember', 'gd-back-btn', giveUpTyped);
+  addButton(actions, 'Check', 'gs-start-btn', checkTyped);
+  setTimeout(() => input.focus(), 0);
+}
+
+function showTypedHint() {
+  if (!vs.typed) return;
+  vs.typed.hinted = true;
+  const hint = el('vsHint');
+  hint.textContent = Recall.makeHint(vs.verse.text);
+  hint.classList.remove('hidden');
+  setMsg('Cue used: this attempt won\'t count toward mastery, and the verse will come back sooner.');
+  el('vsInput').focus();
+}
+
+function giveUpTyped() { submitAttempt(false, null); }
+
+function checkTyped() {
+  const input = el('vsInput');
+  if (!input.value.trim()) {
+    setMsg('Type what you remember, or tap "I don\'t remember".', 'bad');
+    input.focus();
+    return;
+  }
+  const grade = Recall.gradeRecall(input.value, vs.verse.text);
+  submitAttempt(grade.passed, grade);
+}
+
+function submitAttempt(passed, grade) {
+  const hinted = vs.typed.hinted;
+  const ref    = vs.verse.ref;
+  const today  = Recall.dateKey();
+  const cards  = getCards();
+  const before = cards[ref];
+  const review = vs.mode === 'review';
+
+  const { card, counted } = Recall.recordAttempt(before, { passed, hinted }, today);
+  const xp = Recall.xpForAttempt({
+    passed, hinted, review, stageBefore: before ? before.stage : -1, counted,
+  });
+
+  cards[ref] = card;
+  saveCards(cards);
+  if (xp) vSave(VERSE_XP_KEY, getXp() + xp);
+  if (counted && passed) bumpDailyStreak();
+  vs.xp += xp;
+
+  if (counted) {
+    if (!vs.first) vs.first = { passed, hinted };
+    if (!Recall.isMastered(before) && Recall.isMastered(card)) vs.newlyMastered = true;
+    if (review) vs.results.push({ ref, passed, hinted, card });
   }
 
-  const gained = 10 + stars * 15;
-  const oldLevel = Math.floor(getXp() / XP_PER_LEVEL) + 1;
-  vSave(VERSE_XP_KEY, getXp() + gained);
-  const newLevel = Math.floor(getXp() / XP_PER_LEVEL) + 1;
-  const streak   = bumpDailyStreak();
+  el('vsInput').disabled = true;
+  drawFeedback(grade);
 
-  document.getElementById('vrStars').textContent = '★'.repeat(stars) + '☆'.repeat(3 - stars);
-  document.getElementById('vrTitle').textContent =
-    stars === 3 ? 'Perfect recall!' : stars === 2 ? 'Great work!' : 'Nice start!';
-  document.getElementById('vrRef').textContent  = vs.verse.ref;
-  document.getElementById('vrText').textContent = vs.verse.text;
+  const typos = grade && grade.ops.some(o => o.kind === 'typo');
+  let msg, kind;
+  if (passed && !hinted) {
+    msg = typos ? 'Correct! Check the spelling of the underlined words.' : 'Perfect recall ✓';
+    kind = 'good';
+  } else if (passed) {
+    msg = 'Recalled with a cue. It will come back sooner so you can try it without one.';
+    kind = 'good';
+  } else if (grade) {
+    msg = 'Not yet. Words in red were missing or different.';
+    kind = 'bad';
+  } else {
+    msg = 'No problem. Read it aloud once; it will come back soon.';
+    kind = 'bad';
+  }
+  if (!counted) msg += ' (You already practiced this verse today, so this round won\'t change your schedule.)';
+  setMsg(msg, kind);
 
-  const bits = [`+${gained} XP`];
-  if (newLevel > oldLevel) bits.push(`🎉 Level ${newLevel}!`);
-  if (improved && before > 0) bits.push('New best!');
-  if (streak.count > 1) bits.push(`🔥 ${streak.count}-day streak`);
-  if (stars < 3) bits.push('Try again for 3 stars');
-  document.getElementById('vrXp').textContent = bits.join('  ·  ');
+  const actions = el('vsActions');
+  actions.innerHTML = '';
+  if (review) {
+    addButton(actions, 'Next →', 'gs-start-btn', () => {
+      if (!passed && counted && !vs.requeued.has(ref)) {
+        vs.requeued.add(ref);
+        vs.queue.push(ref); // one more try at the end of this session
+      }
+      reviewNext();
+    });
+  } else if (passed) {
+    addButton(actions, 'Continue →', 'gs-start-btn', finishLearning);
+  } else {
+    addButton(actions, 'Try again', 'gd-back-btn', renderTyped);
+    addButton(actions, 'Finish for today', 'gs-start-btn', finishLearning);
+  }
+}
 
-  const wordsWrap = document.getElementById('vrWordsWrap');
-  const wordsEl   = document.getElementById('vrWords');
+function drawFeedback(grade) {
+  const text = el('vsText');
+  text.className = 'vs-text vs-text-feedback';
+  text.innerHTML = '';
+
+  if (!grade) {
+    text.textContent = vs.verse.text;
+    return;
+  }
+
+  grade.ops.forEach(op => {
+    const span = document.createElement('span');
+    if (op.kind === 'ok') {
+      span.className = 'd-ok';
+      span.textContent = op.target;
+    } else if (op.kind === 'typo') {
+      span.className = 'd-typo';
+      span.textContent = op.target;
+      span.title = `You typed "${op.typed}"`;
+    } else if (op.kind === 'wrong') {
+      span.className = 'd-miss';
+      span.textContent = op.target;
+      const said = document.createElement('small');
+      said.className = 'd-said';
+      said.textContent = ` (you: ${op.typed})`;
+      span.append(said);
+    } else if (op.kind === 'missing') {
+      span.className = 'd-miss';
+      span.textContent = op.target;
+    } else {
+      span.className = 'd-extra';
+      span.textContent = op.typed;
+    }
+    text.append(span, ' ');
+  });
+
+  const hint = el('vsHint');
+  hint.textContent = 'Green = correct · underlined = check spelling · red = missing or different · struck through = extra';
+  hint.classList.remove('hidden');
+}
+
+// ─── Finish: learning ────────────────────────────────
+function finishLearning() {
+  const today = Recall.dateKey();
+  const card  = getCards()[vs.verse.ref];
+  const days  = Math.min(Recall.recallDays(card), Recall.MASTERY_DAYS);
+  const first = vs.first;
+
+  let title;
+  if (vs.newlyMastered)                 title = 'Mastered!';
+  else if (first && first.passed && !first.hinted) title = 'Recalled from memory!';
+  else if (first && first.passed)       title = 'Nice. Try it without a cue next time';
+  else if (first)                       title = 'Good start. You\'ll see this again tomorrow';
+  else                                  title = 'Practice logged';
+
+  el('vrStars').textContent = '●'.repeat(days) + '○'.repeat(Recall.MASTERY_DAYS - days);
+  el('vrTitle').textContent = title;
+  el('vrRef').textContent   = `${vs.verse.ref} · recalled on ${days} of ${Recall.MASTERY_DAYS} days`;
+  el('vrText').textContent  = vs.verse.text;
+
+  const newLevel = levelOf(getXp());
+  const bits = [vs.xp ? `+${vs.xp} XP` : 'No XP this round'];
+  if (newLevel > vs.levelBefore) bits.push(`🎉 Level ${newLevel}!`);
+  const streak = currentStreak();
+  if (streak > 1) bits.push(`🔥 ${streak}-day streak`);
+  bits.push(`Next review ${Recall.describeDue(card, today)}`);
+  if (!Recall.isMastered(card)) {
+    const need = Recall.MASTERY_DAYS - Recall.recallDays(card);
+    bits.push(`${need} more recall day${need === 1 ? '' : 's'} to master`);
+  }
+  el('vrXp').textContent = bits.join('  ·  ');
+
+  const wordsEl = el('vrWords');
   wordsEl.innerHTML = '';
   vs.verse.lexicon.forEach(entry => {
     const tag = document.createElement('span');
@@ -499,14 +729,58 @@ function finishVerse() {
     tag.onclick = () => openModal(entry);
     wordsEl.appendChild(tag);
   });
-  wordsWrap.classList.toggle('hidden', vs.verse.lexicon.length === 0);
+  el('vrWordsWrap').classList.toggle('hidden', vs.verse.lexicon.length === 0);
+
+  const othersDue = Recall.dueRefs(getCards(), today).filter(r => r !== vs.verse.ref).length;
+  el('vrReview').classList.toggle('hidden', othersDue === 0);
+  el('vrNext').classList.remove('hidden');
+  el('vrAgain').classList.remove('hidden');
 
   showVersePanel('vResult');
-  if (stars === 3) celebrate();
+  if (vs.newlyMastered) celebrate();
+}
+
+// ─── Review session ──────────────────────────────────
+function reviewNext() {
+  if (vs.qi >= vs.queue.length) { finishReview(); return; }
+  const ref = vs.queue[vs.qi++];
+  vs.verse  = verseList.find(v => v.ref === ref);
+  vs.tokens = tokenize(vs.verse.text);
+  renderStep();
+  window.scrollTo({ top: 0 });
+}
+
+function finishReview() {
+  const today = Recall.dateKey();
+  const total = vs.results.length;
+  const clean = vs.results.filter(r => r.passed && !r.hinted).length;
+
+  el('vrStars').textContent = total ? `${clean} / ${total}` : '–';
+  el('vrTitle').textContent = 'Review complete';
+  el('vrRef').textContent   = total ? 'Recalled without a cue' : 'Daily review';
+  el('vrText').textContent  = vs.results.map(r => {
+    const how = r.passed && !r.hinted ? '✓ recalled' : r.passed ? 'recalled with a cue' : 'missed';
+    return `${r.ref} — ${how} · next ${Recall.describeDue(r.card, today)}`;
+  }).join('\n');
+
+  const newLevel = levelOf(getXp());
+  const bits = [vs.xp ? `+${vs.xp} XP` : 'No XP this round'];
+  if (newLevel > vs.levelBefore) bits.push(`🎉 Level ${newLevel}!`);
+  const streak = currentStreak();
+  if (streak > 1) bits.push(`🔥 ${streak}-day streak`);
+  el('vrXp').textContent = bits.join('  ·  ');
+
+  el('vrWordsWrap').classList.add('hidden');
+  el('vrReview').classList.add('hidden');
+  el('vrNext').classList.add('hidden');
+  el('vrAgain').classList.add('hidden');
+
+  showVersePanel('vResult');
+  if (total && clean === total) celebrate();
 }
 
 function celebrate() {
-  const host = document.getElementById('vResult');
+  const host = el('vResult');
   for (let i = 0; i < 22; i++) {
     const p = document.createElement('span');
     p.className = 'confetti';

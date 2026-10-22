@@ -1206,6 +1206,62 @@ body {
 .verse-diff-steady    { color: var(--gold); border-color: var(--gold); }
 .verse-diff-challenge { color: #e85d5d; border-color: #e85d5d; }
 
+/* Daily review card */
+.review-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.2rem;
+  padding: 1rem 1.2rem;
+  background: linear-gradient(135deg, #1a1208 0%, var(--bg2) 100%);
+  border: 1px solid rgba(212,168,67,0.3);
+  border-radius: var(--radius);
+}
+.review-title { font-family: 'Cinzel', serif; font-size: 1rem; color: var(--gold-light); }
+.review-sub { font-size: 0.82rem; color: var(--text-muted); margin-top: 0.25rem; line-height: 1.5; }
+.review-card .gs-start-btn { margin-top: 0; padding: 0.7rem 1.6rem; }
+
+.verse-status { font-size: 0.72rem; color: var(--text-muted); text-align: right; }
+.verse-status.due { color: var(--gold-light); font-weight: 700; }
+
+/* Typed recall */
+.vs-input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'Noto Serif', serif;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  resize: vertical;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.vs-input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,168,67,0.15); }
+.vs-input:disabled { opacity: 0.55; }
+
+.vs-hint {
+  font-family: monospace;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+  color: var(--text-muted);
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  word-break: break-word;
+}
+
+.vs-text-feedback { font-size: 1.15rem; line-height: 2; }
+.d-ok { color: #48bb78; }
+.d-typo { color: #48bb78; text-decoration: underline wavy #e8b04a; text-underline-offset: 4px; }
+.d-miss { color: #e85d5d; font-weight: 600; background: rgba(232,93,93,0.12); border-radius: 4px; padding: 0 3px; }
+.d-said { font-weight: 400; font-size: 0.7em; color: var(--text-muted); }
+.d-extra { color: var(--text-muted); text-decoration: line-through; }
+
 /* Session */
 .vs-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
 .vs-steps { display: flex; gap: 0.4rem; flex-wrap: wrap; }
@@ -1287,7 +1343,7 @@ body {
 /* Result */
 .vr-stars { font-size: 2.6rem; color: var(--gold); letter-spacing: 0.2em; animation: vpop 0.5s ease; }
 .vr-ref { font-family: 'Cinzel', serif; color: var(--gold-light); font-size: 1rem; }
-.vr-text { font-family: 'Noto Serif', serif; font-style: italic; font-size: 1.05rem; line-height: 1.7; max-width: 520px; }
+.vr-text { font-family: 'Noto Serif', serif; font-style: italic; font-size: 1.05rem; line-height: 1.7; max-width: 520px; white-space: pre-line; }
 .vr-xp { font-size: 0.88rem; color: var(--text-muted); }
 .vr-words { width: 100%; }
 .vr-words-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 0.6rem; }
@@ -1333,5 +1389,7 @@ body {
   .vlevel { flex-basis: 100%; }
   .vs-card { padding: 1.2rem 1rem; }
   .vs-text { font-size: 1.1rem; }
+  .vs-input { font-size: 1rem; }
+  .review-card .gs-start-btn { width: 100%; }
   .quiz-options { grid-template-columns: 1fr; }
 }

@@ -160,7 +160,7 @@
             <span class="game-star-icon">✦</span>
             <h1 class="game-title">Memorize Scripture</h1>
           </div>
-          <p class="game-subtitle">Pick a verse. Read it, fill it in, put it in order, then recall it — earn stars and XP along the way.</p>
+          <p class="game-subtitle">Learn a verse in five short steps, ending with typing it from memory. We'll schedule quick reviews over the coming days and weeks, and a verse is mastered once you've recalled it on three different days.</p>
         </div>
 
         <div class="vstats">
@@ -170,6 +170,14 @@
           </div>
           <div class="score-chip streak-chip"><span class="score-val" id="vStreak">0</span><span class="score-lbl">🔥 Day streak</span></div>
           <div class="score-chip"><span class="score-val" id="vMastered">0</span><span class="score-lbl">Mastered</span></div>
+        </div>
+
+        <div class="review-card" id="vReviewCard">
+          <div class="review-text">
+            <div class="review-title" id="vReviewTitle"></div>
+            <div class="review-sub" id="vReviewSub"></div>
+          </div>
+          <button class="gs-start-btn" id="vReviewBtn" onclick="startReview()">Start review</button>
         </div>
 
         <div class="verse-grid" id="verseGrid"></div>
@@ -185,6 +193,8 @@
           <div class="vs-ref" id="vsRef"></div>
           <div class="vs-instruction" id="vsInstruction"></div>
           <div class="vs-text" id="vsText"></div>
+          <textarea id="vsInput" class="vs-input hidden" rows="5" placeholder="Type the verse here…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Type the verse from memory"></textarea>
+          <div class="vs-hint hidden" id="vsHint"></div>
           <div class="vs-msg" id="vsMsg" aria-live="polite"></div>
           <div class="vs-bank" id="vsBank"></div>
           <div class="vs-actions" id="vsActions"></div>
@@ -203,8 +213,9 @@
           <div class="recent-tags" id="vrWords"></div>
         </div>
         <div class="vr-buttons">
+          <button class="gs-start-btn hidden" id="vrReview" onclick="startReview()">Start today's review →</button>
           <button class="gs-start-btn" id="vrNext" onclick="nextVerse()">Next verse →</button>
-          <button class="gd-back-btn" onclick="retryVerse()">Practice again</button>
+          <button class="gd-back-btn" id="vrAgain" onclick="retryVerse()">Practice again</button>
           <button class="gd-back-btn" onclick="exitVerse()">All verses</button>
         </div>
       </div>
@@ -353,6 +364,7 @@
 </div>
 
 <script src="/static/js/app.js"></script>
+<script src="/static/js/recall.js"></script>
 <script src="/static/js/verses.js"></script>
 </body>
 </html>
