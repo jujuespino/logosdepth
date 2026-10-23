@@ -4,7 +4,7 @@
    Review: type each due verse from memory, spaced over days and weeks
    Grading and scheduling live in recall.js.
    =================================================== */
-/* global Recall, openModal, updateDueBadge, showStorageBanner, scheduleSync, track */
+/* global Recall, openModal, updateDueBadge, showStorageBanner, scheduleSync, track, hydrateCustomVerses */
 
 const VERSE_SRS_KEY    = 'ld_verse_srs';
 const VERSE_XP_KEY     = 'ld_verse_xp';
@@ -164,6 +164,7 @@ async function loadVerses() {
     const [vres, pres] = await Promise.all([fetch('/api/verses'), fetch('/api/packs')]);
     verseList = await vres.json();
     packList  = await pres.json();
+    if (typeof hydrateCustomVerses === 'function') await hydrateCustomVerses();
     renderPicker();
   } catch {
     const grid = el('verseGrid');
@@ -270,11 +271,18 @@ function renderPicker() {
 function renderControls(settings) {
   const packs = el('packChips');
   let select = el('packSelect');
-  if (!select) { // build once, so the control keeps keyboard focus when the list re-renders
+  if (!select) { // built once so the control keeps keyboard focus when the list re-renders
     select = document.createElement('select');
     select.id = 'packSelect';
     select.className = 'pack-select';
     select.setAttribute('aria-label', 'Verse pack');
+    select.onchange = () => { saveSettings({ ...getSettings(), pack: select.value }); renderPicker(); };
+    packs.appendChild(select);
+  }
+  const mine = verseList.filter(v => v.custom).length;
+  const sig = `${packList.length}:${verseList.length}:${mine}`;
+  if (select.dataset.sig !== sig) {
+    select.innerHTML = '';
     const add = (id, label) => {
       const o = document.createElement('option');
       o.value = id;
@@ -282,9 +290,9 @@ function renderControls(settings) {
       select.appendChild(o);
     };
     packList.forEach(p => add(p.id, `${p.title} (${p.count})`));
+    if (mine) add('mine', `My verses (${mine})`);
     add('all', `All verses (${verseList.length})`);
-    select.onchange = () => { saveSettings({ ...getSettings(), pack: select.value }); renderPicker(); };
-    packs.appendChild(select);
+    select.dataset.sig = sig;
   }
   select.value = settings.pack;
 
@@ -354,7 +362,7 @@ function toggleVerseList(force) {
 
 // ─── Session plumbing ────────────────────────────────
 function showVersePanel(name) {
-  ['vPicker', 'vSession', 'vResult'].forEach(id =>
+  ['vPicker', 'vSession', 'vResult', 'vBible'].forEach(id =>
     el(id).classList.toggle('hidden', id !== name));
 }
 

@@ -11,6 +11,7 @@ from flask import Flask, Response, jsonify, render_template, request
 from accounts import bp as accounts_bp
 from beta import beta_enabled
 from beta import bp as beta_bp
+from bible import bp as bible_bp
 from store import bp as store_bp
 
 app = Flask(__name__)
@@ -35,6 +36,7 @@ if os.environ.get("SENTRY_DSN"):
 app.register_blueprint(store_bp)
 app.register_blueprint(accounts_bp)
 app.register_blueprint(beta_bp)
+app.register_blueprint(bible_bp)
 
 DATA_DIR = Path(__file__).resolve().parent / "data"
 LEXICON: list[dict] = json.loads((DATA_DIR / "lexicon.json").read_text(encoding="utf-8"))

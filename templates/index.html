@@ -300,7 +300,10 @@
           <div class="qf-actions"><button class="qf-btn qf-btn-quiet" id="vNextBtn" data-click="learnNext">Learn this verse</button></div>
         </section>
 
-        <button class="qf-link" id="vOtherBtn" data-click="toggleVerseList" aria-expanded="false" aria-controls="vListWrap">Choose a different verse ▾</button>
+        <div class="qf-links">
+          <button class="qf-link" id="vOtherBtn" data-click="toggleVerseList" aria-expanded="false" aria-controls="vListWrap">Choose a different verse ▾</button>
+          <button class="qf-link" id="vBibleBtn" data-click="openBible">Browse the whole Bible →</button>
+        </div>
 
         <div class="qf-list hidden" id="vListWrap">
           <div class="picker-controls">
@@ -316,6 +319,27 @@
           <span>Mastered <span id="vMastered">0</span></span>
           <span class="qf-bar" aria-hidden="true"><i id="vXpFill" style="width:0%"></i></span>
         </p>
+      </div>
+
+      <!-- The whole Bible -->
+      <div id="vBible" class="qf-bible hidden">
+        <div class="vs-top">
+          <button class="qf-link" id="bibBack" data-click="bibleBack">← Back</button>
+          <div class="translation-toggle" id="bibTranslation" role="group" aria-label="Translation"></div>
+        </div>
+        <h1 class="qf-title" id="bibTitle">The Bible</h1>
+        <p class="qf-sub" id="bibCrumb"></p>
+        <div class="bib-goto">
+          <label class="sr-only" for="bibGoto">Go straight to a verse</label>
+          <input type="text" id="bibGoto" class="settings-input" placeholder="Go to a verse, e.g. John 3:16" autocomplete="off" />
+          <button class="qf-btn qf-btn-quiet" data-click="bibleGoto">Learn it</button>
+        </div>
+        <p class="settings-msg" id="bibMsg" aria-live="polite"></p>
+        <div id="bibBody"></div>
+        <div class="bib-bar hidden" id="bibBar">
+          <div class="bib-bar-row"><span id="bibSel"></span><button class="qf-btn" id="bibLearn" data-click="bibleLearn">Learn this</button></div>
+          <p class="bib-hint" id="bibHint" aria-live="polite"></p>
+        </div>
       </div>
 
       <!-- Practice session -->
@@ -516,6 +540,7 @@
 <script src="/static/js/analytics.js"></script>
 <script src="/static/js/reminder.js"></script>
 <script src="/static/js/verses.js"></script>
+<script src="/static/js/bible.js"></script>
 <script src="/static/js/settings.js"></script>
 <script src="/static/js/actions.js"></script>
 </body>

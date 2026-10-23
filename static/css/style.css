@@ -1716,3 +1716,29 @@ body[data-page="verses"] .topbar, body[data-page="game"] .topbar, body[data-page
 .vr-text { font-style: normal; }
 .game-start-screen, .gs-card, #gameStart { background: var(--bg); box-shadow: none; }
 .gs-icon, .gs-emoji { display: none; }
+
+/* ---- The whole Bible ---- */
+.qf-links { display: flex; gap: 1.4rem; flex-wrap: wrap; justify-content: center; }
+.qf-bible { display: grid; gap: 1rem; padding-bottom: 6rem; }
+.qf-bible .qf-title { font-size: 1.7rem; text-align: left; }
+.qf-bible .qf-sub { max-width: none; text-align: left; margin-top: -0.4rem; }
+.bib-goto { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.bib-goto .settings-input { flex: 1 1 14rem; }
+.bib-heading { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin: 1.2rem 0 0.6rem; }
+.bib-grid { display: grid; gap: 0.5rem; }
+.bib-books { grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); }
+.bib-chapters { grid-template-columns: repeat(auto-fill, minmax(3.4rem, 1fr)); }
+.bib-btn { border: 1px solid var(--border); background: var(--bg); border-radius: 10px; padding: 0.6rem 0.7rem; font: inherit; font-size: 0.92rem; color: var(--text); cursor: pointer; text-align: center; }
+.bib-btn:hover { background: var(--bg2); border-color: var(--text-muted); }
+.bib-verses { display: grid; }
+.bib-verse { display: grid; grid-template-columns: 2.2rem 1fr; gap: 0.4rem; text-align: left; border: 0; background: none; padding: 0.55rem 0.6rem; border-radius: 8px; font: inherit; color: var(--text); cursor: pointer; }
+.bib-verse:hover { background: var(--bg2); }
+.bib-verse.selected { background: var(--brand-soft); }
+.bib-num { color: var(--text-muted); font-size: 0.8rem; padding-top: 0.25rem; font-variant-numeric: tabular-nums; }
+.bib-text { font-family: 'Noto Serif', Georgia, serif; font-size: 1.05rem; line-height: 1.6; }
+.bib-bar { position: sticky; bottom: 0; background: var(--bg); border-top: 1px solid var(--border); padding: 0.8rem 0 0.9rem; display: grid; gap: 0.3rem; margin-top: 1rem; }
+.bib-bar.hidden { display: none; }
+.bib-bar-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; font-weight: 600; }
+.bib-hint { color: var(--text-muted); font-size: 0.85rem; min-height: 1.2rem; }
+.qf-btn:disabled { opacity: 0.4; cursor: default; }
+.bib-goto.hidden { display: none; }
