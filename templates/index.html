@@ -14,7 +14,7 @@
 </head>
 <body data-page="verses">
 
-<!-- ===== SIDEBAR ===== -->
+<!-- ===== TOP BAR ===== -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <span class="logo-icon">&#x05D0;</span>
@@ -31,14 +31,6 @@
       <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       Explore
     </button>
-    <button class="nav-btn" data-view="search" data-click="showView" data-arg="search">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      Search Words
-    </button>
-    <button class="nav-btn" data-view="browse" data-click="showView" data-arg="browse">
-      <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      Browse
-    </button>
     <button class="nav-btn" data-view="game" data-click="showView" data-arg="game">
       <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       Word Game
@@ -49,28 +41,6 @@
     </button>
   </nav>
 
-  <div class="sidebar-section-label">Language Filter</div>
-  <div class="lang-filter">
-    <button class="lang-btn active" data-lang="all" data-click="setLang" data-arg="all">All</button>
-    <button class="lang-btn hebrew" data-lang="hebrew" data-click="setLang" data-arg="hebrew">Hebrew</button>
-    <button class="lang-btn greek" data-lang="greek" data-click="setLang" data-arg="greek">Greek</button>
-  </div>
-
-  <div class="sidebar-section-label">Categories</div>
-  <ul class="category-list" id="categoryList">
-    <li class="cat-item loading">Loading…</li>
-  </ul>
-
-  <div class="sidebar-stats" id="sidebarStats">
-    <div class="stat-pill hebrew-pill">
-      <span class="stat-num" id="statHebrew">–</span>
-      <span class="stat-label">Hebrew</span>
-    </div>
-    <div class="stat-pill greek-pill">
-      <span class="stat-num" id="statGreek">–</span>
-      <span class="stat-label">Greek</span>
-    </div>
-  </div>
 </aside>
 
 <!-- ===== MAIN ===== -->
@@ -78,9 +48,6 @@
 
   <!-- Top bar -->
   <header class="topbar">
-    <button class="menu-toggle" data-click="toggleSidebar" aria-label="Open menu">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-    </button>
     <div class="search-wrap" id="topSearchWrap">
       <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input
@@ -103,7 +70,7 @@
 
   <!-- ===== VIEW: DASHBOARD ===== -->
   <section class="view hidden" id="view-dashboard">
-    <h1 class="sr-only">Explore words</h1>
+    <div class="explore-head"><h1>Explore the original words</h1><p class="hint-line">Search any English word above, or <button class="link-btn" data-click="showView" data-arg="browse">browse by category</button>.</p></div>
 
     <div class="dashboard-grid">
 
@@ -155,6 +122,11 @@
   <!-- ===== VIEW: SEARCH ===== -->
   <section class="view hidden" id="view-search">
     <h1 class="sr-only">Search results</h1>
+    <div class="lang-filter" role="group" aria-label="Language">
+      <button class="lang-btn active" data-lang="all" data-click="setLang" data-arg="all">All</button>
+      <button class="lang-btn hebrew" data-lang="hebrew" data-click="setLang" data-arg="hebrew">Hebrew</button>
+      <button class="lang-btn greek" data-lang="greek" data-click="setLang" data-arg="greek">Greek</button>
+    </div>
     <div class="results-header" id="resultsHeader"></div>
     <div class="results-grid" id="resultsGrid"></div>
     <div class="no-results hidden" id="noResults">
@@ -314,46 +286,45 @@
     <div class="game-container verse-container">
 
       <!-- Verse picker -->
-      <div id="vPicker">
-        <div class="game-header">
-          <div class="game-title-row">
-            <span class="game-star-icon">✦</span>
-            <h1 class="game-title">Memorize Scripture</h1>
+      <div id="vPicker" class="qf-home">
+        <section class="qf-today" id="vReviewCard" aria-labelledby="vReviewTitle">
+          <p class="qf-eyebrow" id="vTodayLabel">Today</p>
+          <h1 class="qf-title" id="vReviewTitle"></h1>
+          <p class="qf-sub" id="vReviewSub"></p>
+          <button class="qf-btn" id="vReviewBtn" data-click="startReview">Start review</button>
+        </section>
+
+        <section class="qf-next hidden" id="vNextCard" aria-label="Next verse to learn">
+          <span class="qf-next-label" id="vNextLabel">Next up</span>
+          <p class="qf-verse" id="vNextText"></p>
+          <div class="qf-actions"><button class="qf-btn qf-btn-quiet" id="vNextBtn" data-click="learnNext">Learn this verse</button></div>
+        </section>
+
+        <button class="qf-link" id="vOtherBtn" data-click="toggleVerseList" aria-expanded="false" aria-controls="vListWrap">Choose a different verse ▾</button>
+
+        <div class="qf-list hidden" id="vListWrap">
+          <div class="picker-controls">
+            <div class="pack-chips" id="packChips"></div>
+            <div class="translation-toggle" id="translationToggle" role="group" aria-label="Translation"></div>
           </div>
-          <p class="game-subtitle">Learn a verse in short steps, ending with typing it from memory. We'll schedule quick reviews over the coming days and weeks, and a verse is mastered once you've recalled it on three different days.</p>
+          <div class="verse-grid" id="verseGrid"></div>
         </div>
 
-        <div class="vstats">
-          <div class="vlevel">
-            <div class="vlevel-top"><span class="vlevel-name" id="vLevel">Level 1</span><span class="vlevel-xp" id="vXpLabel">0 / 100 XP</span></div>
-            <div class="game-progress-bar"><div class="game-progress-fill" id="vXpFill" style="width:0%"></div></div>
-          </div>
-          <div class="score-chip streak-chip"><span class="score-val" id="vStreak">0</span><span class="score-lbl">🔥 Day streak</span></div>
-          <div class="score-chip"><span class="score-val" id="vMastered">0</span><span class="score-lbl">Mastered</span></div>
-        </div>
-
-        <div class="review-card" id="vReviewCard">
-          <div class="review-text">
-            <div class="review-title" id="vReviewTitle"></div>
-            <div class="review-sub" id="vReviewSub"></div>
-          </div>
-          <button class="gs-start-btn" id="vReviewBtn" data-click="startReview">Start review</button>
-        </div>
-
-        <div class="picker-controls">
-          <div class="pack-chips" id="packChips" role="group" aria-label="Verse packs"></div>
-          <div class="translation-toggle" id="translationToggle" role="group" aria-label="Translation"></div>
-        </div>
-
-        <div class="verse-grid" id="verseGrid"></div>
+        <p class="qf-stats" id="vStats">
+          <span id="vLevel">Level 1</span> · <span id="vXpLabel">0 / 100 XP</span> ·
+          <span><span id="vStreak">0</span>-day streak</span> ·
+          <span>Mastered <span id="vMastered">0</span></span>
+          <span class="qf-bar" aria-hidden="true"><i id="vXpFill" style="width:0%"></i></span>
+        </p>
       </div>
 
       <!-- Practice session -->
       <div id="vSession" class="hidden">
         <h1 class="sr-only">Practice session</h1>
         <div class="vs-top">
-          <button class="gd-back-btn" data-click="exitVerse">← All verses</button>
+          <button class="qf-link" id="vsBack" data-click="exitVerse">← All verses</button>
           <div class="vs-steps" id="vsSteps"></div>
+          <span class="qf-steplabel" id="vsLabel"></span>
         </div>
         <div class="vs-card">
           <div class="vs-ref" id="vsRef"></div>

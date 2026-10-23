@@ -258,7 +258,7 @@ def _asset_version() -> str:
 
 
 ASSET_VERSION = _asset_version()
-PRECACHE_URLS = ["/", "/manifest.webmanifest"] + [
+PRECACHE_URLS = ["/", "/about", "/privacy", "/manifest.webmanifest"] + [
     "/static/" + p.relative_to(STATIC_DIR).as_posix() for p in _static_files() if p.suffix != ".txt"
 ]
 

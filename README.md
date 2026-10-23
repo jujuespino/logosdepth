@@ -4,9 +4,9 @@ Memorize scripture word-for-word and keep it, using methods with strong scientif
 
 ## What it does
 
-- **Memorize Verses:** learn a verse in short steps (Read, Phrases, Fill In, Order, Recall, Type It; an optional "guess first" comes before reading), then review it on a spaced schedule. A verse is *mastered* after you recall it unaided on three different days.
+- **Memorize:** the home screen says what to do today (review what is due, or learn the next suggested verse); the full verse list and pack picker are one click away. Learn a verse in short steps (Read, Phrases, Fill In, Order, Recall, Type It; an optional "guess first" comes before reading), then review it on a spaced schedule. A verse is *mastered* after you recall it unaided on three different days.
 - **Content:** 201 verses in 14 packs (KJV, and WEB for 190 of them), each linked to the exact Hebrew/Greek words in it.
-- **Word study:** search and browse 83 hand-written Hebrew and Greek word entries (Strong's numbers, transliteration, definitions, KJV renderings). Words found in verses but not in that set get brief entries.
+- **Explore:** search and browse 83 hand-written Hebrew and Greek word entries (Strong's numbers, transliteration, definitions, KJV renderings). Words found in verses but not in that set get brief entries.
 - **Word Game:** flashcards and a quiz for the original-language vocabulary.
 - **Works offline and installs as an app (PWA).** Settings has backup/restore of your progress (merge-safe), a daily calendar reminder (.ics), and an intro walkthrough.
 

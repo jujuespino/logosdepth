@@ -70,8 +70,20 @@ def wait_for(pg, expr, timeout=10000):
     raise TimeoutError(expr)
 
 
+def show_list(pg):
+    if pg.is_hidden('#vListWrap'):
+        pg.click('#vOtherBtn')
+
+
+def exit_verse(pg):
+    pg.evaluate('exitVerse()')
+    show_list(pg)
+
+
 def open_verses(pg):
+    """Go to Memorize and open the full verse list (it is collapsed behind 'Choose a different verse')."""
     pg.click('[data-view="verses"]')
+    show_list(pg)
 
 
 def card(pg, ref):
@@ -129,10 +141,22 @@ with sync_playwright() as p:
 
     # ───────────── Navigation + word game regression ─────────────
     pg = new_page(b)
-    for view in ['game', 'verses', 'browse', 'search', 'dashboard']:
+    views = ['game', 'verses', 'browse', 'search', 'dashboard', 'settings']
+    for view in ['game', 'verses', 'dashboard', 'settings']:
         pg.click(f'[data-view="{view}"]')
-        visible = [v for v in ['game', 'verses', 'browse', 'search', 'dashboard'] if pg.is_visible(f'#view-{v}')]
+        visible = [v for v in views if pg.is_visible(f'#view-{v}')]
         check(f'nav -> {view}', visible == [view], visible)
+    check('top bar has exactly four places', pg.locator('.nav-btn').count() == 4, pg.locator('.nav-btn').count())
+    pg.click('[data-view="dashboard"]')
+    pg.get_by_role('button', name='browse by category').click()
+    check('Explore links to Browse', pg.is_visible('#view-browse') and not pg.is_visible('#view-dashboard'))
+    pg.fill('#searchInput', 'love')
+    pg.wait_for_selector('#resultsGrid .word-card')
+    check('typing in the search bar opens results', pg.is_visible('#view-search'))
+    pg.get_by_role('button', name='Hebrew', exact=True).click()
+    pg.wait_for_timeout(400)
+    check('language filter on the results page works', pg.locator('#resultsGrid .word-card').count() >= 1
+          and 'hebrew' in (pg.locator('#resultsGrid .word-card').first.inner_html().lower()))
     pg.click('[data-view="game"]')
     pg.click('#gameStart .gs-start-btn')
     pg.click('#flashcard')
@@ -149,9 +173,12 @@ with sync_playwright() as p:
 
     # ───────────── Scenario 1: learn + clean typed recall (day 0) ─────────────
     pg = new_page(b)
+    check('the verse list is tucked away until asked for', pg.is_hidden('#vListWrap'))
     open_verses(pg)
+    check('"Choose a different verse" opens the list', pg.is_visible('#vListWrap'))
     check('fresh state: review button hidden', pg.is_hidden('#vReviewBtn'))
-    check('fresh state: no review card yet', pg.is_hidden('#vReviewCard'))
+    check('fresh state: invites the first verse', pg.inner_text('#vReviewTitle') == 'Learn your first verse')
+    check('fresh state: suggests a verse to start with', pg.is_visible('#vNextCard') and 'start with' in pg.inner_text('#vNextLabel').lower())
     check('picker lists the Start Here verses', pg.locator('.verse-card').count() >= 10)
 
     guided_to_typed(pg, 'Psalm 23:1')
@@ -262,7 +289,7 @@ with sync_playwright() as p:
     # Day 1: both due
     at_day(pg, 1)
     open_verses(pg)
-    check('day1: review card shows 2 due', pg.inner_text('#vReviewTitle') == "Today's review: 2 verses due",
+    check('day1: review card shows 2 due', pg.inner_text('#vReviewTitle') == "2 verses to review",
           pg.inner_text('#vReviewTitle'))
     check('day1: both cards flagged Due today', pg.locator('.verse-status.due').count() == 2)
     if SHOTS:
@@ -303,7 +330,7 @@ with sync_playwright() as p:
     # Day 4: Genesis (overdue) + Psalm due -> Psalm reaches 3 recall days = mastered
     at_day(pg, 4)
     open_verses(pg)
-    check('day4: 2 due', pg.inner_text('#vReviewTitle') == "Today's review: 2 verses due", pg.inner_text('#vReviewTitle'))
+    check('day4: 2 due', pg.inner_text('#vReviewTitle') == "2 verses to review", pg.inner_text('#vReviewTitle'))
     click_btn(pg, 'Start review')
     for _ in range(2):
         submit(pg, verse_text(pg, pg.evaluate('vs.verse.ref')))
@@ -381,12 +408,12 @@ with sync_playwright() as p:
     pg.evaluate('startVerse("Psalm 23:1")')
     check('fallback uses KJV text and plain key',
           pg.evaluate('vs.translation') == 'kjv' and pg.evaluate('vs.key') == 'Psalm 23:1')
-    pg.evaluate('exitVerse()')
+    exit_verse(pg)
 
     # Review a WEB card next day
     at_day(pg, 1)
     open_verses(pg)
-    check('WEB card is due next day', pg.inner_text('#vReviewTitle') == "Today's review: 1 verse due", pg.inner_text('#vReviewTitle'))
+    check('WEB card is due next day', pg.inner_text('#vReviewTitle') == "1 verse to review", pg.inner_text('#vReviewTitle'))
     click_btn(pg, 'Start review')
     check('review uses the WEB text', pg.evaluate('vs.text') == web_text)
     submit(pg, web_text)
@@ -440,7 +467,7 @@ with sync_playwright() as p:
     check('next step is Fill In', pg.evaluate('vs.steps[vs.step].id') == 'fill1')
 
     # A single-phrase verse skips the Phrases step (WEB Hebrews 13:8)
-    pg.evaluate('exitVerse()')
+    exit_verse(pg)
     pg.get_by_role('button', name='WEB', exact=True).click()
     pg.evaluate('startVerse("Hebrews 13:8")')
     ids = pg.evaluate('vs.steps.map(s => s.id)')
@@ -546,7 +573,7 @@ with sync_playwright() as p:
     check('first verse comes from the chosen pack', 'gospel' in started, started)
     check('pack choice is remembered', pg.evaluate('getSettings().pack') == 'gospel')
     check('onboarding is remembered', pg.evaluate('localStorage.getItem("ld_onboarded")') == 'true')
-    pg.evaluate('exitVerse()')
+    exit_verse(pg)
     pg.click('[data-view="dashboard"]')
     pg.click('[data-view="verses"]')
     check('onboarding does not reappear', pg.is_hidden('#onboard'))
@@ -581,6 +608,13 @@ with sync_playwright() as p:
     pg.reload()
     pg.wait_for_selector('.verse-card', state='attached')
     check('page is controlled by the service worker', pg.evaluate('!!navigator.serviceWorker.controller'))
+    pg.goto(BASE + 'about')
+    check('with the service worker active, /about is the About page (not the app)',
+          'keep it' in pg.inner_text('h1') and pg.locator('#vPicker').count() == 0, pg.inner_text('h1'))
+    pg.goto(BASE + 'privacy')
+    check('...and /privacy is the privacy page', pg.inner_text('h1') == 'Privacy')
+    pg.goto(BASE)
+    pg.wait_for_selector('.verse-card', state='attached')
     ctx.set_offline(True)
     pg.reload()
     pg.wait_for_selector('.verse-card', state='attached', timeout=15000)
@@ -596,7 +630,7 @@ with sync_playwright() as p:
 
     # ───────────── Scenario 7: mobile layout with the typing UI ─────────────
     pg = new_page(b, 0, width=390, height=800)
-    pg.click('.menu-toggle')
+    check('mobile: the top bar is visible without a menu button', pg.is_visible('.sidebar-nav') and pg.locator('.menu-toggle').count() == 0)
     pg.click('[data-view="verses"]')
     pg.evaluate('startVerse("Isaiah 41:10"); goToStep("type")')
     pg.fill('#vsInput', 'Fear thou not; for I am with thee')

@@ -26,27 +26,12 @@ function showView(name, btn) {
   document.getElementById(`view-${name}`).classList.remove('hidden');
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
-  document.getElementById('sidebar').classList.remove('open');
 
   if (name !== 'search') {
     resetSearchState();
   }
   if (name === 'verses' && typeof maybeShowOnboarding === 'function') maybeShowOnboarding();
 }
-
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
-}
-
-// Close sidebar when clicking outside on mobile
-document.addEventListener('click', e => {
-  const sidebar = document.getElementById('sidebar');
-  if (sidebar.classList.contains('open') &&
-      !sidebar.contains(e.target) &&
-      !e.target.closest('.menu-toggle')) {
-    sidebar.classList.remove('open');
-  }
-});
 
 // ─── Language filter ─────────────────────────────────
 function setLang(lang, btn) {
@@ -148,8 +133,6 @@ async function loadStats() {
     const cats = await res.json();
     const totalH = cats.reduce((s, c) => s + c.hebrew, 0);
     const totalG = cats.reduce((s, c) => s + c.greek, 0);
-    document.getElementById('statHebrew').textContent  = totalH;
-    document.getElementById('statGreek').textContent   = totalG;
     document.getElementById('dashTotal').textContent   = totalH + totalG;
     document.getElementById('dashHebrew').textContent  = totalH;
     document.getElementById('dashGreek').textContent   = totalG;
@@ -187,26 +170,13 @@ async function loadFeatured() {
   } catch {}
 }
 
-// ─── Categories sidebar + browse ─────────────────────
+// ─── Browse by category ──────────────────────────────
 async function loadCategories() {
   try {
     const res  = await fetch('/api/categories');
     const cats = await res.json();
 
     // Sidebar list
-    const list = document.getElementById('categoryList');
-    list.innerHTML = '';
-    cats.forEach(cat => {
-      const li = document.createElement('li');
-      li.className = 'cat-item';
-      li.innerHTML = `
-        <span>${cat.name}</span>
-        <span class="cat-count">${cat.count}</span>
-      `;
-      li.onclick = () => selectCategory(cat.name, li);
-      list.appendChild(li);
-    });
-
     // Browse grid
     const browseGrid = document.getElementById('browseGrid');
     browseGrid.innerHTML = '';

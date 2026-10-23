@@ -60,7 +60,9 @@ self.addEventListener('fetch', event => {
   if (url.pathname.startsWith(API_PREFIX)) {
     event.respondWith(networkFirst(request));
   } else if (request.mode === 'navigate') {
-    event.respondWith(networkFirst(new Request('/'), '/'));
+    // The app lives at "/". The public pages are separate documents and must not be answered with the app shell.
+    if (url.pathname === '/') event.respondWith(networkFirst(new Request('/'), '/'));
+    else if (url.pathname === '/about' || url.pathname === '/privacy') event.respondWith(networkFirst(request));
   } else if (url.pathname.startsWith('/static/') || url.pathname === '/manifest.webmanifest') {
     event.respondWith(cacheFirst(request));
   }

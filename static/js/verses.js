@@ -196,6 +196,7 @@ function renderPicker() {
     `${verseList.filter(v => Recall.isMastered(cards[keyOf(v)])).length}/${verseList.length}`;
 
   renderReviewCard(cards, today);
+  renderNext(settings, cards);
   renderControls(settings);
 
   const todayIdx = verseList.length ? Math.floor(Date.now() / 864e5) % verseList.length : -1;
@@ -306,10 +307,9 @@ function renderReviewCard(cards, today) {
   const known = Object.keys(cards).filter(exists);
   const due   = Recall.dueRefs(cards, today).filter(exists);
   const btn   = el('vReviewBtn');
-  el('vReviewCard').classList.toggle('hidden', !due.length && !known.length);
 
   if (due.length) {
-    el('vReviewTitle').textContent = `Today's review: ${due.length} verse${due.length === 1 ? '' : 's'} due`;
+    el('vReviewTitle').textContent = `${due.length} verse${due.length === 1 ? '' : 's'} to review`;
     el('vReviewSub').textContent   = 'Type each one from memory. Short, spaced-out practice is what makes it stick.';
     btn.classList.remove('hidden');
   } else if (known.length) {
@@ -318,10 +318,38 @@ function renderReviewCard(cards, today) {
     el('vReviewSub').textContent   = `Next review ${Recall.describeDue(next, today)}.`;
     btn.classList.add('hidden');
   } else {
-    el('vReviewTitle').textContent = 'Spaced reviews';
-    el('vReviewSub').textContent   = 'Learn a verse below and its reviews will be scheduled for you.';
+    el('vReviewTitle').textContent = 'Learn your first verse';
+    el('vReviewSub').textContent   = 'Short steps, then type it from memory. We schedule the reviews for you.';
     btn.classList.add('hidden');
   }
+}
+
+// The verse we suggest: the first one in the chosen pack that has not been started yet.
+let suggested = null;
+function renderNext(settings, cards) {
+  const keyOf = v => cardKey(v.ref, resolveTranslation(v, settings.translation));
+  const inPack = v => settings.pack === 'all' || (v.packs || []).includes(settings.pack);
+  suggested = verseList.find(v => inPack(v) && !cards[keyOf(v)]) || null;
+  const card = el('vNextCard');
+  card.classList.toggle('hidden', !suggested);
+  if (!suggested) return;
+  const tr = resolveTranslation(suggested, settings.translation);
+  const first = Object.keys(cards).length === 0;
+  el('vNextLabel').textContent = `${first ? 'Start with' : 'Next up'} · ${suggested.ref}`;
+  el('vNextText').textContent  = textFor(suggested, tr);
+}
+
+function learnNext() {
+  if (suggested) startVerse(suggested.ref, getSettings().translation);
+}
+
+function toggleVerseList(force) {
+  const wrap = el('vListWrap');
+  const open = typeof force === 'boolean' ? force : wrap.classList.contains('hidden');
+  wrap.classList.toggle('hidden', !open);
+  const b = el('vOtherBtn');
+  b.setAttribute('aria-expanded', String(open));
+  b.textContent = open ? 'Hide the verse list ▴' : 'Choose a different verse ▾';
 }
 
 // ─── Session plumbing ────────────────────────────────
@@ -363,6 +391,7 @@ function exitVerse() {
   stopSpeech();
   vs = null;
   renderPicker();
+  toggleVerseList(false);
   showVersePanel('vPicker');
 }
 
@@ -387,9 +416,10 @@ function renderSteps() {
   wrap.innerHTML = '';
   if (vs.mode === 'review') {
     const el1 = document.createElement('span');
-    el1.className = 'vs-step current';
+    el1.className = 'vs-step current review';
     el1.textContent = `Review ${vs.qi} of ${vs.queue.length}`;
     wrap.appendChild(el1);
+    el('vsLabel').textContent = '';
     return;
   }
   vs.steps.forEach((s, i) => {
@@ -398,6 +428,7 @@ function renderSteps() {
     s1.textContent = `${i + 1}. ${s.label}`;
     wrap.appendChild(s1);
   });
+  el('vsLabel').textContent = `Step ${vs.step + 1} of ${vs.steps.length} · ${vs.steps[vs.step].label}`;
 }
 
 function setMsg(text, kind) {
