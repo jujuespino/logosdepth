@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}LogosDepth{% endblock %}</title>
+  <meta name="description" content="{% block description %}Memorize scripture word-for-word and keep it, using methods with strong scientific support.{% endblock %}" />
+  <meta name="theme-color" content="#0d1117" />
+  <link rel="icon" type="image/png" href="/static/icons/icon-192.png" />
+  <link rel="stylesheet" href="/static/css/fonts.css" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body class="doc-page">
+<header class="doc-header">
+  <a class="doc-brand" href="/about"><span class="logo-icon">&#x05D0;</span><span class="logo-text">LogosDepth</span></a>
+  <nav class="doc-nav" aria-label="Site">
+    <a href="/about">About</a>
+    <a href="/about#science">The science</a>
+    <a href="/privacy">Privacy</a>
+    <a class="doc-cta" href="/">Open the app</a>
+  </nav>
+</header>
+<main class="doc-main">
+{% block content %}{% endblock %}
+</main>
+<footer class="doc-footer">
+  <p>Scripture: King James Version and World English Bible (public domain in the US). Original-language data: STEPBible, CC BY 4.0.
+  See <a href="/about#credits">credits</a>.</p>
+</footer>
+</body>
+</html>

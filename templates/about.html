@@ -1,0 +1,54 @@
+{% extends "doc_base.html" %}
+{% block title %}About LogosDepth{% endblock %}
+{% block content %}
+<h1>Memorize scripture and keep it</h1>
+<p class="doc-lead">LogosDepth helps you learn a verse word for word, then brings it back at the right times so it stays. When you want to go deeper, it shows you the Hebrew and Greek words behind the verse.</p>
+<p><a class="doc-button" href="/">Start with a verse</a></p>
+
+<h2 id="how">How it works</h2>
+<ol class="doc-steps">
+  <li><strong>Learn in short steps.</strong> Read the verse, practice it phrase by phrase, fill in the blanks, put the pieces in order, then type it from memory.</li>
+  <li><strong>Come back on a schedule.</strong> After you learn a verse, it returns after 1, 3, 7, 14, 30, 60 and 120 days. A clean recall moves it up a step; a miss brings it back tomorrow.</li>
+  <li><strong>Mastered means recalled on three different days.</strong> One good session is not mastery, so the app asks for it on separate days.</li>
+  <li><strong>Go deeper (optional).</strong> Every verse links to the exact Hebrew or Greek words in it, with transliteration, meaning and how the word is translated elsewhere.</li>
+</ol>
+<p>You are not limited to the starter packs: the whole Bible is there (all 66 books, King James Version, and the World English Bible where it lines up). Pick any verse or short passage and learn it the same way.</p>
+<p>It works offline, can be added to your home screen, and keeps your progress in your own browser. You can back it up, and (if this site offers it) sync across devices with an emailed sign-in link.</p>
+
+<h2 id="science">The science behind it</h2>
+<p>The design follows research on how people learn and keep verbal material. We have tried to say only what the evidence supports, including where it is thin.</p>
+<table class="doc-table">
+  <thead><tr><th scope="col">What the app does</th><th scope="col">Why</th><th scope="col">Strength of evidence</th></tr></thead>
+  <tbody>
+    <tr><td>You type the verse from memory instead of re-reading it</td><td>Trying to recall strengthens memory more than studying again, and the advantage grows with time. Free recall tends to help more than picking from choices.</td><td>Strong, replicated</td></tr>
+    <tr><td>Reviews are spread over days and weeks</td><td>Spreading practice out improves long-term retention compared with cramming.</td><td>Strong, replicated</td></tr>
+    <tr><td>A verse is mastered after recall on three separate days</td><td>Relearning across sessions, not one good session, is what builds durable memory.</td><td>Strong</td></tr>
+    <tr><td>Verses are split into phrases to practice</td><td>Testing yourself during learning, not only at the end, helps; working in small chunks keeps practice winnable.</td><td>Moderate</td></tr>
+    <tr><td>Optional “guess first” before reading</td><td>Attempting before you have learned something, even wrongly, improves later learning of that material.</td><td>Moderate</td></tr>
+    <tr><td>Rewards (XP, streaks) follow successful recall, not time spent</td><td>Game elements help on average but can backfire if they reward the wrong thing.</td><td>Mixed</td></tr>
+  </tbody>
+</table>
+<h3>What we do not know</h3>
+<ul>
+  <li>We did not find a study that tested Bible-verse memorization itself. The research comes from word lists, texts and school subjects, and we are applying it to verses.</li>
+  <li>The research supports spacing practice out, but not any one exact schedule. The 1, 3, 7, 14, 30, 60, 120 day ladder is our design choice.</li>
+  <li>Apps cannot make memorizing effortless. The methods work because they ask effort of you at the right moments.</li>
+</ul>
+<h3>Where to read more</h3>
+<ul>
+  <li>Karpicke &amp; Roediger (2008), <a href="https://pubmed.ncbi.nlm.nih.gov/18276894/" rel="noopener">“The critical importance of retrieval for learning”</a>, <em>Science</em>.</li>
+  <li>Cepeda et al. (2006), <a href="https://pubmed.ncbi.nlm.nih.gov/16719566/" rel="noopener">“Distributed practice in verbal recall tasks”</a>, <em>Psychological Bulletin</em>.</li>
+  <li>Dunlosky et al. (2013), <a href="https://pubmed.ncbi.nlm.nih.gov/26173288/" rel="noopener">“Improving students’ learning with effective learning techniques”</a>, <em>Psychological Science in the Public Interest</em>.</li>
+  <li>Rawson, Vaughn, Walsh &amp; Dunlosky (2018), <a href="https://pubmed.ncbi.nlm.nih.gov/29431462/" rel="noopener">on successive relearning</a>.</li>
+</ul>
+
+<h2 id="credits">Credits</h2>
+<ul>
+  <li><strong>King James Version</strong> (1769 text). Public domain in the United States; some countries, including the United Kingdom, treat it differently.</li>
+  <li><strong>World English Bible</strong>. Public domain. “World English Bible” is a trademark of eBible.org; we show the text unaltered.</li>
+  <li><strong>Strong’s tagging</strong> of the KJV: CrossWire Bible Society.</li>
+  <li><strong>Original-language word data:</strong> hand-written entries for the most common words, and brief entries from <a href="https://github.com/STEPBible/STEPBible-Data" rel="noopener">STEPBible</a> (Tyndale House, Cambridge; TBESG and TBESH), licensed <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a>.</li>
+  <li><strong>Fonts:</strong> Cinzel, Inter, Noto Serif and Noto Serif Hebrew, under the SIL Open Font License.</li>
+</ul>
+<p class="doc-note">Questions or corrections: {% if contact_email %}<a href="mailto:{{ contact_email }}">{{ contact_email }}</a>{% else %}use the Feedback form in the app’s Settings{% endif %}.</p>
+{% endblock %}

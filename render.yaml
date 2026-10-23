@@ -1,0 +1,47 @@
+# Render Blueprint: https://render.com/docs/blueprint-spec
+# A persistent disk is only needed if you turn on accounts or the beta tools (they use SQLite).
+services:
+  - type: web
+    name: logosdepth
+    runtime: python
+    plan: starter            # persistent disks need a paid instance
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --access-logfile -
+    healthCheckPath: /healthz
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"
+      - key: TRUST_PROXY
+        value: "1"
+      - key: DATABASE_PATH
+        value: /data/logosdepth.db
+      - key: PUBLIC_URL
+        sync: false          # e.g. https://logosdepth.example
+      - key: ACCOUNTS_ENABLED
+        value: "0"           # set to 1 after SMTP below is configured and tested
+      - key: BETA_ENABLED
+        value: "0"           # set to 1 for the beta
+      - key: MAIL_BACKEND
+        value: smtp
+      - key: MAIL_FROM
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: OPERATOR_NAME
+        sync: false
+      - key: CONTACT_EMAIL
+        sync: false
+      - key: LEGAL_REVIEWED
+        value: "0"           # set to 1 only after a lawyer has reviewed /privacy
+      - key: SENTRY_DSN
+        sync: false          # optional; also pip install "sentry-sdk[flask]"
