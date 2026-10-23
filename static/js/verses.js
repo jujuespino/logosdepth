@@ -52,7 +52,7 @@ const el = id => document.getElementById(id);
 
 // ─── Settings and translations ───────────────────────
 const VERSE_SETTINGS_KEY = 'ld_verse_settings';
-const getSettings  = () => ({ translation: 'kjv', pack: 'all', ...vLoad(VERSE_SETTINGS_KEY, {}) });
+const getSettings  = () => ({ translation: 'kjv', pack: 'start', ...vLoad(VERSE_SETTINGS_KEY, {}) });
 const saveSettings = s => vSave(VERSE_SETTINGS_KEY, s);
 const TRANSLATION_LABEL = { kjv: 'KJV', web: 'WEB' };
 let packList = [];
@@ -267,18 +267,25 @@ function renderPicker() {
 }
 
 function renderControls(settings) {
-  const chips = el('packChips');
-  chips.innerHTML = '';
-  const make = (id, label, count) => {
-    const b = document.createElement('button');
-    b.className = 'pack-chip' + (settings.pack === id ? ' active' : '');
-    b.textContent = count != null ? `${label} · ${count}` : label;
-    b.setAttribute('aria-pressed', settings.pack === id ? 'true' : 'false');
-    b.onclick = () => { saveSettings({ ...getSettings(), pack: id }); renderPicker(); };
-    chips.appendChild(b);
-  };
-  make('all', 'All', verseList.length);
-  packList.forEach(p => make(p.id, p.title, p.count));
+  const packs = el('packChips');
+  let select = el('packSelect');
+  if (!select) { // build once, so the control keeps keyboard focus when the list re-renders
+    select = document.createElement('select');
+    select.id = 'packSelect';
+    select.className = 'pack-select';
+    select.setAttribute('aria-label', 'Verse pack');
+    const add = (id, label) => {
+      const o = document.createElement('option');
+      o.value = id;
+      o.textContent = label;
+      select.appendChild(o);
+    };
+    packList.forEach(p => add(p.id, `${p.title} (${p.count})`));
+    add('all', `All verses (${verseList.length})`);
+    select.onchange = () => { saveSettings({ ...getSettings(), pack: select.value }); renderPicker(); };
+    packs.appendChild(select);
+  }
+  select.value = settings.pack;
 
   const toggle = el('translationToggle');
   toggle.innerHTML = '';
@@ -299,6 +306,7 @@ function renderReviewCard(cards, today) {
   const known = Object.keys(cards).filter(exists);
   const due   = Recall.dueRefs(cards, today).filter(exists);
   const btn   = el('vReviewBtn');
+  el('vReviewCard').classList.toggle('hidden', !due.length && !known.length);
 
   if (due.length) {
     el('vReviewTitle').textContent = `Today's review: ${due.length} verse${due.length === 1 ? '' : 's'} due`;

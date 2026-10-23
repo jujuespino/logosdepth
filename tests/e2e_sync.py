@@ -257,7 +257,6 @@ with tempfile.TemporaryDirectory() as tmp:
             fpg = f.new_page()
             fpg.goto(BASE)
             fpg.wait_for_selector('.verse-card', state='attached')
-            fpg.click('[data-view="verses"]')
             fpg.wait_for_selector('#onboard:not(.hidden)')
             click = fpg.get_by_role('button', name='Next →')
             click.click()

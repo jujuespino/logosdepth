@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ─── View switching ──────────────────────────────────
 function showView(name, btn) {
+  document.body.dataset.page = name;
   document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
   document.getElementById(`view-${name}`).classList.remove('hidden');
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));

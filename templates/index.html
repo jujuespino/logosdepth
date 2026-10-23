@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LogosDepth — Bible Word Translator</title>
+  <title>LogosDepth</title>
   <link rel="manifest" href="/manifest.webmanifest" />
   <meta name="theme-color" content="#0d1117" />
   <link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png" />
@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="/static/css/fonts.css" />
   <link rel="stylesheet" href="/static/css/style.css" />
 </head>
-<body>
+<body data-page="verses">
 
 <!-- ===== SIDEBAR ===== -->
 <aside class="sidebar" id="sidebar">
@@ -22,9 +22,14 @@
   </div>
 
   <nav class="sidebar-nav">
-    <button class="nav-btn active" data-view="dashboard" data-click="showView" data-arg="dashboard">
+    <button class="nav-btn active" data-view="verses" data-click="showView" data-arg="verses">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      Memorize
+      <span class="nav-badge hidden" id="dueBadge" aria-label="Verses due for review"></span>
+    </button>
+    <button class="nav-btn" data-view="dashboard" data-click="showView" data-arg="dashboard">
       <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      Dashboard
+      Explore
     </button>
     <button class="nav-btn" data-view="search" data-click="showView" data-arg="search">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -33,11 +38,6 @@
     <button class="nav-btn" data-view="browse" data-click="showView" data-arg="browse">
       <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
       Browse
-    </button>
-    <button class="nav-btn" data-view="verses" data-click="showView" data-arg="verses">
-      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-      Memorize Verses
-      <span class="nav-badge hidden" id="dueBadge" aria-label="Verses due for review"></span>
     </button>
     <button class="nav-btn" data-view="game" data-click="showView" data-arg="game">
       <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
@@ -102,8 +102,8 @@
   <noscript><div class="banner">LogosDepth needs JavaScript to run.</div></noscript>
 
   <!-- ===== VIEW: DASHBOARD ===== -->
-  <section class="view" id="view-dashboard">
-    <h1 class="sr-only">Dashboard</h1>
+  <section class="view hidden" id="view-dashboard">
+    <h1 class="sr-only">Explore words</h1>
 
     <div class="dashboard-grid">
 
@@ -310,7 +310,7 @@
   </section>
 
   <!-- ===== VIEW: MEMORIZE VERSES ===== -->
-  <section class="view hidden" id="view-verses">
+  <section class="view" id="view-verses">
     <div class="game-container verse-container">
 
       <!-- Verse picker -->

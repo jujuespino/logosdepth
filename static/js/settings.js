@@ -491,6 +491,8 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('online', () => { if (syncState.signedIn) runSync(true); });
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') tracker.flush(); });
 
+  if (typeof maybeShowOnboarding === 'function') maybeShowOnboarding(); // Memorize is the home view
+
   const view = params.get('view');
   if (view && $(`view-${view}`)) showView(view, document.querySelector(`[data-view="${view}"]`));
 
