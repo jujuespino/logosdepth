@@ -52,11 +52,9 @@ with sync_playwright() as p:
     pg.wait_for_timeout(500)
 
     audit(pg, "memorize home")
-    pg.click("#vOtherBtn")
-    audit(pg, "memorize home with list open")
     pg.click("#vBibleBtn")
     pg.wait_for_selector(".bib-books")
-    audit(pg, "bible: books")
+    audit(pg, "bible: books and starter verses")
     pg.get_by_role("button", name="Psalms", exact=True).click()
     audit(pg, "bible: chapters")
     pg.get_by_role("button", name="Psalms chapter 23, 6 verses").click()

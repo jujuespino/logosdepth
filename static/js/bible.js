@@ -92,7 +92,7 @@ function renderBibleToggle() {
     b.className = 'translation-btn' + (settings.translation === id ? ' active' : '');
     b.textContent = label;
     b.setAttribute('aria-pressed', settings.translation === id ? 'true' : 'false');
-    b.onclick = () => { saveSettings({ ...getSettings(), translation: id }); renderBible(); };
+    b.onclick = () => { saveSettings({ ...getSettings(), translation: id }); renderPicker(); renderBible(); };
     toggle.appendChild(b);
   });
 }
@@ -103,6 +103,7 @@ function renderBible() {
   el('bibMsg').textContent = '';
   renderBibleToggle();
   document.querySelector('.bib-goto').classList.toggle('hidden', bib.level !== 'books');
+  el('vListWrap').classList.toggle('hidden', bib.level !== 'books');
   if (bib.level === 'books') {
     el('bibTitle').textContent = 'The Bible';
     el('bibCrumb').textContent = '';

@@ -301,16 +301,7 @@
         </section>
 
         <div class="qf-links">
-          <button class="qf-link" id="vOtherBtn" data-click="toggleVerseList" aria-expanded="false" aria-controls="vListWrap">Choose a different verse ▾</button>
-          <button class="qf-link" id="vBibleBtn" data-click="openBible">Browse the whole Bible →</button>
-        </div>
-
-        <div class="qf-list hidden" id="vListWrap">
-          <div class="picker-controls">
-            <div class="pack-chips" id="packChips"></div>
-            <div class="translation-toggle" id="translationToggle" role="group" aria-label="Translation"></div>
-          </div>
-          <div class="verse-grid" id="verseGrid"></div>
+          <button class="qf-link" id="vBibleBtn" data-click="openBible">Browse the Bible →</button>
         </div>
 
         <p class="qf-stats" id="vStats">
@@ -336,6 +327,13 @@
         </div>
         <p class="settings-msg" id="bibMsg" aria-live="polite"></p>
         <div id="bibBody"></div>
+        <section class="qf-list" id="vListWrap" aria-label="Starter verses">
+          <h2 class="bib-heading">Starter verses</h2>
+          <div class="picker-controls">
+            <div class="pack-chips" id="packChips"></div>
+          </div>
+          <div class="verse-grid" id="verseGrid"></div>
+        </section>
         <div class="bib-bar hidden" id="bibBar">
           <div class="bib-bar-row"><span id="bibSel"></span><button class="qf-btn" id="bibLearn" data-click="bibleLearn">Learn this</button></div>
           <p class="bib-hint" id="bibHint" aria-live="polite"></p>

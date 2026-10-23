@@ -71,19 +71,18 @@ def wait_for(pg, expr, timeout=10000):
 
 
 def show_list(pg):
+    """The starter packs live at the top of the Bible browser."""
     if pg.is_hidden('#vListWrap'):
-        pg.click('#vOtherBtn')
+        pg.click('#vBibleBtn')
 
 
 def exit_verse(pg):
     pg.evaluate('exitVerse()')
-    show_list(pg)
 
 
 def open_verses(pg):
-    """Go to Memorize and open the full verse list (it is collapsed behind 'Choose a different verse')."""
+    """Go to the Memorize home screen."""
     pg.click('[data-view="verses"]')
-    show_list(pg)
 
 
 def card(pg, ref):
@@ -173,13 +172,17 @@ with sync_playwright() as p:
 
     # ───────────── Scenario 1: learn + clean typed recall (day 0) ─────────────
     pg = new_page(b)
-    check('the verse list is tucked away until asked for', pg.is_hidden('#vListWrap'))
+    check('home has one link to find other verses: Browse the Bible', pg.inner_text('#vBibleBtn') == 'Browse the Bible →'
+          and pg.locator('#vOtherBtn').count() == 0)
+    check('the starter list is not on the home screen', pg.is_hidden('#vListWrap'))
     open_verses(pg)
-    check('"Choose a different verse" opens the list', pg.is_visible('#vListWrap'))
     check('fresh state: review button hidden', pg.is_hidden('#vReviewBtn'))
     check('fresh state: invites the first verse', pg.inner_text('#vReviewTitle') == 'Learn your first verse')
     check('fresh state: suggests a verse to start with', pg.is_visible('#vNextCard') and 'start with' in pg.inner_text('#vNextLabel').lower())
-    check('picker lists the Start Here verses', pg.locator('.verse-card').count() >= 10)
+    show_list(pg)
+    check('the Bible browser opens with the Start Here verses on top', pg.locator('.verse-card').count() >= 10)
+    pg.click('#bibBack')
+    check('Back from the Bible returns home', pg.is_visible('#vNextCard'))
 
     guided_to_typed(pg, 'Psalm 23:1')
     check('step bar matches the steps for this verse (incl. Phrases)', pg.locator('.vs-step').count() == pg.evaluate('vs.steps.length') == 6)
@@ -291,7 +294,9 @@ with sync_playwright() as p:
     open_verses(pg)
     check('day1: review card shows 2 due', pg.inner_text('#vReviewTitle') == "2 verses to review",
           pg.inner_text('#vReviewTitle'))
+    show_list(pg)
     check('day1: both cards flagged Due today', pg.locator('.verse-status.due').count() == 2)
+    pg.click('#bibBack')
     if SHOTS:
         pg.screenshot(path=f'{SHOTS}/review_due.png')
     click_btn(pg, 'Start review')
@@ -353,6 +358,7 @@ with sync_playwright() as p:
     # ───────────── Scenario 8: packs, translations, exact word links ─────────────
     pg = new_page(b)
     open_verses(pg)
+    show_list(pg)
     n_start = pg.locator('.verse-card').count()
     check('a new learner starts on the short Start Here pack', pg.input_value('#packSelect') == 'start' and 10 <= n_start <= 30, n_start)
     check('pack picker lists 10+ packs plus All', pg.locator('#packSelect option').count() >= 11, pg.locator('#packSelect option').count())
@@ -365,6 +371,7 @@ with sync_playwright() as p:
     pg.reload()
     pg.wait_for_selector('.verse-card', state='attached')
     open_verses(pg)
+    show_list(pg)
     check('pack filter persists across reload', pg.input_value('#packSelect') == 'comfort')
     pg.select_option('#packSelect', 'all')
     check('All restores the full list', pg.locator('.verse-card').count() == n_all)
@@ -403,6 +410,7 @@ with sync_playwright() as p:
 
     # KJV-only verse under WEB falls back to KJV
     pg.locator('#vResult button', has_text='All verses').click()
+    show_list(pg)
     check('KJV-only verse is labelled in WEB mode',
           'New · KJV only' in pg.locator('.verse-card', has_text='Psalm 23:1').first.inner_text())
     pg.evaluate('startVerse("Psalm 23:1")')
@@ -468,6 +476,7 @@ with sync_playwright() as p:
 
     # A single-phrase verse skips the Phrases step (WEB Hebrews 13:8)
     exit_verse(pg)
+    show_list(pg)
     pg.get_by_role('button', name='WEB', exact=True).click()
     pg.evaluate('startVerse("Hebrews 13:8")')
     ids = pg.evaluate('vs.steps.map(s => s.id)')
@@ -553,6 +562,7 @@ with sync_playwright() as p:
     pg = new_page(b, init_script="Storage.prototype.setItem = function () { throw new Error('blocked'); };")
     check('blocked storage shows the banner', pg.is_visible('#storageBanner'))
     open_verses(pg)
+    show_list(pg)
     check('app still loads verses with storage blocked', pg.locator('.verse-card').count() >= 10)
     pg.context.close()
 
@@ -657,6 +667,7 @@ with sync_playwright() as p:
     saved = pg.evaluate('JSON.parse(localStorage.getItem("ld_custom_verses"))')
     check('the passage text is kept on this device for offline reviews', 'Obadiah 1:15' in saved and saved['Obadiah 1:15']['text'].startswith('For the day of the LORD'))
     exit_verse(pg)
+    show_list(pg)
     check('a "My verses" pack appears', 'My verses (1)' in pg.inner_text('#packSelect'))
     pg.select_option('#packSelect', 'mine')
     check('My verses lists the passage', pg.locator('.verse-card').count() == 1 and 'Obadiah 1:15' in pg.inner_text('.verse-card'))

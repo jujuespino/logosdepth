@@ -295,19 +295,6 @@ function renderControls(settings) {
     select.dataset.sig = sig;
   }
   select.value = settings.pack;
-
-  const toggle = el('translationToggle');
-  toggle.innerHTML = '';
-  Object.entries(TRANSLATION_LABEL).forEach(([id, label]) => {
-    const b = document.createElement('button');
-    b.className = 'translation-btn' + (settings.translation === id ? ' active' : '');
-    b.textContent = label;
-    b.setAttribute('aria-pressed', settings.translation === id ? 'true' : 'false');
-    b.onclick = () => { saveSettings({ ...getSettings(), translation: id }); renderPicker(); };
-    toggle.appendChild(b);
-  });
-  const nameKey = settings.translation === 'web' ? 'World English Bible (public domain)' : 'King James Version (1769, public domain)';
-  toggle.title = nameKey;
 }
 
 function renderReviewCard(cards, today) {
@@ -351,15 +338,6 @@ function learnNext() {
   if (suggested) startVerse(suggested.ref, getSettings().translation);
 }
 
-function toggleVerseList(force) {
-  const wrap = el('vListWrap');
-  const open = typeof force === 'boolean' ? force : wrap.classList.contains('hidden');
-  wrap.classList.toggle('hidden', !open);
-  const b = el('vOtherBtn');
-  b.setAttribute('aria-expanded', String(open));
-  b.textContent = open ? 'Hide the verse list ▴' : 'Choose a different verse ▾';
-}
-
 // ─── Session plumbing ────────────────────────────────
 function showVersePanel(name) {
   ['vPicker', 'vSession', 'vResult', 'vBible'].forEach(id =>
@@ -399,7 +377,6 @@ function exitVerse() {
   stopSpeech();
   vs = null;
   renderPicker();
-  toggleVerseList(false);
   showVersePanel('vPicker');
 }
 
