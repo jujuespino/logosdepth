@@ -50,7 +50,6 @@ Copy the backup somewhere off the server (object storage, another host). Practic
 ## 6. Before you announce it
 
 - [ ] A lawyer has reviewed `/privacy` (and you have terms of use if you want them). Then set `LEGAL_REVIEWED=1`, `OPERATOR_NAME`, `CONTACT_EMAIL`.
-- [ ] Someone qualified has reviewed the hand-written Hebrew/Greek explanations (see `NOTICE.md`).
 - [ ] You have confirmed the King James Version position for any country where you will promote the app (see `NOTICE.md`).
 - [ ] `python3 scripts/check_deploy.py https://your-domain --expect-accounts --expect-beta` passes (without `--allow-draft`).
 - [ ] You have installed it to your own phone's home screen (iPhone: Share → Add to Home Screen) and used it offline.

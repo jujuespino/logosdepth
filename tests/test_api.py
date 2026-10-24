@@ -24,7 +24,7 @@ def test_health(client):
     r = client.get("/healthz")
     assert r.status_code == 200
     body = r.get_json()
-    assert body["status"] == "ok" and body["lexicon"] > 0 and body["verses"] > 0
+    assert body["status"] == "ok" and body["verses"] > 0 and body["packs"] > 0
 
 
 def test_security_headers(client):
@@ -45,65 +45,19 @@ def test_no_external_requests_in_page(client):
     assert "fonts.googleapis.com" not in html and "fonts.gstatic.com" not in html
 
 
-def test_search_by_keyword(client):
-    body = client.get("/api/search?q=love").get_json()
-    assert body["results"], "expected results for 'love'"
-    assert any(e["strongs_id"] == "G26" for e in body["results"])
-
-
-def test_search_empty_returns_nothing(client):
-    assert client.get("/api/search").get_json()["results"] == []
-
-
-def test_search_language_filter(client):
-    results = client.get("/api/search?q=love&lang=hebrew").get_json()["results"]
-    assert results and all(e["language"] == "Hebrew" for e in results)
-
-
-def test_search_category_filter(client):
-    cats = client.get("/api/categories").get_json()
-    name = cats[0]["name"]
-    results = client.get(f"/api/search?category={name}").get_json()["results"]
-    assert results and all(e["category"] == name for e in results)
-
-
-def test_categories_counts_add_up(client):
-    cats = client.get("/api/categories").get_json()
-    for c in cats:
-        assert c["count"] == c["hebrew"] + c["greek"]
-
-
-def test_word_of_day_is_stable_within_a_day(client):
-    a = client.get("/api/word-of-day").get_json()
-    b = client.get("/api/word-of-day").get_json()
-    assert a["strongs_id"] == b["strongs_id"]
-
-
-def test_featured_has_entries(client):
-    assert len(client.get("/api/featured").get_json()) >= 5
-
-
-@pytest.mark.parametrize("lang,prefix", [("hebrew", "H"), ("greek", "G")])
-def test_words_language_filter(client, lang, prefix):
-    words = client.get(f"/api/words?lang={lang}").get_json()
-    assert words and all(w["strongs_id"].startswith(prefix) for w in words)
-
-
-def test_words_all_returns_everything(client):
-    assert len(client.get("/api/words").get_json()) == client.get("/healthz").get_json()["lexicon"]
-
-
-def test_verses_sorted_short_first_with_resolved_lexicon(client):
+def test_verses_sorted_short_first(client):
     verses = client.get("/api/verses").get_json()
     lengths = [len(v["text"].split()) for v in verses]
     assert lengths == sorted(lengths)
     john = next(v for v in verses if v["ref"] == "John 3:16")
-    # Exact words in the verse: "loved" is agapao (G25), "believeth" is pisteuo (G4100), "everlasting" aionios (G166)
-    assert {e["strongs_id"] for e in john["lexicon"]} >= {"G25", "G4100", "G166", "G2316"}
-    assert "G26" not in {e["strongs_id"] for e in john["lexicon"]}
-    assert all(isinstance(e, dict) for v in verses for e in v["lexicon"])
     assert john["translations"]["web"] and "kjv" not in john["translations"]
     assert "start" in john["packs"]
+    assert not any("lexicon" in v or "align" in v for v in verses), "no original-language data is served"
+
+
+def test_removed_word_study_routes_are_gone(client):
+    for path in ("/api/search?q=love", "/api/word-of-day", "/api/categories", "/api/featured", "/api/words"):
+        assert client.get(path).status_code == 404, path
 
 
 def test_verses_without_web_still_served(client):

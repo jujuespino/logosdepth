@@ -6,7 +6,6 @@ Optional: SHOTS=/some/dir to save screenshots.
 """
 import json
 import os
-import unicodedata
 from datetime import datetime, timedelta
 
 from playwright.sync_api import sync_playwright
@@ -139,35 +138,17 @@ def submit(pg, text):
 with sync_playwright() as p:
     b = p.chromium.launch(executable_path=CHROME, args=['--no-sandbox'])
 
-    # ───────────── Navigation + word game regression ─────────────
+    # ───────────── Navigation ─────────────
     pg = new_page(b)
-    views = ['game', 'verses', 'browse', 'search', 'dashboard', 'settings']
-    for view in ['game', 'verses', 'dashboard', 'settings']:
+    views = ['verses', 'settings']
+    for view in ['settings', 'verses']:
         pg.click(f'[data-view="{view}"]')
         visible = [v for v in views if pg.is_visible(f'#view-{v}')]
         check(f'nav -> {view}', visible == [view], visible)
-    check('top bar has exactly four places', pg.locator('.nav-btn').count() == 4, pg.locator('.nav-btn').count())
-    pg.click('[data-view="dashboard"]')
-    pg.get_by_role('button', name='browse by category').click()
-    check('Explore links to Browse', pg.is_visible('#view-browse') and not pg.is_visible('#view-dashboard'))
-    pg.fill('#searchInput', 'love')
-    pg.wait_for_selector('#resultsGrid .word-card')
-    check('typing in the search bar opens results', pg.is_visible('#view-search'))
-    pg.get_by_role('button', name='Hebrew', exact=True).click()
-    pg.wait_for_timeout(400)
-    check('language filter on the results page works', pg.locator('#resultsGrid .word-card').count() >= 1
-          and 'hebrew' in (pg.locator('#resultsGrid .word-card').first.inner_html().lower()))
-    pg.click('[data-view="game"]')
-    pg.click('#gameStart .gs-start-btn')
-    pg.click('#flashcard')
-    pg.wait_for_timeout(600)
-    pg.click('.fc-btn-yes')
-    check('flashcard scores', int(pg.inner_text('#gameScore')) >= 10)
-    pg.evaluate('restartGame()')
-    pg.click('#tabQuiz')
-    pg.click('#gameStart .gs-start-btn')
-    pg.wait_for_selector('.quiz-option')
-    check('quiz has 4 options', pg.locator('.quiz-option').count() == 4)
+    check('top bar has exactly two places: Memorize and Settings', pg.locator('.nav-btn').count() == 2, pg.locator('.nav-btn').count())
+    check('no Hebrew or Greek material anywhere in the page',
+          not any(0x0370 <= ord(c) <= 0x03FF or 0x0590 <= ord(c) <= 0x05FF or 0x1F00 <= ord(c) <= 0x1FFF
+                  for c in pg.inner_text('body') + pg.content()))
     check('regression: no JS errors', not pg.errors, pg.errors[:2])
     pg.context.close()
 
@@ -356,7 +337,7 @@ with sync_playwright() as p:
     check('scenario 6: no JS errors', not pg.errors, pg.errors[:2])
     pg.context.close()
 
-    # ───────────── Scenario 8: packs, translations, exact word links ─────────────
+    # ───────────── Scenario 8: packs and translations ─────────────
     pg = new_page(b)
     open_verses(pg)
     show_list(pg)
@@ -394,20 +375,7 @@ with sync_playwright() as p:
     check('result shows (WEB)', '(WEB)' in pg.inner_text('#vrRef'), pg.inner_text('#vrRef'))
     check('progress stored under the WEB key only', card(pg, 'John 3:16|web') is not None and card(pg, 'John 3:16') is None)
 
-    # Exact original-language words (John 3:16: loved = agapao, believeth = pisteuo; not agape/pistis)
-    chips = pg.locator('#vrWords .recent-tag').all_inner_texts()
-    joined = ' | '.join(chips)
-    check('result lists exact words: agapao and pisteuo', 'agapaō' in joined and 'pisteuō' in joined, joined)
-    check('result does not list the related-but-wrong agape/pistis', 'Agape' not in joined and 'Pistis' not in joined, joined)
-    check('curated words come first', 'Aionios' in chips[0] or 'Zoe' in chips[0] or 'Theos' in chips[0], chips[:3])
-    pg.locator('#vrWords .recent-tag', has_text='agapaō').click()
-    check('brief entry opens in the modal', pg.is_visible('#wordModal') and 'STEPBible' in pg.inner_text('#modalExtended'))
-    check('brief entry shows part of speech', 'verb' in pg.inner_text('#modalLang').lower(), pg.inner_text('#modalLang'))
-    pg.keyboard.press('Escape')
-    pg.locator('#vrWords .recent-tag', has_text='Theos').click()
-    check('curated entry keeps its in-depth text', 'Brief entry' not in pg.inner_text('#modalExtended')
-          and len(pg.inner_text('#modalExtended')) > 80)
-    pg.keyboard.press('Escape')
+    check('the result screen has no word chips', pg.locator('#vrWords').count() == 0 and pg.locator('.recent-tag').count() == 0)
 
     # KJV-only verse under WEB falls back to KJV
     pg.locator('#vResult button', has_text='All verses').click()
@@ -581,7 +549,7 @@ with sync_playwright() as p:
     check('the first verse comes from the Start Here pack', 'start' in started, started)
     check('the intro is remembered', pg.evaluate('localStorage.getItem("ld_onboarded")') == 'true')
     exit_verse(pg)
-    pg.click('[data-view="dashboard"]')
+    pg.click('[data-view="settings"]')
     pg.click('[data-view="verses"]')
     check('the intro does not reappear', pg.is_hidden('#onboard'))
     pg.context.close()
@@ -604,7 +572,7 @@ with sync_playwright() as p:
     pg.on('pageerror', lambda e: pg.errors.append(str(e)[:160]))
     pg.goto(BASE + '?view=verses')
     pg.wait_for_selector('.verse-card', state='attached')
-    check('?view=verses opens the Memorize view', pg.is_visible('#view-verses') and pg.is_hidden('#view-dashboard'))
+    check('?view=verses opens the Memorize view', pg.is_visible('#view-verses') and pg.is_hidden('#view-settings'))
     mani = pg.evaluate('fetch(document.querySelector("link[rel=manifest]").href).then(r => r.json())')
     check('manifest has name, standalone display and a maskable icon',
           mani['name'] == 'LogosDepth' and mani['display'] == 'standalone'
@@ -778,57 +746,6 @@ with sync_playwright() as p:
     at_day(pg, 10)
     open_verses(pg)
     check("\"Don't ask again\" stops the offers for good", pg.is_hidden('#vRemindHome') and pg.is_hidden('#vrRemind'))
-    pg.context.close()
-
-    # ───────────── Scenario 15: words you missed ─────────────
-    pg = new_page(b)
-    pg.evaluate('startVerse("John 3:16"); goToStep("type")')
-    check('nothing is listed before an answer is checked', pg.is_hidden('#vsMissed'))
-    submit(pg, 'For God so the world, that he gave his only begotten Son, that whosoever in him should not perish, but have life.')
-    check('a miss lists the words you missed', pg.is_visible('#vsMissed') and 'words you missed' in pg.inner_text('#vsMissed').lower())
-    missed = pg.inner_text('#vsMissed')
-    check('...naming each missed English word', all(w in missed for w in ('loved', 'believeth', 'everlasting')), missed)
-    nfc = unicodedata.normalize('NFC', missed)  # the lexicon uses a different accent code point for some letters
-    check('...with the Greek word behind it', all(unicodedata.normalize('NFC', g) in nfc for g in ('ἀγαπάω', 'πιστεύω', 'αἰώνιος')), missed)
-    check('...and its meaning', 'to love' in missed)
-    check('words that were right are not listed', 'gave' not in missed and 'Son' not in missed)
-    pg.locator('.vs-missed-orig').first.click()
-    check('tapping the Greek word opens its details', pg.is_visible('#wordModal') and 'G25' in pg.inner_text('#modalStrongs'))
-    pg.keyboard.press('Escape')
-    pg.get_by_role('button', name='Try again').click()
-    check('trying again clears the list', pg.is_hidden('#vsMissed'))
-    submit(pg, verse_text(pg, 'John 3:16'))
-    check('a perfect answer lists nothing', pg.is_hidden('#vsMissed'))
-
-    # little words are listed but never given a Greek word of their own
-    pg.get_by_role('button', name='Continue →').click()
-    pg.evaluate('startVerse("John 3:16"); goToStep("type")')
-    submit(pg, 'For God so loved world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.')
-    items = pg.locator('.vs-missed-list li').all_inner_texts()
-    check('a missed "the" is listed without a Greek word', any(t.strip().startswith('the') and 'κόσμος' not in t for t in items), items)
-
-    # a different translation lists the words but cannot pair them with Greek (the tagging is for the KJV wording)
-    exit_verse(pg)
-    show_list(pg)
-    pg.get_by_role('button', name='WEB', exact=True).click()
-    pg.evaluate('startVerse("John 3:16"); goToStep("type")')
-    submit(pg, 'For God so the world')
-    web_missed = pg.inner_text('#vsMissed')
-    check('under WEB the missed words are listed without Greek words', 'missed' in web_missed.lower()
-          and pg.locator('.vs-missed-orig').count() == 0, web_missed[:80])
-
-    # a Bible passage (not in the starter packs) works too, with Hebrew words
-    exit_verse(pg)
-    show_list(pg)
-    pg.get_by_role('button', name='KJV', exact=True).click()
-    pg.fill('#bibGoto', 'Psalm 23:2-3')
-    pg.keyboard.press('Enter')
-    pg.wait_for_selector('#vSession:not(.hidden)')
-    pg.evaluate('goToStep("type")')
-    submit(pg, 'He maketh me to lie down in green pastures')
-    check('a Bible passage lists missed words with Hebrew words', pg.locator('.vs-missed-orig').count() >= 1
-          and any(0x0590 <= ord(ch) <= 0x05FF for ch in pg.inner_text('#vsMissed')))
-    check('scenario 15: no JS errors', not pg.errors, pg.errors[:2])
     pg.context.close()
 
     # ───────────── Scenario 7: mobile layout with the typing UI ─────────────

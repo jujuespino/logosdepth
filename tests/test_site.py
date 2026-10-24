@@ -21,7 +21,7 @@ def test_about_page(client):
     html = r.get_data(as_text=True)
     assert "<h1>" in html and 'id="science"' in html
     assert "We did not find a study that tested Bible-verse memorization" in html
-    assert "STEPBible" in html and "CC BY 4.0" in html
+    assert "STEPBible" not in html and "Hebrew" not in html
 
 
 def test_privacy_is_flagged_as_draft_until_reviewed(client, monkeypatch):

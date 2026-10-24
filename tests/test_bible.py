@@ -4,9 +4,9 @@ from pathlib import Path
 
 import pytest
 
-from app import LEXICON_BY_ID, VERSES
+from app import VERSES
 from app import app as flask_app
-from bible import MAX_VERSES, MAX_WORDS, _book, _index, _lexicon
+from bible import MAX_VERSES, MAX_WORDS, _book, _index
 
 DATA = Path(__file__).resolve().parent.parent / "data" / "bible"
 
@@ -36,26 +36,9 @@ def test_known_verse_counts():
 def test_no_empty_or_stray_markup_in_any_verse():
     for b in _index():
         for ch in _book(b["slug"])["chapters"]:
-            for kjv, web, ids, _align in ch:
+            for kjv, web in ch:
                 assert kjv.strip() and not re.search(r"[#\[\]]|\s{2,}", kjv), (b["name"], kjv[:40])
                 assert web is None or (web.strip() and not re.search(r"\s{2,}", web))
-                assert len(ids) <= 10
-
-
-def test_every_linked_word_resolves():
-    curated = {k for k, v in LEXICON_BY_ID.items() if not v.get("brief")}
-    lex = _lexicon()
-    for b in _index():
-        for ch in _book(b["slug"])["chapters"]:
-            for _, _, ids, _align in ch:
-                for sid in ids:
-                    assert sid in curated or sid in lex, sid
-
-
-def test_lexicon_entries_have_the_fields_the_word_modal_needs():
-    for sid, e in list(_lexicon().items())[:500]:
-        assert e["strongs_id"] == sid and e["original"] and e["language"] in ("Hebrew", "Greek") and e["brief"] is True
-        assert e["source"].startswith("STEPBible")
 
 
 def test_curated_verses_match_the_whole_bible_text(client):
@@ -84,7 +67,7 @@ def test_chapter_endpoint(client):
 def test_passage_single_verse_and_range(client):
     one = client.get("/api/passage", query_string={"ref": "John 3:16"}).get_json()
     assert one["ref"] == "John 3:16" and "everlasting life" in one["text"] and one["packs"] == ["mine"]
-    assert {e["strongs_id"] for e in one["lexicon"]} & {"G25", "G4100"}
+    assert "lexicon" not in one and "align" not in one
     rng = client.get("/api/passage", query_string={"ref": "Psalm 23:1-3"}).get_json()
     assert rng["ref"] == "Psalm 23:1-3" and rng["text"].startswith("The LORD is my shepherd") and "for his name's sake." in rng["text"]
     assert "translations" not in rng   # Psalm 23:1 opens with a superscription in the WEB, so the range is KJV-only
@@ -125,53 +108,3 @@ def test_whole_bible_data_files_are_reasonable_in_size():
     total = sum(p.stat().st_size for p in DATA.glob("*.json"))
     assert 8_000_000 < total < 25_000_000
     json.loads((DATA / "index.json").read_text())
-
-
-# ── word alignment: which word of the verse carries which Hebrew or Greek word ──
-def test_alignment_points_at_real_words_with_real_ids_everywhere():
-    for b in _index():
-        for ch in _book(b["slug"])["chapters"]:
-            for kjv, _, ids, al in ch:
-                n = len(kjv.split())
-                for item in (al.split(",") if al else []):
-                    t, i = (int(x) for x in item.split(":"))
-                    assert 0 <= t < n and 0 <= i < len(ids), (b["name"], kjv[:40], item)
-
-
-def test_alignment_pairs_the_right_english_words(client):
-    j = client.get("/api/passage", query_string={"ref": "John 3:16"}).get_json()
-    words = j["text"].split()
-    pairs = {words[t].strip(",.;:").lower(): sid for t, sid in j["align"]}
-    assert pairs["loved"] == "G25" and pairs["believeth"] == "G4100" and pairs["everlasting"] == "G166"
-    assert pairs["god"] == "G2316" and pairs["son"] == "G5207"
-
-
-def test_alignment_offsets_follow_the_joined_passage(client):
-    j = client.get("/api/passage", query_string={"ref": "Psalm 23:2-3"}).get_json()
-    n_first = len(client.get("/api/passage", query_string={"ref": "Psalm 23:2"}).get_json()["text"].split())
-    assert any(t >= n_first for t, _ in j["align"]), "words of the second verse are numbered after the first verse"
-    assert all(t < len(j["text"].split()) for t, _ in j["align"])
-
-
-def test_starter_verses_carry_alignment_limited_to_their_linked_words(client):
-    verses = client.get("/api/verses").get_json()
-    assert all(v["align"] for v in verses)
-    for v in verses:
-        linked = {e["strongs_id"] for e in v["lexicon"]}
-        assert {sid for _, sid in v["align"]} <= linked, v["ref"]
-        assert all(0 <= t < len(v["text"].split()) for t, _ in v["align"])
-    j = next(v for v in verses if v["ref"] == "John 3:16")
-    words = j["text"].split()
-    assert {words[t].strip(",.") .lower(): sid for t, sid in j["align"]}["loved"] == "G25"
-
-
-def test_alignment_covers_nearly_every_tagged_word():
-    """Of the verses with tagged words, most have at least one aligned pair (a few are all function words)."""
-    with_pairs = total = 0
-    for slug in ("john", "psalms", "romans", "genesis"):
-        for ch in _book(slug)["chapters"]:
-            for _, _, ids, al in ch:
-                if ids:
-                    total += 1
-                    with_pairs += bool(al)
-    assert with_pairs / total > 0.97

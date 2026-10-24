@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render the PWA icons (static/icons/*.png) from the logo mark: a gold Aleph on the app's dark background.
+"""Render the PWA icons (static/icons/*.png): a white open book on the app's blue.
 
 Needs Playwright with Chromium. Usage: python3 scripts/make_icons.py
 """
@@ -10,7 +10,6 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parent.parent
-FONT = ROOT / "static" / "fonts" / "noto-serif-hebrew-hebrew-400-normal.woff2"
 OUT = ROOT / "static" / "icons"
 
 # name, pixel size, maskable (full-bleed with a safe zone) vs. "any" (rounded square)
@@ -22,14 +21,13 @@ ICONS = [
 ]
 
 HTML = """<!doctype html><meta charset="utf-8"><style>
-@font-face {{ font-family: 'Aleph'; src: url('file://{font}') format('woff2'); }}
 html, body {{ margin: 0; background: transparent; }}
 .icon {{ width: {size}px; height: {size}px; display: grid; place-items: center; box-sizing: border-box;
-  background: radial-gradient(circle at 30% 25%, #1c2330 0%, #0d1117 70%);
-  border-radius: {radius}px; {border} }}
-.glyph {{ font-family: 'Aleph', serif; color: #f0c866; font-size: {glyph}px; line-height: 1;
-  transform: translateY({shift}px); text-shadow: 0 0 {glow}px rgba(212,168,67,0.35); }}
-</style><div class="icon"><div class="glyph">א</div></div>"""
+  background: #2563eb; border-radius: {radius}px; }}
+svg {{ width: {glyph}px; height: {glyph}px; stroke: #fff; fill: none; stroke-width: 1.6;
+  stroke-linecap: round; stroke-linejoin: round; }}
+</style><div class="icon"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+<path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>"""
 
 
 def main():
@@ -41,20 +39,15 @@ def main():
         browser = p.chromium.launch(executable_path=exe, args=["--no-sandbox"])
         for name, size, maskable in ICONS:
             html = HTML.format(
-                font=FONT,
                 size=size,
                 radius=0 if maskable else round(size * 0.22),
-                border="" if maskable else f"border: {max(2, size // 64)}px solid rgba(212,168,67,0.35);",
-                glyph=round(size * (0.50 if maskable else 0.62)),
-                shift=round(size * 0.03),
-                glow=round(size * 0.08),
+                glyph=round(size * (0.46 if maskable else 0.56)),
             )
             f = Path(tmp) / "icon.html"
             f.write_text(html, encoding="utf-8")
             page = browser.new_page(viewport={"width": size, "height": size})
             page.goto(f"file://{f}")
-            page.evaluate("document.fonts.ready")
-            page.wait_for_timeout(150)
+            page.wait_for_timeout(100)
             page.screenshot(path=str(OUT / name), omit_background=True)
             page.close()
             print("wrote", OUT / name)

@@ -149,7 +149,6 @@ An evidence review for LogosDepth, compiled 22 Oct 2026.
 | Phrase chunks in Order step | Aligns with chunking (~4 chunks); long verses may exceed it | 🟡 Cap chunk count |
 | Errors cost nothing except stars; hints available | Keeps success rate high, which retrieval needs | 🟢 Keep |
 | XP awarded for finishing steps (even with hints) | Rewards should track successful recall | 🟡 Rework |
-| Link to Hebrew/Greek words | Elaboration, a meaning link | 🟢 Keep |
 | Listen button (text-to-speech) | Hearing is fine, but *producing* aloud is what the production effect measures | 🟡 Add "say it aloud" |
 | Single "Word Game" quiz uses multiple choice | Recognition format | 🟡 Fine for vocabulary; not for verses |
 

@@ -36,7 +36,7 @@ def run(base, expect_accounts=False, expect_beta=False, allow_draft=False):
     status, _, body = get(base, "/healthz")
     health = json.loads(body) if status == 200 else {}
     check("healthz is ok", status == 200 and health.get("status") == "ok", status)
-    check("content is loaded", health.get("verses", 0) >= 100 and health.get("lexicon", 0) >= 80, health)
+    check("content is loaded", health.get("verses", 0) >= 100 and health.get("packs", 0) >= 5, health)
 
     status, headers, body = get(base, "/")
     h = {k.lower(): v for k, v in headers.items()}

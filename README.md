@@ -1,15 +1,12 @@
 # LogosDepth
 
-Memorize scripture word-for-word and keep it, using methods with strong scientific support, and go deeper into the original Hebrew and Greek behind each verse.
+Memorize scripture word-for-word and keep it, using methods with strong scientific support.
 
 ## What it does
 
 - **Memorize:** the home screen says what to do today (review what is due, or learn the next suggested verse); the Bible browser (one link) opens with every book, and the starter packs underneath. Learn a verse in short steps (Read, Phrases, Fill In, Order, Recall, Type It; an optional "guess first" comes before reading), then review it on a spaced schedule. A verse is *mastered* after you recall it unaided on three different days.
 - **The whole Bible:** all 66 books (31,102 verses) in the KJV, and in the WEB wherever its numbering lines up. Browse by book and chapter (the 201 starter verses and their packs sit below the book list), tap a verse or a short range (up to 12 verses / 160 words), and learn it like any other verse; or type a reference. Passages you start appear under **My verses** and are kept on the device for offline reviews; if progress arrives from a backup or another device, the text is fetched back by reference.
-- **Starter content:** 201 hand-picked verses in 14 packs (KJV, and WEB for 190 of them), each linked to the exact Hebrew/Greek words in it.
-- **Words you missed:** after a wrong or incomplete answer, the app lists each missed word with the Hebrew or Greek word behind it (tap for details). This uses a word-by-word alignment between the KJV text and its Strong's tagging, generated into `data/bible/` (99.95% of tagged words align); it is shown for the KJV wording only.
-- **Explore:** search and browse 83 hand-written Hebrew and Greek word entries (Strong's numbers, transliteration, definitions, KJV renderings). Words found in verses but not in that set get brief entries.
-- **Word Game:** flashcards and a quiz for the original-language vocabulary.
+- **Starter content:** 201 hand-picked verses in 14 packs (KJV, and WEB for 190 of them).
 - **Works offline and installs as an app (PWA).** Settings has backup/restore of your progress (merge-safe) and a daily calendar reminder (.ics). A one-screen intro appears on first use; after the first verse is learned the app offers the calendar reminder once and, if declined, asks again every two days until it is added or the learner chooses "Don't ask again".
 
 The learning design follows the evidence summarized in [`docs/memory-science.md`](docs/memory-science.md); sources are catalogued in [`docs/sources.md`](docs/sources.md).
@@ -95,10 +92,8 @@ store.py                Shared SQLite connection, schema and rate limiting for t
 beta.py                 Opt-in anonymous usage events and the feedback form (BETA_ENABLED)
 accounts.py             Optional accounts: email sign-in links, sync storage, export/delete (SQLite)
 progress_schema.py      Server-side validation of synced progress (mirror of progress.js validate)
-data/bible/             Generated: every verse of the Bible (KJV, WEB where aligned) with linked words
-data/lexicon.json       Hand-written Hebrew/Greek word entries (searchable, browsable)
-data/lexicon_brief.json Generated brief entries for words linked from verses
-data/verses.json        Generated: verse text (KJV + WEB), packs, linked Strong's IDs
+data/bible/             Generated: every verse of the Bible (KJV, WEB where aligned)
+data/verses.json        Generated: starter verse text (KJV + WEB) and packs
 data/packs.json         Curated: which verses belong to which pack
 scripts/                Content pipeline (fetch_sources.sh, build_content.py), make_icons.py, metrics.py
 static/js/recall.js     Typed-recall grading and spaced-review scheduling (pure functions)
@@ -111,7 +106,7 @@ static/js/bible.js      Bible browser, passage picker, saved passages (My verses
 static/js/verses.js     Memorization UI (learn steps, typed recall, daily review)
 static/js/settings.js   Settings, onboarding, install prompt, service-worker registration
 static/sw.js            Service worker template (versioned and served at /sw.js)
-static/js/app.js        Dashboard, search, browse, word game
+static/js/app.js        View switching (Memorize, Settings)
 static/css, static/fonts  Styles and self-hosted fonts
 templates/index.html    Single-page shell
 tests/                  pytest, Node unit tests, Playwright end-to-end test
@@ -121,7 +116,7 @@ Dockerfile, render.yaml Deployment configuration
 
 ## Adding or changing verses
 
-`data/verses.json` and `data/lexicon_brief.json` are **generated**; edit `data/packs.json` instead and rebuild:
+`data/verses.json` is **generated**; edit `data/packs.json` instead and rebuild:
 
 ```bash
 scripts/fetch_sources.sh                       # downloads the public datasets into scripts/sources/ (needs npm, curl)
@@ -130,11 +125,11 @@ python3 scripts/build_content.py               # regenerate the data files
 pytest                                         # validate
 ```
 
-The build pulls verse text from public datasets rather than from memory, so wording is exact: KJV (1769) text, KJV with Strong's tags (to find the exact original words in each verse), the World English Bible, and the STEPBible brief lexicons. Verses outside 5-55 words are rejected, and WEB is omitted where it can't be aligned word-for-word (e.g. psalms whose WEB verse 1 includes the superscription).
+The build pulls verse text from public datasets rather than from memory, so wording is exact: KJV (1769) text, and the World English Bible. Verses outside 5-55 words are rejected, and WEB is omitted where it can't be aligned word-for-word (e.g. psalms whose WEB verse 1 includes the superscription).
 
 ## The whole-Bible data
 
-`data/bible/` is **generated** by `scripts/build_bible.py` from the same public datasets as the starter verses (run `scripts/fetch_sources.sh` first): `index.json` (books and verses per chapter), one file per book (`[kjv, web|null, [Strong's ids], "token:idIndex,..."]` per verse; the last item says which word of the KJV text carries which linked word) and `lexicon.json` (brief STEPBible entries for every linked word). WEB is left out per verse where it would not match the KJV verse (psalm superscriptions) and for the six chapters whose numbering differs (Luke 17, Acts 8/15/24, Romans 14/16). API: `GET /api/bible` (books), `/api/bible/<slug>/<chapter>`, `/api/passage?ref=Psalm 23:1-3`. `tests/test_bible.py` checks the counts, that every linked word resolves, and that all 201 starter verses match the whole-Bible text word for word.
+`data/bible/` is **generated** by `scripts/build_bible.py` from the same public datasets as the starter verses (run `scripts/fetch_sources.sh` first): `index.json` (books and verses per chapter), one file per book (`[kjv, web|null]` per verse). WEB is left out per verse where it would not match the KJV verse (psalm superscriptions) and for the six chapters whose numbering differs (Luke 17, Acts 8/15/24, Romans 14/16). API: `GET /api/bible` (books), `/api/bible/<slug>/<chapter>`, `/api/passage?ref=Psalm 23:1-3`. `tests/test_bible.py` checks the counts and that all 201 starter verses match the whole-Bible text word for word.
 
 ## How scheduling works
 

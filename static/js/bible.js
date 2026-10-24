@@ -22,7 +22,7 @@ function addCustomVerse(data) {
 
 function saveCustomVerse(data) {
   const all = vLoad(CUSTOM_KEY, {});
-  all[data.ref] = { ref: data.ref, text: data.text, translations: data.translations || {}, lexicon: data.lexicon || [] };
+  all[data.ref] = { ref: data.ref, text: data.text, translations: data.translations || {} };
   vSave(CUSTOM_KEY, all);
 }
 

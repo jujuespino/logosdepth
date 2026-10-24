@@ -22,17 +22,10 @@ const Recall = (() => {
   }
 
   // Dashes and hyphens separate words, so "self-control" and "self control" are equivalent.
-  // `wi` is the word's position among the whitespace-separated words of the original text; the Bible data
-  // uses the same numbering, which is how a word is matched to its Hebrew or Greek word.
   function splitWords(text) {
-    const out = [];
-    text.split(/\s+/).filter(Boolean).forEach((chunk, wi) => {
-      chunk.replace(/[\u2010-\u2015-]+/g, ' ').split(/\s+/).filter(Boolean).forEach(raw => {
-        const key = normWord(raw);
-        if (key) out.push({ raw, key, wi });
-      });
-    });
-    return out;
+    return text.replace(/[\u2010-\u2015-]+/g, ' ').split(/\s+/).filter(Boolean)
+      .map(raw => ({ raw, key: normWord(raw) }))
+      .filter(w => w.key);
   }
 
   function editDistance(a, b) {
@@ -95,11 +88,11 @@ const Recall = (() => {
         const c = pair(T[i - 1], U[j - 1]);
         ops.push({
           kind: c === MATCH ? 'ok' : c === TYPO ? 'typo' : 'wrong',
-          target: T[i - 1].raw, typed: U[j - 1].raw, wi: T[i - 1].wi,
+          target: T[i - 1].raw, typed: U[j - 1].raw,
         });
         i--; j--;
       } else if (i > 0 && dp[i][j] === dp[i - 1][j] + EDIT) {
-        ops.push({ kind: 'missing', target: T[i - 1].raw, wi: T[i - 1].wi });
+        ops.push({ kind: 'missing', target: T[i - 1].raw });
         i--;
       } else {
         ops.push({ kind: 'extra', typed: U[j - 1].raw });
@@ -116,32 +109,6 @@ const Recall = (() => {
       accuracy: n ? correct / n : 0,
       ops,
     };
-  }
-
-  // Small words that carry no meaning of their own: a Hebrew or Greek word is never shown for these, even when the
-  // tagging groups them with the next word ("the world" is one underlying word).
-  const FUNCTION_WORDS = new Set(('a an the of and or but to in on at by for with from unto upon into as is was be ' +
-    'are were been shall will not no nor that this these those it its he him his she her they them their i me my ' +
-    'we us our thou thee thy thine ye you your which who whom').split(' '));
-
-  // The words a learner got wrong or left out, one entry per word, each with the original-language entry for it
-  // when the verse's tagging says there is one. align: [[wordIndex, strongsId], ...]; lexicon: entries by id.
-  function missedWords(grade, align, lexicon) {
-    const idAt = new Map((align || []).map(([wi, id]) => [wi, id]));
-    const entries = new Map((lexicon || []).map(e => [e.strongs_id, e]));
-    const seen = new Set();
-    const out = [];
-    for (const op of grade.ops) {
-      if (op.kind !== 'wrong' && op.kind !== 'missing') continue;
-      const word = op.target.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '');
-      const key = normWord(word);
-      const entry = FUNCTION_WORDS.has(key) ? null : (entries.get(idAt.get(op.wi)) || null);
-      const id = `${key}|${entry ? entry.strongs_id : ''}`;
-      if (!key || seen.has(id)) continue;
-      seen.add(id);
-      out.push({ word, entry, typed: op.kind === 'wrong' ? op.typed : null });
-    }
-    return out;
   }
 
   // Split a verse into short phrases for phrase-by-phrase study: break at punctuation, split anything
@@ -269,7 +236,7 @@ const Recall = (() => {
 
   return {
     INTERVAL_DAYS, MASTERY_DAYS,
-    normWord, splitWords, editDistance, gradeRecall, makeHint, makePhrases, missedWords,
+    normWord, splitWords, editDistance, gradeRecall, makeHint, makePhrases,
     dateKey, addDays, daysBetween,
     recordAttempt, mergeCards, isDue, isMastered, recallDays, dueRefs, describeDue, xpForAttempt,
   };
