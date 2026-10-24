@@ -9,7 +9,7 @@ Memorize scripture word-for-word and keep it, using methods with strong scientif
 - **Starter content:** 201 hand-picked verses in 14 packs (KJV, and WEB for 190 of them), each linked to the exact Hebrew/Greek words in it.
 - **Explore:** search and browse 83 hand-written Hebrew and Greek word entries (Strong's numbers, transliteration, definitions, KJV renderings). Words found in verses but not in that set get brief entries.
 - **Word Game:** flashcards and a quiz for the original-language vocabulary.
-- **Works offline and installs as an app (PWA).** Settings has backup/restore of your progress (merge-safe), a daily calendar reminder (.ics), and an intro walkthrough.
+- **Works offline and installs as an app (PWA).** Settings has backup/restore of your progress (merge-safe) and a daily calendar reminder (.ics). A one-screen intro appears on first use; after the first verse is learned the app offers the calendar reminder once and, if declined, asks again every two days until it is added or the learner chooses "Don't ask again".
 
 The learning design follows the evidence summarized in [`docs/memory-science.md`](docs/memory-science.md); sources are catalogued in [`docs/sources.md`](docs/sources.md).
 

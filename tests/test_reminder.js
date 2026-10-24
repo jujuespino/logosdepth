@@ -45,4 +45,35 @@ test('rejects invalid times', () => {
   assert.strictEqual(Rm.validTime('23:59'), true);
 });
 
+
+// ── when to ask ──
+test('not asked before the first verse is learned', () => {
+  assert.strictEqual(Rm.shouldAsk(undefined, '2026-11-02', false), false);
+});
+test('asked once the first verse is learned', () => {
+  assert.strictEqual(Rm.shouldAsk(undefined, '2026-11-02', true), true);
+});
+test('after "Not now" it waits, then asks again every 2 days', () => {
+  const st = Rm.declined(undefined, '2026-11-02');
+  assert.strictEqual(Rm.shouldAsk(st, '2026-11-02', true), false, 'same day');
+  assert.strictEqual(Rm.shouldAsk(st, '2026-11-03', true), false, 'next day');
+  assert.strictEqual(Rm.shouldAsk(st, '2026-11-04', true), true, 'two days later');
+  const again = Rm.declined(st, '2026-11-04');
+  assert.strictEqual(Rm.shouldAsk(again, '2026-11-05', true), false);
+  assert.strictEqual(Rm.shouldAsk(again, '2026-11-06', true), true);
+});
+test('accepted or "Don\'t ask again" stops the questions for good', () => {
+  assert.strictEqual(Rm.shouldAsk(Rm.accepted(Rm.declined(undefined, '2026-11-02')), '2027-01-01', true), false);
+  assert.strictEqual(Rm.shouldAsk(Rm.never(undefined), '2027-01-01', true), false);
+});
+test('works across month and year ends', () => {
+  const st = Rm.declined(undefined, '2026-12-31');
+  assert.strictEqual(Rm.shouldAsk(st, '2027-01-01', true), false);
+  assert.strictEqual(Rm.shouldAsk(st, '2027-01-02', true), true);
+});
+test('corrupt saved state is ignored safely', () => {
+  assert.strictEqual(Rm.shouldAsk({ status: 'weird', last: 'yesterday' }, '2026-11-02', true), true);
+  assert.deepStrictEqual(Rm.cleanState(null), { status: 'none', last: '' });
+});
+
 console.log(`\n${passed} passed`);

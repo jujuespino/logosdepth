@@ -2,7 +2,7 @@
    LogosDepth — Settings, backup/restore, reminders, onboarding, PWA
    =================================================== */
 /* global Recall, Progress, Reminder, Sync, Analytics, vLoad, vSave, getCards, getSettings, saveSettings, verseList, packList,
-   renderPicker, startVerse, showView */
+   renderPicker, startVerse, showView, learnNext */
 
 const ONBOARD_KEY = 'ld_onboarded';
 const BASE_TITLE  = document.title;
@@ -113,9 +113,12 @@ function confirmReset() {
 }
 
 // ─── Calendar reminder ───────────────────────────────
-function downloadReminder() {
-  const time = $('reminderTime').value;
-  if (!Reminder.validTime(time)) { say('reminderMsg', 'Please choose a time.', 'bad'); return; }
+const REMIND_KEY = 'ld_reminder';
+const remindState = () => Reminder.cleanState(vLoad(REMIND_KEY, null));
+
+// Builds the .ics file and offers it for download. Returns false if the time is not valid.
+function saveReminderFile(time) {
+  if (!Reminder.validTime(time)) return false;
   const ics = Reminder.makeIcs({ time, url: `${location.origin}/?view=verses` });
   const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
   const a = document.createElement('a');
@@ -126,7 +129,72 @@ function downloadReminder() {
   a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   track('reminder_downloaded');
+  vSave(REMIND_KEY, Reminder.accepted(remindState()));
+  return true;
+}
+
+function downloadReminder() {
+  const time = $('reminderTime').value;
+  if (!saveReminderFile(time)) { say('reminderMsg', 'Please choose a time.', 'bad'); return; }
   say('reminderMsg', `Open the downloaded file to add a daily event at ${time} to your calendar.`, 'good');
+  refreshReminderCards();
+}
+
+// The offer: once after the first verse is learned, then every couple of days until they add it or opt out.
+function fillReminderCard(root, key) {
+  root.innerHTML = '';
+  const title = document.createElement('p');
+  title.className = 'remind-title';
+  title.textContent = 'Want a daily reminder?';
+  const text = document.createElement('p');
+  text.className = 'remind-text';
+  text.textContent = 'Reviews work best when they are spaced out. Pick a time and add a repeating event to your calendar.';
+  const row = document.createElement('div');
+  row.className = 'remind-row';
+  const label = document.createElement('label');
+  label.className = 'settings-label';
+  label.htmlFor = `${key}Time`;
+  label.textContent = 'Time';
+  const time = document.createElement('input');
+  time.type = 'time';
+  time.id = `${key}Time`;
+  time.className = 'settings-input';
+  time.value = $('reminderTime').value || '08:00';
+  const msg = document.createElement('p');
+  msg.className = 'settings-msg';
+  msg.setAttribute('aria-live', 'polite');
+  const add = obButton('Add to calendar', 'qf-btn qf-btn-small', () => {
+    if (!saveReminderFile(time.value)) { msg.textContent = 'Please choose a time.'; msg.className = 'settings-msg bad'; return; }
+    $('reminderTime').value = time.value;
+    row.remove();
+    text.textContent = 'Done. Open the downloaded file to add the daily event to your calendar.';
+    title.textContent = 'Reminder ready';
+    document.querySelectorAll('.remind-card').forEach(c => { if (c !== root) c.classList.add('hidden'); });
+  });
+  const later = obButton('Not now', 'qf-link', () => {
+    vSave(REMIND_KEY, Reminder.declined(remindState(), Recall.dateKey()));
+    refreshReminderCards();
+  });
+  const never = obButton('Don\'t ask again', 'qf-link', () => {
+    vSave(REMIND_KEY, Reminder.never(remindState()));
+    refreshReminderCards();
+  });
+  row.append(label, time, add, later, never);
+  root.append(title, text, row, msg);
+}
+
+function refreshReminderCards() {
+  const ask = Reminder.shouldAsk(remindState(), Recall.dateKey(), Object.keys(getCards()).length > 0);
+  [['vRemindHome', 'remHome'], ['vrRemind', 'remResult']].forEach(([id, key]) => {
+    const root = $(id);
+    if (!root) return;
+    if (ask) {
+      if (root.classList.contains('hidden') || !root.firstChild) fillReminderCard(root, key);
+      root.classList.remove('hidden');
+    } else {
+      root.classList.add('hidden');
+    }
+  });
 }
 
 // ─── Install ─────────────────────────────────────────
@@ -152,13 +220,11 @@ async function installApp() {
   $('installBtn').classList.add('hidden');
 }
 
-// ─── Onboarding ──────────────────────────────────────
-const ob = { step: 0, pack: 'start' };
-
+// ─── Onboarding (one welcome screen) ─────────────────
 function maybeShowOnboarding() {
   if (vLoad(ONBOARD_KEY, false)) return;
   if (Object.keys(getCards()).length) { vSave(ONBOARD_KEY, true); return; }
-  showOnboarding(0);
+  showOnboarding();
 }
 
 function closeOnboarding() {
@@ -176,116 +242,56 @@ function obButton(label, cls, onClick) {
   return b;
 }
 
-function showOnboarding(step) {
-  ob.step = step;
-  const hasPacks = packList.length > 0;
-  const total = hasPacks ? 3 : 2;
-  const body = $('onboardBody'), actions = $('onboardActions'), title = $('onboardTitle');
+// The optional usage-sharing box (beta servers only). The server answers after the intro may already be showing,
+// so this is also called when that answer arrives.
+function addShareBox() {
+  const body = $('onboardBody');
+  if (!betaEnabled || $('obShare') || $('onboard').classList.contains('hidden')) return;
+  if (Analytics.blockedBySignal(navigator) || Analytics.isOn(localStorage, navigator)) return;
+  const share = document.createElement('label');
+  share.className = 'check-row';
+  const box = document.createElement('input');
+  box.type = 'checkbox';
+  box.id = 'obShare';
+  share.append(box, ' Share anonymous usage to help improve the app (optional; no text you type is sent)');
+  body.appendChild(share);
+}
+
+function showOnboarding() {
+  const body = $('onboardBody'), actions = $('onboardActions');
   body.innerHTML = '';
   actions.innerHTML = '';
+  $('onboardDots').innerHTML = '';
+  $('onboardTitle').textContent = 'Welcome to LogosDepth';
 
-  const dots = $('onboardDots');
-  dots.innerHTML = '';
-  for (let i = 0; i < total; i++) {
-    const d = document.createElement('span');
-    d.className = 'onboard-dot' + (i === step ? ' active' : '');
-    dots.appendChild(d);
-  }
-
-  const kind = step === 0 ? 'intro' : (hasPacks && step === 1 ? 'packs' : 'habit');
-
-  if (kind === 'intro') {
-    title.textContent = 'Welcome to LogosDepth';
-    const ol = document.createElement('ol');
-    ol.className = 'onboard-list';
-    [
-      ['Learn a verse in short steps.', 'Read it, practice it phrase by phrase, then fill in the blanks.'],
-      ['Type it from memory.', 'Trying to recall is what makes it stick, even when it feels hard.'],
-      ['We bring it back on a schedule.', 'A quick review tomorrow, then days and weeks later. Recall it on three different days and it\'s mastered.'],
-    ].forEach(([head, rest]) => {
-      const li = document.createElement('li');
-      const strong = document.createElement('strong');
-      strong.textContent = head;
-      li.append(strong, ' ', rest);
-      ol.appendChild(li);
-    });
-    body.appendChild(ol);
-    const note = document.createElement('p');
-    note.className = 'settings-note';
-    note.textContent = 'A few minutes a day is enough to get going.';
-    body.appendChild(note);
-    actions.append(
-      obButton('Skip intro', 'gd-back-btn', closeOnboarding),
-      obButton('Next →', 'gs-start-btn', () => showOnboarding(1)),
-    );
-  } else if (kind === 'packs') {
-    title.textContent = 'Where would you like to start?';
-    const list = document.createElement('div');
-    list.className = 'onboard-packs';
-    packList.forEach(p => {
-      const b = document.createElement('button');
-      b.className = 'onboard-pack' + (ob.pack === p.id ? ' active' : '');
-      b.setAttribute('aria-pressed', ob.pack === p.id ? 'true' : 'false');
-      const t = document.createElement('span');
-      t.className = 'onboard-pack-title';
-      t.textContent = `${p.title} · ${p.count}`;
-      const d = document.createElement('span');
-      d.className = 'onboard-pack-desc';
-      d.textContent = p.description;
-      b.append(t, d);
-      b.onclick = () => { ob.pack = p.id; showOnboarding(1); };
-      list.appendChild(b);
-    });
-    body.appendChild(list);
-    actions.append(
-      obButton('← Back', 'gd-back-btn', () => showOnboarding(0)),
-      obButton('Next →', 'gs-start-btn', () => showOnboarding(2)),
-    );
-  } else {
-    title.textContent = 'Make it a habit';
-    const p = document.createElement('p');
-    p.textContent = 'Short, regular reviews work better than long, rare ones. Pick a daily time and add a reminder to your calendar (optional).';
-    body.appendChild(p);
-    const row = document.createElement('div');
-    row.className = 'settings-row';
-    const label = document.createElement('label');
-    label.className = 'settings-label';
-    label.htmlFor = 'obTime';
-    label.textContent = 'Time';
-    const time = document.createElement('input');
-    time.type = 'time';
-    time.id = 'obTime';
-    time.value = $('reminderTime').value || '08:00';
-    time.className = 'settings-input';
-    const add = obButton('Add to calendar', 'gd-back-btn', () => {
-      $('reminderTime').value = time.value;
-      downloadReminder();
-      msg.textContent = 'Reminder file downloaded. Open it to add the daily event.';
-    });
-    row.append(label, time, add);
-    const msg = document.createElement('div');
-    msg.className = 'settings-msg good';
-    body.append(row, msg);
-    if (betaEnabled && !Analytics.blockedBySignal(navigator) && !Analytics.isOn(localStorage, navigator)) {
-      const share = document.createElement('label');
-      share.className = 'check-row';
-      const box = document.createElement('input');
-      box.type = 'checkbox';
-      box.id = 'obShare';
-      share.append(box, ' Share anonymous usage to help improve the app (optional; no text you type is sent)');
-      body.appendChild(share);
-    }
-    actions.append(
-      obButton('← Back', 'gd-back-btn', () => showOnboarding(hasPacks ? 1 : 0)),
-      obButton('Start my first verse', 'gs-start-btn', finishOnboarding),
-    );
-  }
+  const ol = document.createElement('ol');
+  ol.className = 'onboard-list';
+  [
+    ['Learn a verse in short steps.', 'Read it, practice it phrase by phrase, then fill in the blanks.'],
+    ['Type it from memory.', 'Trying to recall is what makes it stick, even when it feels hard.'],
+    ['We bring it back on a schedule.', 'A quick review tomorrow, then days and weeks later. Recall it on three different days and it\'s mastered.'],
+  ].forEach(([head, rest]) => {
+    const li = document.createElement('li');
+    const strong = document.createElement('strong');
+    strong.textContent = head;
+    li.append(strong, ' ', rest);
+    ol.appendChild(li);
+  });
+  body.appendChild(ol);
+  const note = document.createElement('p');
+  note.className = 'settings-note';
+  note.textContent = 'A few minutes a day is enough to get going.';
+  body.appendChild(note);
+  actions.append(
+    obButton('Skip intro', 'gd-back-btn', closeOnboarding),
+    obButton('Start my first verse', 'gs-start-btn', finishOnboarding),
+  );
 
   $('onboard').classList.remove('hidden');
   $('onboardBackdrop').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
-  const primary = actions.querySelector('.gs-start-btn');
-  if (primary) primary.focus();
+  addShareBox();
+  actions.querySelector('.gs-start-btn').focus();
 }
 
 function finishOnboarding() {
@@ -294,13 +300,10 @@ function finishOnboarding() {
     Analytics.setOn(localStorage, true, { nav: navigator });
     renderBetaCards();
   }
-  track('onboarding_done', ob.pack);
+  track('onboarding_done');
   closeOnboarding();
-  if (packList.some(p => p.id === ob.pack)) saveSettings({ ...getSettings(), pack: ob.pack });
   renderPicker();
-  // verseList is sorted shortest-first, so this is the gentlest verse in the chosen pack.
-  const first = verseList.find(v => (v.packs || []).includes(ob.pack)) || verseList[0];
-  if (first) startVerse(first.ref);
+  learnNext(); // the gentlest verse in the starter pack
 }
 
 // ─── Accounts and sync (only when the server has them switched on) ───
@@ -338,6 +341,7 @@ async function refreshAuth() {
   } catch { syncState.enabled = false; betaEnabled = false; }
   renderSyncCard();
   renderBetaCards();
+  if (!$('onboard').classList.contains('hidden')) addShareBox();
 }
 
 async function runSync(quiet) {

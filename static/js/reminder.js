@@ -67,7 +67,36 @@ const Reminder = (() => {
     return lines.map(fold).join('\r\n') + '\r\n';
   }
 
-  return { makeIcs, validTime, escapeText: esc };
+  // ─── When to ask ───────────────────────────────────
+  // After the first verse is learned we offer the reminder once. If the learner says "Not now" we ask again
+  // every ASK_EVERY_DAYS days (never on the same day), until they add it or choose "Don't ask again".
+  const ASK_EVERY_DAYS = 2;
+  const DAY = /^\d{4}-\d{2}-\d{2}$/;
+
+  function daysBetween(a, b) {
+    const t = d => Date.UTC(+d.slice(0, 4), +d.slice(5, 7) - 1, +d.slice(8, 10));
+    return Math.round((t(b) - t(a)) / 864e5);
+  }
+
+  function cleanState(raw) {
+    const r = raw && typeof raw === 'object' ? raw : {};
+    return {
+      status: r.status === 'accepted' || r.status === 'never' ? r.status : 'none',
+      last: typeof r.last === 'string' && DAY.test(r.last) ? r.last : '',
+    };
+  }
+
+  function shouldAsk(raw, today, hasLearned) {
+    const st = cleanState(raw);
+    if (!hasLearned || st.status !== 'none') return false;
+    return !st.last || daysBetween(st.last, today) >= ASK_EVERY_DAYS;
+  }
+
+  const declined = (raw, today) => ({ ...cleanState(raw), last: today });
+  const accepted = raw => ({ ...cleanState(raw), status: 'accepted' });
+  const never = raw => ({ ...cleanState(raw), status: 'never' });
+
+  return { makeIcs, validTime, escapeText: esc, ASK_EVERY_DAYS, shouldAsk, declined, accepted, never, cleanState };
 })();
 
 if (typeof module !== 'undefined' && module.exports) module.exports = Reminder;

@@ -258,10 +258,7 @@ with tempfile.TemporaryDirectory() as tmp:
             fpg.goto(BASE)
             fpg.wait_for_selector('.verse-card', state='attached')
             fpg.wait_for_selector('#onboard:not(.hidden)')
-            click = fpg.get_by_role('button', name='Next →')
-            click.click()
-            click.click()
-            check('beta: intro offers an unchecked usage-sharing box', fpg.locator('#obShare').count() == 1
+            check('beta: the intro offers an unchecked usage-sharing box', fpg.locator('#obShare').count() == 1
                   and not fpg.is_checked('#obShare'))
             check('beta: the box can be ignored (nothing stored yet)', fpg.evaluate('localStorage.getItem("ld_analytics")') is None)
             fpg.check('#obShare')

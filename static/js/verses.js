@@ -4,7 +4,7 @@
    Review: type each due verse from memory, spaced over days and weeks
    Grading and scheduling live in recall.js.
    =================================================== */
-/* global Recall, openModal, updateDueBadge, showStorageBanner, scheduleSync, track, hydrateCustomVerses */
+/* global Recall, openModal, updateDueBadge, showStorageBanner, scheduleSync, track, hydrateCustomVerses, refreshReminderCards */
 
 const VERSE_SRS_KEY    = 'ld_verse_srs';
 const VERSE_XP_KEY     = 'ld_verse_xp';
@@ -266,6 +266,7 @@ function renderPicker() {
     grid.appendChild(empty);
   }
   if (typeof updateDueBadge === 'function') updateDueBadge();
+  if (typeof refreshReminderCards === 'function') refreshReminderCards();
 }
 
 function renderControls(settings) {
@@ -1007,6 +1008,7 @@ function finishLearning() {
   el('vrAgain').classList.remove('hidden');
 
   showVersePanel('vResult');
+  if (typeof refreshReminderCards === 'function') refreshReminderCards();
   if (vs.newlyMastered) celebrate();
 }
 
@@ -1050,6 +1052,7 @@ function finishReview() {
   el('vrAgain').classList.add('hidden');
 
   showVersePanel('vResult');
+  if (typeof refreshReminderCards === 'function') refreshReminderCards();
   if (total && clean === total) celebrate();
 }
 
