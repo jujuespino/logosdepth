@@ -433,6 +433,7 @@ function addButton(parent, label, cls, onClick) {
 }
 
 function renderStep() {
+  el('vsMissed').classList.add('hidden');
   el('vsRef').textContent = vs.verse.ref + (vs.translation === 'web' ? ' · WEB' : '');
   renderSteps();
   setMsg('');
@@ -803,6 +804,7 @@ function checkPhrase() {
 // ── Step: Type it from memory (also the whole of a review) ──
 function renderTyped() {
   const review = vs.mode === 'review';
+  el('vsMissed').classList.add('hidden');
   el('vsInstruction').textContent = (review ? 'Type this verse from memory. ' : 'Last step: say it aloud once from memory, then type the whole verse. ') +
     'Capitals and punctuation don\'t matter, but the words and their order do.';
 
@@ -924,6 +926,57 @@ function drawFeedback(grade) {
 
   diffInto(text, grade);
   showLegend();
+  renderMissed(grade);
+}
+
+// "Words you missed": each word that was wrong or left out, with the Hebrew or Greek word behind it when the
+// verse's word tagging has one. The tagging is for the KJV wording, so other translations list the words only.
+function renderMissed(grade) {
+  const box = el('vsMissed');
+  box.innerHTML = '';
+  box.classList.add('hidden');
+  const align = vs.translation === 'kjv' ? (vs.verse.align || []) : [];
+  const missed = Recall.missedWords(grade, align, vs.verse.lexicon || []);
+  if (!missed.length) return;
+
+  const title = document.createElement('h2');
+  title.className = 'vs-missed-title';
+  title.textContent = 'Words you missed';
+  const list = document.createElement('ul');
+  list.className = 'vs-missed-list';
+  missed.slice(0, 8).forEach(m => {
+    const li = document.createElement('li');
+    const word = document.createElement('span');
+    word.className = 'vs-missed-word';
+    word.textContent = m.word;
+    li.appendChild(word);
+    if (m.typed) {
+      const typed = document.createElement('span');
+      typed.className = 'vs-missed-typed';
+      typed.textContent = `you typed “${m.typed}”`;
+      li.appendChild(typed);
+    }
+    if (m.entry) {
+      const btn = document.createElement('button');
+      btn.className = 'vs-missed-orig';
+      btn.textContent = `${m.entry.original} · ${m.entry.transliteration}`;
+      btn.setAttribute('aria-label', `${btn.textContent}, ${m.entry.language} word meaning ${m.entry.definition}. Open details`);
+      btn.onclick = () => openModal(m.entry);
+      const def = document.createElement('span');
+      def.className = 'vs-missed-def';
+      def.textContent = m.entry.definition;
+      li.append(btn, def);
+    }
+    list.appendChild(li);
+  });
+  if (missed.length > 8) {
+    const more = document.createElement('li');
+    more.className = 'vs-missed-more';
+    more.textContent = `and ${missed.length - 8} more`;
+    list.appendChild(more);
+  }
+  box.append(title, list);
+  box.classList.remove('hidden');
 }
 
 function showLegend() {

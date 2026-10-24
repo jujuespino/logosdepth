@@ -4,6 +4,7 @@ import json
 import os
 import random
 from datetime import date
+from functools import cache
 from pathlib import Path
 
 from flask import Flask, Response, jsonify, render_template, request
@@ -215,6 +216,22 @@ def all_words():
     return jsonify(shuffled)
 
 
+@cache
+def _starter_alignment_cached(ref: str, text: str, words: tuple) -> tuple:
+    from bible import passage_for
+
+    data, err = passage_for(ref, {k: e for k, e in LEXICON_BY_ID.items() if not e.get("brief")})
+    if err or data["text"] != text:
+        return ()
+    return tuple(tuple(pair) for pair in data["align"] if pair[1] in set(words))
+
+
+def _starter_alignment(v: dict) -> list:
+    """Which word of the verse text carries which linked word (from the whole-Bible data), limited to the words
+    this verse already links."""
+    return [list(p) for p in _starter_alignment_cached(v["ref"], v["text"], tuple(v.get("words", [])))]
+
+
 @app.route("/api/verses")
 def verses():
     """Verses for the memorization game, easiest (shortest) first."""
@@ -226,6 +243,7 @@ def verses():
             "translations": v.get("translations", {}),
             "packs": v.get("packs", []),
             "lexicon": [LEXICON_BY_ID[w] for w in v.get("words", []) if w in LEXICON_BY_ID],
+            "align": _starter_alignment(v),
         })
     out.sort(key=lambda v: len(v["text"].split()))
     return jsonify(out)

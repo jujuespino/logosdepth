@@ -6,6 +6,7 @@ Optional: SHOTS=/some/dir to save screenshots.
 """
 import json
 import os
+import unicodedata
 from datetime import datetime, timedelta
 
 from playwright.sync_api import sync_playwright
@@ -777,6 +778,57 @@ with sync_playwright() as p:
     at_day(pg, 10)
     open_verses(pg)
     check("\"Don't ask again\" stops the offers for good", pg.is_hidden('#vRemindHome') and pg.is_hidden('#vrRemind'))
+    pg.context.close()
+
+    # ───────────── Scenario 15: words you missed ─────────────
+    pg = new_page(b)
+    pg.evaluate('startVerse("John 3:16"); goToStep("type")')
+    check('nothing is listed before an answer is checked', pg.is_hidden('#vsMissed'))
+    submit(pg, 'For God so the world, that he gave his only begotten Son, that whosoever in him should not perish, but have life.')
+    check('a miss lists the words you missed', pg.is_visible('#vsMissed') and 'words you missed' in pg.inner_text('#vsMissed').lower())
+    missed = pg.inner_text('#vsMissed')
+    check('...naming each missed English word', all(w in missed for w in ('loved', 'believeth', 'everlasting')), missed)
+    nfc = unicodedata.normalize('NFC', missed)  # the lexicon uses a different accent code point for some letters
+    check('...with the Greek word behind it', all(unicodedata.normalize('NFC', g) in nfc for g in ('ἀγαπάω', 'πιστεύω', 'αἰώνιος')), missed)
+    check('...and its meaning', 'to love' in missed)
+    check('words that were right are not listed', 'gave' not in missed and 'Son' not in missed)
+    pg.locator('.vs-missed-orig').first.click()
+    check('tapping the Greek word opens its details', pg.is_visible('#wordModal') and 'G25' in pg.inner_text('#modalStrongs'))
+    pg.keyboard.press('Escape')
+    pg.get_by_role('button', name='Try again').click()
+    check('trying again clears the list', pg.is_hidden('#vsMissed'))
+    submit(pg, verse_text(pg, 'John 3:16'))
+    check('a perfect answer lists nothing', pg.is_hidden('#vsMissed'))
+
+    # little words are listed but never given a Greek word of their own
+    pg.get_by_role('button', name='Continue →').click()
+    pg.evaluate('startVerse("John 3:16"); goToStep("type")')
+    submit(pg, 'For God so loved world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.')
+    items = pg.locator('.vs-missed-list li').all_inner_texts()
+    check('a missed "the" is listed without a Greek word', any(t.strip().startswith('the') and 'κόσμος' not in t for t in items), items)
+
+    # a different translation lists the words but cannot pair them with Greek (the tagging is for the KJV wording)
+    exit_verse(pg)
+    show_list(pg)
+    pg.get_by_role('button', name='WEB', exact=True).click()
+    pg.evaluate('startVerse("John 3:16"); goToStep("type")')
+    submit(pg, 'For God so the world')
+    web_missed = pg.inner_text('#vsMissed')
+    check('under WEB the missed words are listed without Greek words', 'missed' in web_missed.lower()
+          and pg.locator('.vs-missed-orig').count() == 0, web_missed[:80])
+
+    # a Bible passage (not in the starter packs) works too, with Hebrew words
+    exit_verse(pg)
+    show_list(pg)
+    pg.get_by_role('button', name='KJV', exact=True).click()
+    pg.fill('#bibGoto', 'Psalm 23:2-3')
+    pg.keyboard.press('Enter')
+    pg.wait_for_selector('#vSession:not(.hidden)')
+    pg.evaluate('goToStep("type")')
+    submit(pg, 'He maketh me to lie down in green pastures')
+    check('a Bible passage lists missed words with Hebrew words', pg.locator('.vs-missed-orig').count() >= 1
+          and any(0x0590 <= ord(ch) <= 0x05FF for ch in pg.inner_text('#vsMissed')))
+    check('scenario 15: no JS errors', not pg.errors, pg.errors[:2])
     pg.context.close()
 
     # ───────────── Scenario 7: mobile layout with the typing UI ─────────────

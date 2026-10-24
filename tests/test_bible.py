@@ -36,7 +36,7 @@ def test_known_verse_counts():
 def test_no_empty_or_stray_markup_in_any_verse():
     for b in _index():
         for ch in _book(b["slug"])["chapters"]:
-            for kjv, web, ids in ch:
+            for kjv, web, ids, _align in ch:
                 assert kjv.strip() and not re.search(r"[#\[\]]|\s{2,}", kjv), (b["name"], kjv[:40])
                 assert web is None or (web.strip() and not re.search(r"\s{2,}", web))
                 assert len(ids) <= 10
@@ -47,7 +47,7 @@ def test_every_linked_word_resolves():
     lex = _lexicon()
     for b in _index():
         for ch in _book(b["slug"])["chapters"]:
-            for _, _, ids in ch:
+            for _, _, ids, _align in ch:
                 for sid in ids:
                     assert sid in curated or sid in lex, sid
 
@@ -125,3 +125,53 @@ def test_whole_bible_data_files_are_reasonable_in_size():
     total = sum(p.stat().st_size for p in DATA.glob("*.json"))
     assert 8_000_000 < total < 25_000_000
     json.loads((DATA / "index.json").read_text())
+
+
+# ── word alignment: which word of the verse carries which Hebrew or Greek word ──
+def test_alignment_points_at_real_words_with_real_ids_everywhere():
+    for b in _index():
+        for ch in _book(b["slug"])["chapters"]:
+            for kjv, _, ids, al in ch:
+                n = len(kjv.split())
+                for item in (al.split(",") if al else []):
+                    t, i = (int(x) for x in item.split(":"))
+                    assert 0 <= t < n and 0 <= i < len(ids), (b["name"], kjv[:40], item)
+
+
+def test_alignment_pairs_the_right_english_words(client):
+    j = client.get("/api/passage", query_string={"ref": "John 3:16"}).get_json()
+    words = j["text"].split()
+    pairs = {words[t].strip(",.;:").lower(): sid for t, sid in j["align"]}
+    assert pairs["loved"] == "G25" and pairs["believeth"] == "G4100" and pairs["everlasting"] == "G166"
+    assert pairs["god"] == "G2316" and pairs["son"] == "G5207"
+
+
+def test_alignment_offsets_follow_the_joined_passage(client):
+    j = client.get("/api/passage", query_string={"ref": "Psalm 23:2-3"}).get_json()
+    n_first = len(client.get("/api/passage", query_string={"ref": "Psalm 23:2"}).get_json()["text"].split())
+    assert any(t >= n_first for t, _ in j["align"]), "words of the second verse are numbered after the first verse"
+    assert all(t < len(j["text"].split()) for t, _ in j["align"])
+
+
+def test_starter_verses_carry_alignment_limited_to_their_linked_words(client):
+    verses = client.get("/api/verses").get_json()
+    assert all(v["align"] for v in verses)
+    for v in verses:
+        linked = {e["strongs_id"] for e in v["lexicon"]}
+        assert {sid for _, sid in v["align"]} <= linked, v["ref"]
+        assert all(0 <= t < len(v["text"].split()) for t, _ in v["align"])
+    j = next(v for v in verses if v["ref"] == "John 3:16")
+    words = j["text"].split()
+    assert {words[t].strip(",.") .lower(): sid for t, sid in j["align"]}["loved"] == "G25"
+
+
+def test_alignment_covers_nearly_every_tagged_word():
+    """Of the verses with tagged words, most have at least one aligned pair (a few are all function words)."""
+    with_pairs = total = 0
+    for slug in ("john", "psalms", "romans", "genesis"):
+        for ch in _book(slug)["chapters"]:
+            for _, _, ids, al in ch:
+                if ids:
+                    total += 1
+                    with_pairs += bool(al)
+    assert with_pairs / total > 0.97

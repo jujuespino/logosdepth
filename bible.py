@@ -98,7 +98,22 @@ def passage_for(ref: str, curated: dict):
                 ids.append(sid)
     ids = sorted(ids, key=lambda s: (0 if s in curated else 1))[:10]
     out["lexicon"] = [e for e in (_entry(s, curated) for s in ids) if e]
+    out["align"] = _alignment(verses, set(ids))
     return out, None
+
+
+def _alignment(verses: list, keep: set) -> list:
+    """[[token_index, strongs_id], ...] for the KJV text of the passage (tokens are whitespace-separated words)."""
+    pairs, offset = [], 0
+    for v in verses:
+        for item in (v[3] if len(v) > 3 and v[3] else "").split(","):
+            if item:
+                t, i = item.split(":")
+                sid = v[2][int(i)]
+                if sid in keep:
+                    pairs.append([offset + int(t), sid])
+        offset += len(v[0].split())
+    return pairs
 
 
 @bp.route("/api/passage")

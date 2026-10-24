@@ -208,4 +208,61 @@ test('XP rewards unaided/later recall; none for misses, retries or hints-only be
   assert.strictEqual(R.xpForAttempt({ ...base, counted: false, review: true, stageBefore: 4 }), 0);
 });
 
+// ── words you missed ──
+// A tiny verse with its tagging, as the app receives it: word positions are whitespace-separated words.
+const LEX = [
+  { strongs_id: 'G25', original: 'ἀγαπάω', transliteration: 'agapaō', definition: 'to love' },
+  { strongs_id: 'G2889', original: 'κόσμος', transliteration: 'kosmos', definition: 'world, order' },
+  { strongs_id: 'G4100', original: 'πιστεύω', transliteration: 'pisteuō', definition: 'to believe' },
+];
+const ALIGN = [[1, 'G2316'], [2, 'G3779'], [3, 'G25'], [4, 'G2889'], [5, 'G2889'], [16, 'G4100']];
+
+test('splitWords numbers words by whitespace, so dashes do not shift the numbering', () => {
+  const w = R.splitWords('self-control is good');
+  assert.deepStrictEqual(w.map(x => [x.key, x.wi]), [['self', 0], ['control', 0], ['is', 1], ['good', 2]]);
+});
+test('grading ops carry the word position of the target word', () => {
+  const g = R.gradeRecall('For God so the world', J316.split(' ').slice(0, 6).join(' '));
+  const miss = g.ops.find(o => o.kind === 'missing' || o.kind === 'wrong');
+  assert.ok(miss && Number.isInteger(miss.wi));
+});
+test('a perfect answer misses nothing', () => {
+  assert.deepStrictEqual(R.missedWords(R.gradeRecall(J316, J316), ALIGN, LEX), []);
+});
+test('a missed word is paired with its original-language word', () => {
+  const typed = J316.replace('loved ', '');
+  const out = R.missedWords(R.gradeRecall(typed, J316), ALIGN, LEX);
+  assert.strictEqual(out.length, 1);
+  assert.strictEqual(out[0].word, 'loved');
+  assert.strictEqual(out[0].entry.transliteration, 'agapaō');
+});
+test('a wrong word is listed with what was typed instead', () => {
+  const out = R.missedWords(R.gradeRecall(J316.replace('loved', 'hated'), J316), ALIGN, LEX);
+  assert.strictEqual(out[0].word, 'loved');
+  assert.strictEqual(out[0].typed, 'hated');
+});
+test('words without a linked entry are still listed, without one', () => {
+  const out = R.missedWords(R.gradeRecall(J316.replace('gave', ''), J316), ALIGN, LEX);
+  assert.deepStrictEqual(out.map(o => [o.word, o.entry]), [['gave', null]]);
+});
+test('little words never get an original-language word, even when the tagging groups them', () => {
+  const out = R.missedWords(R.gradeRecall(J316.replace('the world', 'world'), J316), ALIGN, LEX);
+  assert.deepStrictEqual(out.map(o => [o.word, o.entry]), [['the', null]]);
+  const both = R.missedWords(R.gradeRecall(J316.replace('the world', ''), J316), ALIGN, LEX);
+  assert.deepStrictEqual(both.map(o => [o.word, o.entry && o.entry.strongs_id]), [['the', null], ['world', 'G2889']]);
+});
+test('punctuation is trimmed from the listed word', () => {
+  const out = R.missedWords(R.gradeRecall(J316.replace('Son,', ''), J316), ALIGN, LEX);
+  assert.strictEqual(out[0].word, 'Son');
+});
+test('the same word is listed once', () => {
+  const t = 'that that that';
+  const out = R.missedWords(R.gradeRecall('', t), [], []);
+  assert.strictEqual(out.length, 1);
+});
+test('no tagging at all still lists the missed words', () => {
+  const out = R.missedWords(R.gradeRecall('For God', J316), undefined, undefined);
+  assert.ok(out.length > 5 && out.every(o => o.entry === null));
+});
+
 console.log(`\n${passed} passed`);
