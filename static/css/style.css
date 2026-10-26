@@ -720,6 +720,8 @@ body {
 .vr-text { font-family: 'Noto Serif', serif; font-style: italic; font-size: 1.05rem; line-height: 1.7; max-width: 520px; white-space: pre-line; }
 
 .vr-xp { font-size: 0.88rem; color: var(--text-muted); }
+.vr-spots { font-size: 0.95rem; color: var(--text); max-width: 520px; }
+.vr-spots.hidden { display: none; }
 
 .vr-buttons { display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center; align-items: center; }
 

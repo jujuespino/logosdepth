@@ -6,6 +6,13 @@
   <title>LogosDepth</title>
   <link rel="manifest" href="/manifest.webmanifest" />
   <meta name="theme-color" content="#ffffff" />
+  <meta name="description" content="{{ og_description }}" />
+  <meta property="og:site_name" content="LogosDepth" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="{{ og_title }}" />
+  <meta property="og:description" content="{{ og_description }}" />
+  <meta property="og:image" content="{{ og_image }}" />
+  <meta name="twitter:card" content="summary" />
   <link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png" />
   <link rel="icon" type="image/png" href="/static/icons/icon-192.png" />
   <link rel="preload" href="/static/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
@@ -189,6 +196,15 @@
 
       <!-- Verse picker -->
       <div id="vPicker" class="qf-home">
+        <section class="remind-card hidden" id="vShared" aria-labelledby="vSharedLabel">
+          <p class="qf-eyebrow" id="vSharedLabel"></p>
+          <p class="qf-verse" id="vSharedText"></p>
+          <div class="qf-actions">
+            <button class="qf-btn qf-btn-quiet" id="vSharedGo" data-click="sharedGo">Learn this verse</button>
+            <button class="qf-link" data-click="sharedDismiss">Not now</button>
+          </div>
+        </section>
+
         <section class="qf-today" id="vReviewCard" aria-labelledby="vReviewTitle">
           <p class="qf-eyebrow" id="vTodayLabel">Today</p>
           <h1 class="qf-title" id="vReviewTitle"></h1>
@@ -235,6 +251,8 @@
           <h2 class="bib-heading">Starter verses</h2>
           <div class="picker-controls">
             <div class="pack-chips" id="packChips"></div>
+            <button class="qf-link hidden" id="packShare" data-click="sharePack">Share this pack</button>
+            <span class="settings-msg" id="packShareMsg" aria-live="polite"></span>
           </div>
           <div class="verse-grid" id="verseGrid"></div>
         </section>
@@ -270,14 +288,18 @@
         <h1 class="gd-title" id="vrTitle"></h1>
         <div class="vr-ref" id="vrRef"></div>
         <div class="vr-text" id="vrText"></div>
+        <div class="vr-spots hidden" id="vrSpots"></div>
         <div class="vr-xp" id="vrXp"></div>
         <div class="remind-card hidden" id="vrRemind"></div>
         <div class="vr-buttons">
           <button class="gs-start-btn hidden" id="vrReview" data-click="startReview">Start today's review →</button>
           <button class="gs-start-btn" id="vrNext" data-click="nextVerse">Next verse →</button>
           <button class="gd-back-btn" id="vrAgain" data-click="retryVerse">Practice again</button>
+          <button class="gd-back-btn" id="vrShare" data-click="shareVerse">Share this verse</button>
+          <button class="gd-back-btn hidden" id="vrDrill" data-click="startDrillFromResult">Practice the words you missed</button>
           <button class="gd-back-btn" data-click="exitVerse">All verses</button>
         </div>
+        <p class="settings-msg" id="vrShareMsg" aria-live="polite"></p>
       </div>
 
     </div>
@@ -300,6 +322,7 @@
 <script src="/static/js/sync.js"></script>
 <script src="/static/js/analytics.js"></script>
 <script src="/static/js/reminder.js"></script>
+<script src="/static/js/share.js"></script>
 <script src="/static/js/verses.js"></script>
 <script src="/static/js/bible.js"></script>
 <script src="/static/js/settings.js"></script>

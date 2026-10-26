@@ -4,7 +4,7 @@
    Review: type each due verse from memory, spaced over days and weeks
    Grading and scheduling live in recall.js.
    =================================================== */
-/* global Recall, updateDueBadge, showStorageBanner, scheduleSync, track, hydrateCustomVerses, refreshReminderCards */
+/* global Recall, showSharedLink, updateDueBadge, showStorageBanner, scheduleSync, track, hydrateCustomVerses, refreshReminderCards */
 
 const VERSE_SRS_KEY    = 'ld_verse_srs';
 const VERSE_XP_KEY     = 'ld_verse_xp';
@@ -166,6 +166,7 @@ async function loadVerses() {
     packList  = await pres.json();
     if (typeof hydrateCustomVerses === 'function') await hydrateCustomVerses();
     renderPicker();
+    if (typeof showSharedLink === 'function') showSharedLink();
   } catch {
     const grid = el('verseGrid');
     grid.innerHTML = '';
@@ -296,6 +297,9 @@ function renderControls(settings) {
     select.dataset.sig = sig;
   }
   select.value = settings.pack;
+  const sharable = packList.some(p => p.id === settings.pack);
+  el('packShare').classList.toggle('hidden', !sharable);
+  el('packShareMsg').textContent = '';
 }
 
 function renderReviewCard(cards, today) {
@@ -400,10 +404,10 @@ function nextVerse() {
 function renderSteps() {
   const wrap = el('vsSteps');
   wrap.innerHTML = '';
-  if (vs.mode === 'review') {
+  if (vs.mode === 'review' || vs.mode === 'drill') {
     const el1 = document.createElement('span');
     el1.className = 'vs-step current review';
-    el1.textContent = `Review ${vs.qi} of ${vs.queue.length}`;
+    el1.textContent = `${vs.mode === 'drill' ? 'Trouble spots' : 'Review'} ${vs.qi} of ${vs.queue.length}`;
     wrap.appendChild(el1);
     el('vsLabel').textContent = '';
     return;
@@ -444,6 +448,7 @@ function renderStep() {
   el('vsHint').classList.add('hidden');
 
   if (vs.mode === 'review') { renderTyped(); return; }
+  if (vs.mode === 'drill') { renderDrill(); return; }
 
   const step = vs.steps[vs.step];
   if (step.id === 'read')         renderRead();
@@ -465,10 +470,15 @@ function goToStep(id) {
 
 // Shown after each guided step is complete.
 function stepDone() {
-  setMsg(pick(CHEERS) + ' Step complete ✓', 'good');
   const actions = el('vsActions');
   actions.innerHTML = '';
   el('vsBank').innerHTML = '';
+  if (vs.mode === 'drill') {
+    setMsg(pick(CHEERS) + ' That was practice only: type the whole verse from memory to clear a word from your list.', 'good');
+    addButton(actions, vs.qi < vs.queue.length ? 'Next verse →' : 'Done', 'gs-start-btn', drillNext);
+    return;
+  }
+  setMsg(pick(CHEERS) + ' Step complete ✓', 'good');
   addButton(actions, 'Next step →', 'gs-start-btn', advanceStep);
 }
 
@@ -856,6 +866,10 @@ function submitAttempt(passed, grade) {
   const review = vs.mode === 'review';
 
   const { card, counted } = Recall.recordAttempt(before, { passed, hinted }, today);
+  if (grade) { // remember which words tripped the learner (a "give up" says nothing about particular words)
+    const slips = Recall.updateSlips(card.slips, grade.ops);
+    if (Object.keys(slips).length) card.slips = slips; else delete card.slips;
+  }
   if (counted) track('typed_attempt', !passed ? 'miss' : hinted ? 'hinted' : 'perfect');
   const xp = Recall.xpForAttempt({
     passed, hinted, review, stageBefore: before ? before.stage : -1, counted,
@@ -990,7 +1004,9 @@ function finishLearning() {
     bits.push(`${need} more recall day${need === 1 ? '' : 's'} to master`);
   }
   el('vrXp').textContent = bits.join('  ·  ');
-
+  showSpots(vs.verse.ref, Recall.troubleWords(card), [vs.key]);
+  el('vrShare').classList.remove('hidden');
+  el('vrShareMsg').textContent = '';
 
   const othersDue = Recall.dueRefs(getCards(), today).filter(k => k !== vs.key).length;
   el('vrReview').classList.toggle('hidden', othersDue === 0);
@@ -1000,6 +1016,59 @@ function finishLearning() {
   showVersePanel('vResult');
   if (typeof refreshReminderCards === 'function') refreshReminderCards();
   if (vs.newlyMastered) celebrate();
+}
+
+// ─── Trouble spots ───────────────────────────────────
+// Shown on the result screen: the words missed in this verse, and a short drill on just those words.
+// `ref`/`words` fill the one-verse line; `keys` are the verses a drill would cover (those with words to watch).
+let drillKeys = [];
+function showSpots(ref, words, keys) {
+  const cards = getCards();
+  drillKeys = keys.filter(k => Recall.troubleWords(cards[k]).length);
+  const line = el('vrSpots');
+  line.textContent = ref && words.length ? `Words to watch in ${ref}: ${words.join(', ')}` : '';
+  line.classList.toggle('hidden', !line.textContent);
+  el('vrDrill').classList.toggle('hidden', !drillKeys.length);
+}
+
+function startDrillFromResult() { startDrill(drillKeys); }
+
+function startDrill(keys) {
+  const cards = getCards();
+  const queue = keys.filter(k => Recall.troubleWords(cards[k]).length && verseList.some(v => v.ref === parseKey(k).ref));
+  if (!queue.length) { exitVerse(); return; }
+  vs = { mode: 'drill', queue, qi: 0, xp: 0, mistakes: 0, hints: 0, typed: null, levelBefore: levelOf(getXp()) };
+  showVersePanel('vSession');
+  drillNext();
+}
+
+function drillNext() {
+  if (vs.qi >= vs.queue.length) { exitVerse(); return; }
+  const { ref, translation } = parseKey(vs.queue[vs.qi++]);
+  vs.verse       = verseList.find(v => v.ref === ref);
+  vs.translation = resolveTranslation(vs.verse, translation);
+  vs.key         = cardKey(ref, vs.translation);
+  vs.text        = textFor(vs.verse, vs.translation);
+  vs.tokens      = tokenize(vs.text);
+  renderStep();
+  window.scrollTo({ top: 0 });
+}
+
+// The same tap-the-word blanks as the Fill In step, but only on the words this learner keeps missing.
+function renderDrill() {
+  const watch = new Set(Recall.troubleWords(getCards()[vs.key]));
+  const blanks = vs.tokens.map((t, i) => (watch.has(Recall.normWord(t.core)) ? i : -1)).filter(i => i >= 0);
+  if (!blanks.length) { drillNext(); return; }
+  el('vsInstruction').textContent = 'These are the words you tend to miss. Tap the word that belongs in each blank.';
+  vs.fill = {
+    blanks: new Set(blanks),
+    order: blanks,
+    filled: new Set(),
+    active: blanks[0],
+    bank: shuffle(blanks.map(i => ({ key: vs.tokens[i].key, text: vs.tokens[i].core }))),
+  };
+  drawFill();
+  addButton(el('vsActions'), '💡 Hint', 'gd-back-btn', fillHint);
 }
 
 // ─── Review session ──────────────────────────────────
@@ -1026,7 +1095,9 @@ function finishReview() {
   el('vrRef').textContent   = total ? 'Recalled without a cue' : 'Daily review';
   el('vrText').textContent  = vs.results.map(r => {
     const how = r.passed && !r.hinted ? '✓ recalled' : r.passed ? 'recalled with a cue' : 'missed';
-    return `${r.ref}${r.translation === 'web' ? ' (WEB)' : ''} — ${how} · next ${Recall.describeDue(r.card, today)}`;
+    const watch = Recall.troubleWords(getCards()[r.key]);
+    return `${r.ref}${r.translation === 'web' ? ' (WEB)' : ''} — ${how} · next ${Recall.describeDue(r.card, today)}` +
+      (watch.length ? ` · watch: ${watch.slice(0, 4).join(', ')}` : '');
   }).join('\n');
 
   const newLevel = levelOf(getXp());
@@ -1035,6 +1106,9 @@ function finishReview() {
   const streak = currentStreak();
   if (streak > 1) bits.push(`🔥 ${streak}-day streak`);
   el('vrXp').textContent = bits.join('  ·  ');
+  showSpots(null, [], [...new Set(vs.results.map(r => r.key))]);
+  el('vrShare').classList.add('hidden');
+  el('vrShareMsg').textContent = '';
 
   el('vrReview').classList.add('hidden');
   el('vrNext').classList.add('hidden');

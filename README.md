@@ -7,6 +7,8 @@ Memorize scripture word-for-word and keep it, using methods with strong scientif
 - **Memorize:** the home screen says what to do today (review what is due, or learn the next suggested verse); the Bible browser (one link) opens with every book, and the starter packs underneath. Learn a verse in short steps (Read, Phrases, Fill In, Order, Recall, Type It; an optional "guess first" comes before reading), then review it on a spaced schedule. A verse is *mastered* after you recall it unaided on three different days.
 - **The whole Bible:** all 66 books (31,102 verses) in the KJV, and in the WEB wherever its numbering lines up. Browse by book and chapter (the 201 starter verses and their packs sit below the book list), tap a verse or a short range (up to 12 verses / 160 words), and learn it like any other verse; or type a reference. Passages you start appear under **My verses** and are kept on the device for offline reviews; if progress arrives from a backup or another device, the text is fetched back by reference.
 - **Starter content:** 201 hand-picked verses in 14 packs (KJV, and WEB for 190 of them).
+- **Trouble spots:** the words you miss when typing a verse are remembered per verse (a miss adds a mark, typing the word correctly later removes one). The result screen lists them and offers a short tap-the-word drill on just those words. The drill is practice only: it never changes the schedule, and a word leaves the list only when you type it correctly from memory.
+- **Share links:** "Share this verse" (result screen) and "Share this pack" (starter list) copy a link like `/?v=John%203%3A16` or `/?pack=comfort`, or open the phone's share sheet. Opening one offers that verse or pack on the home screen (nothing starts by itself; on a first visit the intro's button starts it). Links carry only a Bible reference or pack id, and the page's link preview names the verse. No accounts and nothing is stored on the server.
 - **Works offline and installs as an app (PWA).** Settings has backup/restore of your progress (merge-safe) and a daily calendar reminder (.ics). A one-screen intro appears on first use; after the first verse is learned the app offers the calendar reminder once and, if declined, asks again every two days until it is added or the learner chooses "Don't ask again".
 
 The learning design follows the evidence summarized in [`docs/memory-science.md`](docs/memory-science.md); sources are catalogued in [`docs/sources.md`](docs/sources.md).
@@ -99,6 +101,7 @@ scripts/                Content pipeline (fetch_sources.sh, build_content.py), m
 static/js/recall.js     Typed-recall grading and spaced-review scheduling (pure functions)
 static/js/progress.js   Backup/restore, validation and merge of saved progress (pure functions)
 static/js/reminder.js   Daily review reminder as a calendar file (pure functions)
+static/js/share.js      Share-link building and parsing (pure functions)
 static/js/actions.js    Wires data-click / data-input / data-change attributes to functions (no inline handlers)
 static/js/sync.js       Cross-device sync: fetch, merge, upload, retry on conflict
 static/js/analytics.js  Opt-in usage events (off unless the learner turns it on)

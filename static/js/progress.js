@@ -63,13 +63,27 @@ const Progress = (() => {
     if (typeof c.due !== 'string' || !DATE.test(c.due)) return null;
     if (!Array.isArray(c.days) || !c.days.every(d => typeof d === 'string' && DATE.test(d))) return null;
     const lastDate = typeof c.lastDate === 'string' && DATE.test(c.lastDate) ? c.lastDate : null;
-    return {
+    const out = {
       stage: c.stage,
       due: c.due,
       days: [...new Set(c.days)].sort(),
       lapses: Number.isInteger(c.lapses) && c.lapses >= 0 ? c.lapses : 0,
       lastDate,
     };
+    const slips = cleanSlips(c.slips);
+    if (slips) out.slips = slips;
+    return out;
+  }
+
+  // Trouble-spot words for one verse: a few short words with small counts. Anything else is dropped.
+  function cleanSlips(raw) {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+    const out = {};
+    for (const [word, n] of Object.entries(raw)) {
+      if (Object.keys(out).length >= 12) break;
+      if (word.length > 0 && word.length <= 40 && /^[\p{L}\p{N}]+$/u.test(word) && Number.isInteger(n) && n >= 1 && n <= 9) out[word] = n;
+    }
+    return Object.keys(out).length ? out : null;
   }
 
   // Validate untrusted input (a file the user picked). Returns { ok, error, data } where data is sanitized.

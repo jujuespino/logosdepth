@@ -211,7 +211,8 @@ with sync_playwright() as p:
     submit(pg, full)
     check('retry pass: not counted notice', 'already practiced this verse today' in pg.inner_text('#vsMsg'))
     c2 = card(pg, 'John 3:16')
-    check('retry did not change schedule', c2 == c, (c, c2))
+    check('retry did not change schedule', c2 == {k: v for k, v in c.items() if k != 'slips'}, (c, c2))
+    check('retry typed the missed words correctly, so they left the list', 'slips' in c and 'slips' not in c2, (c, c2))
     check('retry earns no XP', xp(pg) == 0, xp(pg))
     click_btn(pg, 'Continue →')
     check('result reflects first (missed) attempt', 'Good start' in pg.inner_text('#vrTitle'), pg.inner_text('#vrTitle'))
@@ -746,6 +747,112 @@ with sync_playwright() as p:
     at_day(pg, 10)
     open_verses(pg)
     check("\"Don't ask again\" stops the offers for good", pg.is_hidden('#vRemindHome') and pg.is_hidden('#vrRemind'))
+    pg.context.close()
+
+    # ───────────── Scenario 16: trouble spots ─────────────
+    pg = new_page(b, 0)
+    open_verses(pg)
+    pg.evaluate('startVerse("Psalm 23:1"); goToStep("type")')
+    submit(pg, 'The Lord is my')   # misses "shepherd", "I", "shall", "not", "want"
+    check('trouble spots: missed words are saved on the card', 'shepherd' in (card(pg, 'Psalm 23:1').get('slips') or {}),
+          card(pg, 'Psalm 23:1'))
+    click_btn(pg, 'Finish for today')
+    check('trouble spots: result lists the words to watch', 'Words to watch in Psalm 23:1' in pg.inner_text('#vrSpots')
+          and 'shepherd' in pg.inner_text('#vrSpots'), pg.inner_text('#vrSpots'))
+    check('trouble spots: a drill button is offered', pg.is_visible('#vrDrill'))
+    pg.click('#vrDrill')
+    check('trouble spots: the drill blanks only those words',
+          pg.locator('.vslot').count() == len(card(pg, 'Psalm 23:1')['slips']) and pg.locator('.vslot').count() >= 1,
+          pg.locator('.vslot').count())
+    check('trouble spots: the step bar says what this is', 'Trouble spots 1 of 1' in pg.inner_text('#vsSteps'), pg.inner_text('#vsSteps'))
+    before = json.dumps(card(pg, 'Psalm 23:1'))
+    for _ in range(12):
+        if pg.locator('.vslot:not(.filled)').count() == 0:
+            break
+        pg.get_by_role('button', name='💡 Hint').click()
+    check('trouble spots: the drill completes', pg.get_by_role('button', name='Done').count() == 1)
+    check('trouble spots: practice does not change the schedule or the list', json.dumps(card(pg, 'Psalm 23:1')) == before)
+    click_btn(pg, 'Done')
+    check('trouble spots: Done returns home', pg.is_visible('#vPicker'))
+    at_day(pg, 1)
+    open_verses(pg)
+    click_btn(pg, 'Start review')
+    submit(pg, verse_text(pg, 'Psalm 23:1'))
+    check('trouble spots: typing the verse correctly clears the words', not card(pg, 'Psalm 23:1').get('slips'),
+          card(pg, 'Psalm 23:1'))
+    click_btn(pg, 'Next →')
+    check('trouble spots: nothing to watch afterwards', pg.is_hidden('#vrSpots') and pg.is_hidden('#vrDrill'))
+    check('trouble spots: no JS errors', not pg.errors, pg.errors[:2])
+    pg.context.close()
+
+    # ───────────── Scenario 17: share links ─────────────
+    pg = new_page(b, 0, permissions=['clipboard-read', 'clipboard-write'])
+    pg.goto(BASE + '?v=John%203:16')
+    wait_for(pg, "!document.getElementById('vShared').classList.contains('hidden')")
+    check('shared verse: the home screen offers it', 'John 3:16' in pg.text_content('#vSharedLabel')
+          and 'God so loved the world' in pg.text_content('#vSharedText'), pg.text_content('#vShared'))
+    check('shared verse: the link is tidied from the address bar', '?v=' not in pg.url and '%3A' not in pg.url, pg.url)
+    check('shared verse: nothing starts by itself', pg.is_visible('#vPicker') and pg.evaluate('vs') is None)
+    pg.click('#vSharedGo')
+    check('shared verse: Learn starts that verse', pg.evaluate('vs && vs.verse.ref') == 'John 3:16')
+    pg.evaluate('goToStep("type")')
+    submit(pg, verse_text(pg, 'John 3:16'))
+    click_btn(pg, 'Continue →')
+    check('share button is on the result screen', pg.is_visible('#vrShare'))
+    pg.click('#vrShare')
+    wait_for(pg, "document.getElementById('vrShareMsg').textContent.length > 0")
+    check('sharing copies a link to this verse', 'Link copied' in pg.inner_text('#vrShareMsg'), pg.inner_text('#vrShareMsg'))
+    copied = pg.evaluate('navigator.clipboard.readText()')
+    check('the copied link opens that verse', copied.endswith('/?v=John%203%3A16'), copied)
+    exit_verse(pg)
+
+    # a pack link
+    pg.goto(BASE + '?pack=comfort')
+    wait_for(pg, "!document.getElementById('vShared').classList.contains('hidden')")
+    check('shared pack: the home screen offers it', 'Comfort and Peace' in pg.text_content('#vSharedLabel')
+          and 'verses' in pg.text_content('#vSharedText'), pg.text_content('#vShared'))
+    pg.click('#vSharedGo')
+    check('shared pack: Start begins a verse from that pack', pg.evaluate('vs && vs.verse.packs.includes("comfort")') is True)
+    check('shared pack: the pack is now selected', json.loads(pg.evaluate('localStorage.getItem("ld_verse_settings")'))['pack'] == 'comfort')
+    exit_verse(pg)
+    show_list(pg)
+    check('pack share link is offered for a pack', pg.is_visible('#packShare'))
+    pg.click('#packShare')
+    wait_for(pg, "document.getElementById('packShareMsg').textContent.length > 0")
+    check('sharing a pack copies its link', pg.evaluate('navigator.clipboard.readText()').endswith('/?pack=comfort'))
+    pg.select_option('#packSelect', 'all')
+    check('no pack share link for "All verses"', pg.is_hidden('#packShare'))
+    pg.context.close()
+
+    # a whole-Bible passage (not a starter verse) and "Not now"
+    pg = new_page(b, 0)
+    pg.goto(BASE + '?v=Psalm%2023:1-3')
+    wait_for(pg, "!document.getElementById('vShared').classList.contains('hidden')")
+    check('shared passage: fetched from the whole Bible', pg.text_content('#vSharedLabel').endswith('Psalm 23:1-3')
+          and 'shepherd' in pg.text_content('#vSharedText'), pg.text_content('#vShared'))
+    pg.click('#vSharedGo')
+    check('shared passage: starts and is kept as one of my verses', pg.evaluate('vs && vs.verse.ref') == 'Psalm 23:1-3'
+          and 'Psalm 23:1-3' in json.loads(pg.evaluate('localStorage.getItem("ld_custom_verses")')))
+    pg.goto(BASE + '?v=Romans%208:28')
+    wait_for(pg, "!document.getElementById('vShared').classList.contains('hidden')")
+    pg.get_by_role('button', name='Not now', exact=True).click()
+    check('Not now hides the offer and starts nothing', pg.is_hidden('#vShared') and pg.evaluate('vs') is None)
+    for bad in ('?v=hello', '?v=Hezekiah%201:1', '?pack=nope', '?v=%3Cscript%3E'):
+        pg.goto(BASE + bad)
+        pg.wait_for_selector('.verse-card', state='attached')
+        pg.wait_for_timeout(400)
+        check(f'bad link {bad} shows nothing', pg.is_hidden('#vShared'))
+    real = [e for e in pg.errors if 'status of 400' not in e]  # the unknown book above is answered with a 400 on purpose
+    check('share links: no JS errors', not real, real[:2])
+    pg.context.close()
+
+    # first visit through a shared link: the intro's button starts the shared verse
+    pg = new_page(b, 0, onboarded=False)
+    pg.goto(BASE + '?v=Philippians%204:13')
+    wait_for(pg, "!document.getElementById('onboard').classList.contains('hidden')")
+    wait_for(pg, "!document.getElementById('vShared').classList.contains('hidden')")
+    click_btn(pg, 'Start my first verse')
+    check('first visit via a shared link starts the shared verse', pg.evaluate('vs && vs.verse.ref') == 'Philippians 4:13')
     pg.context.close()
 
     # ───────────── Scenario 7: mobile layout with the typing UI ─────────────

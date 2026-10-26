@@ -208,4 +208,46 @@ test('XP rewards unaided/later recall; none for misses, retries or hints-only be
   assert.strictEqual(R.xpForAttempt({ ...base, counted: false, review: true, stageBefore: 4 }), 0);
 });
 
+// ── Trouble spots ──
+const slipsOf = (typed, target, prev) => R.updateSlips(prev, R.gradeRecall(typed, target).ops);
+test('trouble spots: missing and wrong words are recorded, typos and correct words are not', () => {
+  const t = 'The Lord is my shepherd';
+  assert.deepStrictEqual(slipsOf('The Lord is my shepherd', t), {});
+  assert.deepStrictEqual(slipsOf('The Lord is my sheperd', t), {}, 'a spelling slip is not a lapse of memory');
+  assert.deepStrictEqual(slipsOf('The Lord is my', t), { shepherd: 1 });
+  assert.deepStrictEqual(slipsOf('The King is my shepherd', t), { lord: 1 });
+});
+test('trouble spots: repeated misses count up (to 9) and correct recall takes them off', () => {
+  const t = 'The Lord is my shepherd';
+  let s = {};
+  for (let i = 0; i < 12; i++) s = slipsOf('The Lord is my', t, s);
+  assert.deepStrictEqual(s, { shepherd: 9 });
+  s = slipsOf('The Lord is my shepherd', t, { shepherd: 2, lord: 1 });
+  assert.deepStrictEqual(s, { shepherd: 1 }, 'each word typed correctly loses one; others lose one too');
+  s = slipsOf('The Lord is my shepherd', t, s);
+  assert.deepStrictEqual(s, {});
+});
+test('trouble spots: a word missed and also typed right elsewhere nets out sensibly', () => {
+  const t = 'love one another as I have loved you, love';
+  const s = slipsOf('love one another as I have loved you', t);
+  assert.deepStrictEqual(s, { love: 1 });
+});
+test('trouble spots: updateSlips does not mutate its input, keeps at most 12 words, most-missed first', () => {
+  const prev = { shepherd: 3 };
+  R.updateSlips(prev, R.gradeRecall('', 'The Lord is my shepherd').ops);
+  assert.deepStrictEqual(prev, { shepherd: 3 });
+  const long = 'one two three four five six seven eight nine ten eleven twelve thirteen fourteen';
+  const s = R.updateSlips({}, R.gradeRecall('', long).ops);
+  assert.strictEqual(Object.keys(s).length, R.MAX_SLIPS);
+  assert.deepStrictEqual(R.troubleWords({ slips: { b: 1, a: 3, c: 3 } }), ['a', 'c', 'b']);
+  assert.deepStrictEqual(R.troubleWords(null), []);
+});
+test('trouble spots survive scheduling and merging of cards', () => {
+  const slips = { shepherd: 2 };
+  const { card } = R.recordAttempt({ stage: 1, due: day(1), days: [day(0)], lapses: 0, lastDate: day(0), slips }, { passed: false, hinted: false }, day(1));
+  assert.deepStrictEqual(card.slips, slips);
+  const older = { stage: 0, due: day(1), days: [], lapses: 0, lastDate: day(0), slips: { lord: 1 } };
+  assert.deepStrictEqual(R.mergeCards(older, card).slips, slips, 'the copy with later activity decides');
+});
+
 console.log(`\n${passed} passed`);

@@ -4,8 +4,8 @@
    Passages you start are kept on this device (ld_custom_verses) so reviews work offline, and are
    re-fetched by reference when progress arrives from a backup or another device.
    =================================================== */
-/* global el, vLoad, vSave, verseList, getCards, getSettings, saveSettings, parseKey, startVerse, showVersePanel,
-   renderPicker, TRANSLATION_LABEL, exitVerse */
+/* global Share, packList, textFor, resolveTranslation, el, vLoad, vSave, verseList, getCards, getSettings, saveSettings, parseKey, startVerse, showVersePanel,
+   renderPicker, TRANSLATION_LABEL, exitVerse, learnNext, vs */
 
 const CUSTOM_KEY = 'ld_custom_verses';
 const BIBLE_MAX_VERSES = 12;
@@ -250,6 +250,89 @@ function bibleGoto() {
   const ref = el('bibGoto').value.trim().replace(/\s+/g, ' ').replace(/[–—]/g, '-');
   if (!ref) { el('bibMsg').textContent = 'Type a reference, for example John 3:16 or Psalm 23:1-3.'; return; }
   learnPassage(ref, el('bibMsg'));
+}
+
+// ─── Share links ─────────────────────────────────────
+// Opening ?v=John%203:16 or ?pack=faith offers that verse or pack on the home screen. Nothing starts by itself.
+let sharedLink = null;
+
+function hideShared() {
+  el('vShared').classList.add('hidden');
+  sharedLink = null;
+}
+
+async function showSharedLink() {
+  const link = Share.parse(location.search);
+  if (!link) return;
+  const url = new URL(location.href);
+  url.searchParams.delete('v');
+  url.searchParams.delete('pack');
+  try { history.replaceState(null, '', url.pathname + url.search + url.hash); } catch { /* not essential */ }
+
+  const tr = getSettings().translation;
+  if (link.kind === 'verse') {
+    let verse = verseList.find(v => v.ref.toLowerCase() === link.ref.toLowerCase());
+    if (!verse) {
+      try { verse = await fetchPassage(link.ref); } catch { return; }
+    }
+    sharedLink = { kind: 'verse', verse };
+    el('vSharedLabel').textContent = `Shared with you · ${verse.ref}`;
+    el('vSharedText').textContent = textFor(verse, resolveTranslation(verse, tr));
+    el('vSharedGo').textContent = 'Learn this verse';
+  } else {
+    const pack = packList.find(p => p.id === link.id);
+    if (!pack) return;
+    sharedLink = { kind: 'pack', pack };
+    el('vSharedLabel').textContent = `Shared with you · ${pack.title} pack`;
+    el('vSharedText').textContent = `${pack.count} verses. ${pack.description}`;
+    el('vSharedGo').textContent = 'Start this pack';
+  }
+  el('vShared').classList.remove('hidden');
+}
+
+function sharedGo() {
+  const link = sharedLink;
+  if (!link) return;
+  hideShared();
+  if (link.kind === 'verse') {
+    const v = link.verse;
+    if (!verseList.some(x => x.ref === v.ref)) {
+      saveCustomVerse(v);
+      addCustomVerse(v);
+    }
+    startVerse(v.ref, getSettings().translation);
+  } else {
+    saveSettings({ ...getSettings(), pack: link.pack.id });
+    renderPicker();
+    learnNext();
+    if (vs === null) openBible(); // every verse in the pack is already started: show the list instead
+  }
+}
+
+function sharedDismiss() { hideShared(); }
+
+// Native share sheet where there is one (phones), otherwise copy the link.
+async function shareLink(url, title, msgEl) {
+  msgEl.textContent = '';
+  if (navigator.share) {
+    try { await navigator.share({ title, text: title, url }); return; } catch (e) { if (e && e.name === 'AbortError') return; }
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    msgEl.textContent = 'Link copied. Paste it into a message.';
+  } catch {
+    msgEl.textContent = `Copy this link: ${url}`;
+  }
+}
+
+function shareVerse() {
+  if (!vs || !vs.verse) return;
+  shareLink(Share.verseUrl(location.origin, vs.verse.ref), `Memorize ${vs.verse.ref} with me`, el('vrShareMsg'));
+}
+
+function sharePack() {
+  const pack = packList.find(p => p.id === getSettings().pack);
+  if (pack) shareLink(Share.packUrl(location.origin, pack.id), `Memorize the ${pack.title} pack with me`, el('packShareMsg'));
 }
 
 document.addEventListener('DOMContentLoaded', () => {

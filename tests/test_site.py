@@ -114,3 +114,31 @@ def test_check_deploy_script_passes_against_a_live_server():
         assert check_deploy.run(f"http://127.0.0.1:{server.server_port}", expect_accounts=True) is False
     finally:
         server.shutdown()
+
+
+def test_home_page_has_default_link_preview(client):
+    html = client.get("/").get_data(as_text=True)
+    assert '<meta property="og:title" content="LogosDepth"' in html
+    assert "Free, no ads" in html and "/static/icons/icon-512.png" in html
+
+
+def test_shared_verse_link_preview_names_the_verse(client):
+    html = client.get("/?v=John 3:16").get_data(as_text=True)
+    assert '<meta property="og:title" content="Memorize John 3:16 with me"' in html
+    assert "For God so loved the world" in html
+
+
+def test_shared_pack_link_preview_names_the_pack(client):
+    html = client.get("/?pack=start").get_data(as_text=True)
+    assert 'og:title" content="Memorize the Start Here pack with me"' in html
+
+
+def test_bad_share_links_fall_back_and_cannot_inject_markup(client):
+    for q in ("/?v=<script>alert(1)</script>", "/?v=Hezekiah 1:1", "/?v=John 3:99", "/?pack=nope", "/?v=" + "a" * 500):
+        r = client.get(q)
+        assert r.status_code == 200
+        html = r.get_data(as_text=True)
+        assert '<meta property="og:title" content="LogosDepth"' in html
+        assert "<script>alert" not in html
+    html = client.get('/?v=John 3:16"><script>x</script>').get_data(as_text=True)
+    assert "<script>x" not in html

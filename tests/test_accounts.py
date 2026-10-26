@@ -200,3 +200,18 @@ def test_input_not_mutated():
     snapshot = copy.deepcopy(original)
     clean_progress(original)
     assert original == snapshot
+
+
+def test_trouble_spot_words_are_validated():
+    from progress_schema import clean_progress
+    card = dict(CARD, slips={"shepherd": 2, "x y": 1, "big": 99, "zero": 0, "<b>": 1, "ok": 3})
+    data, err = clean_progress(doc({"a": card}))
+    assert err is None
+    assert data["srs"]["a"]["slips"] == {"shepherd": 2, "ok": 3}
+    data, _ = clean_progress(doc({"a": dict(CARD, slips=[1])}))
+    assert "slips" not in data["srs"]["a"]
+    data, _ = clean_progress(doc({"a": CARD}))
+    assert "slips" not in data["srs"]["a"]
+    many = {f"w{i}": 1 for i in range(30)}
+    data, _ = clean_progress(doc({"a": dict(CARD, slips=many)}))
+    assert len(data["srs"]["a"]["slips"]) == 12

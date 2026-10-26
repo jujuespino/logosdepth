@@ -35,13 +35,30 @@ def _clean_card(c):
         return None
     last = c.get("lastDate")
     lapses = c.get("lapses")
-    return {
+    out = {
         "stage": c["stage"],
         "due": c["due"],
         "days": sorted(set(days)),
         "lapses": lapses if _is_int(lapses) and lapses >= 0 else 0,
         "lastDate": last if _is_date(last) else None,
     }
+    slips = _clean_slips(c.get("slips"))
+    if slips:
+        out["slips"] = slips
+    return out
+
+
+def _clean_slips(raw):
+    """Trouble-spot words for one verse: at most 12 short words with counts from 1 to 9; anything else is dropped."""
+    if not isinstance(raw, dict):
+        return None
+    out = {}
+    for word, n in raw.items():
+        if len(out) >= 12:
+            break
+        if isinstance(word, str) and 0 < len(word) <= 40 and word.isalnum() and _is_int(n) and 1 <= n <= 9:
+            out[word] = n
+    return out
 
 
 def clean_progress(obj):

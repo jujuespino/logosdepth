@@ -111,6 +111,31 @@ const Recall = (() => {
     };
   }
 
+  // ─── Trouble spots ─────────────────────────────────
+  // slips = { word: n } for one verse: the words the learner keeps missing when typing it. A miss adds one;
+  // typing the word correctly in a later attempt takes one off, so the list shrinks as the verse is learned.
+  const MAX_SLIPS = 12, MAX_SLIP_COUNT = 9;
+
+  function updateSlips(slips, ops) {
+    const out = { ...(slips || {}) };
+    for (const op of ops) {
+      if (op.kind !== 'ok') continue;
+      const k = normWord(op.target);
+      if (out[k] && --out[k] <= 0) delete out[k];
+    }
+    for (const op of ops) {
+      if (op.kind !== 'wrong' && op.kind !== 'missing') continue;
+      const k = normWord(op.target);
+      if (k) out[k] = Math.min((out[k] || 0) + 1, MAX_SLIP_COUNT);
+    }
+    const kept = Object.entries(out).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, MAX_SLIPS);
+    return Object.fromEntries(kept);
+  }
+
+  // The words to watch, most-missed first.
+  const troubleWords = card =>
+    Object.entries((card && card.slips) || {}).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(e => e[0]);
+
   // Split a verse into short phrases for phrase-by-phrase study: break at punctuation, split anything
   // longer than 8 words in half, and fold fragments of under 3 words into a neighbor.
   function makePhrases(text) {
@@ -236,7 +261,7 @@ const Recall = (() => {
 
   return {
     INTERVAL_DAYS, MASTERY_DAYS,
-    normWord, splitWords, editDistance, gradeRecall, makeHint, makePhrases,
+    normWord, splitWords, editDistance, gradeRecall, makeHint, makePhrases, updateSlips, troubleWords, MAX_SLIPS,
     dateKey, addDays, daysBetween,
     recordAttempt, mergeCards, isDue, isMastered, recallDays, dueRefs, describeDue, xpForAttempt,
   };

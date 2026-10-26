@@ -136,6 +136,18 @@ test('__proto__ keys in a backup cannot pollute objects', () => {
   assert.strictEqual(v.dropped, 1);
 });
 
+test('trouble-spot words are kept when valid and dropped when not', () => {
+  const doc = srs => ({ app: 'logosdepth', schemaVersion: 1, data: { srs } });
+  const good = P.validate(doc({ a: card({ slips: { shepherd: 2, lord: 1 } }) })).data.srs.a;
+  assert.deepStrictEqual(good.slips, { shepherd: 2, lord: 1 });
+  const bad = P.validate(doc({ a: card({ slips: { 'x y': 1, big: 99, zero: 0, ok: 3, '<b>': 1, a: 'x' } }) })).data.srs.a;
+  assert.deepStrictEqual(bad.slips, { ok: 3 });
+  assert.strictEqual(P.validate(doc({ a: card({ slips: [1, 2] }) })).data.srs.a.slips, undefined);
+  assert.strictEqual(P.validate(doc({ a: card() })).data.srs.a.slips, undefined, 'no empty slips field');
+  const many = Object.fromEntries(Array.from({ length: 30 }, (_, i) => ['w' + i, 1]));
+  assert.strictEqual(Object.keys(P.validate(doc({ a: card({ slips: many }) })).data.srs.a.slips).length, 12);
+});
+
 // ── storage availability and reset ──
 test('storageAvailable detects a store that refuses writes', () => {
   assert.strictEqual(P.storageAvailable(fakeStore()), true);

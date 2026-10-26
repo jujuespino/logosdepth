@@ -2,7 +2,7 @@
    LogosDepth — Settings, backup/restore, reminders, onboarding, PWA
    =================================================== */
 /* global Recall, Progress, Reminder, Sync, Analytics, vLoad, vSave, getCards, getSettings, saveSettings, verseList, packList,
-   renderPicker, startVerse, showView, learnNext */
+   renderPicker, startVerse, showView, learnNext, sharedLink, sharedGo */
 
 const ONBOARD_KEY = 'ld_onboarded';
 const BASE_TITLE  = document.title;
@@ -303,7 +303,8 @@ function finishOnboarding() {
   track('onboarding_done');
   closeOnboarding();
   renderPicker();
-  learnNext(); // the gentlest verse in the starter pack
+  if (sharedLink) sharedGo(); // they came from a shared link: start that
+  else learnNext(); // the gentlest verse in the starter pack
 }
 
 // ─── Accounts and sync (only when the server has them switched on) ───

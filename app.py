@@ -10,6 +10,7 @@ from accounts import bp as accounts_bp
 from beta import beta_enabled
 from beta import bp as beta_bp
 from bible import bp as bible_bp
+from bible import passage_for
 from store import bp as store_bp
 
 app = Flask(__name__)
@@ -41,9 +42,32 @@ VERSES: list[dict] = json.loads((DATA_DIR / "verses.json").read_text(encoding="u
 PACKS: list[dict] = json.loads((DATA_DIR / "packs.json").read_text(encoding="utf-8"))
 
 
+DEFAULT_DESCRIPTION = "Memorize scripture word-for-word and keep it, with spaced reviews. Free, no ads."
+
+
+def _share_preview() -> tuple[str, str]:
+    """Title and description for link previews. A shared verse or pack link says what it is about."""
+    ref = " ".join(request.args.get("v", "").split())
+    if ref:
+        data, _ = passage_for(ref)
+        if data:
+            text = data["text"]
+            return f"Memorize {data['ref']} with me", (text if len(text) <= 200 else text[:197].rstrip() + "…")
+    pid = request.args.get("pack", "").strip().lower()
+    pack = next((p for p in PACKS if p["id"] == pid), None)
+    if pack:
+        n = sum(1 for v in VERSES if pid in v.get("packs", []))
+        return f"Memorize the {pack['title']} pack with me", f"{n} verses. {pack['description']}"
+    return "LogosDepth", DEFAULT_DESCRIPTION
+
+
 @app.route("/")
 def index():
-    return render_template("index.html")
+    title, description = _share_preview()
+    return render_template(
+        "index.html", og_title=title, og_description=description,
+        og_image=f"{_public_base()}/static/icons/icon-512.png",
+    )
 
 
 def _site_context() -> dict:
