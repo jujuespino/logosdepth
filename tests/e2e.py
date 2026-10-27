@@ -1,0 +1,878 @@
+"""End-to-end browser test. Needs: flask server on BASE, playwright, chromium.
+
+  python3 app.py &            # in another shell
+  python3 tests/e2e.py        # set CHROME=/path/to/chrome to use a specific browser
+Optional: SHOTS=/some/dir to save screenshots.
+"""
+import json
+import os
+from datetime import datetime, timedelta
+
+from playwright.sync_api import sync_playwright
+
+_SANDBOX_CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
+# Use $CHROME if set, else this sandbox's browser if present, else Playwright's bundled Chromium.
+CHROME = os.environ.get('CHROME') or (_SANDBOX_CHROME if os.path.exists(_SANDBOX_CHROME) else None)
+BASE = os.environ.get('BASE', 'http://localhost:5000/')
+SHOTS = os.environ.get('SHOTS')
+D0 = datetime(2026, 11, 2, 10, 0)
+
+fails = []
+passes = 0
+
+
+def check(name, cond, extra=''):
+    global passes
+    if cond:
+        passes += 1
+        print('PASS', name)
+    else:
+        fails.append(name)
+        print('FAIL', name, f'[{extra}]' if extra else '')
+
+
+def day(n):
+    return (D0 + timedelta(days=n)).strftime('%Y-%m-%d')
+
+
+def new_page(browser, n=0, width=1280, height=900, onboarded=True, init_script=None, **ctx_opts):
+    ctx = browser.new_context(viewport={'width': width, 'height': height}, **ctx_opts)
+    if onboarded:  # most tests aren't about the first-run walkthrough
+        ctx.add_init_script("try { localStorage.setItem('ld_onboarded', 'true'); } catch (e) {}")
+    if init_script:
+        ctx.add_init_script(init_script)
+    pg = ctx.new_page()
+    pg.errors = []
+    pg.on('pageerror', lambda e: pg.errors.append(str(e)[:160]))
+    pg.on('console', lambda m: pg.errors.append('console:' + m.text[:160])
+          if m.type == 'error' and 'ERR_' not in m.text else None)
+    pg.clock.set_fixed_time(D0 + timedelta(days=n))
+    pg.goto(BASE)
+    pg.wait_for_selector('.verse-card', state='attached')
+    return pg
+
+
+def at_day(pg, n):
+    """Jump the browser clock to day n and reload (storage persists)."""
+    pg.clock.set_fixed_time(D0 + timedelta(days=n))
+    pg.reload()
+    pg.wait_for_selector('.verse-card', state='attached')
+
+
+def wait_for(pg, expr, timeout=10000):
+    """Poll a JS expression with evaluate(); wait_for_function evals a string, which the page's CSP forbids."""
+    waited = 0
+    while waited < timeout:
+        if pg.evaluate(f'() => !!({expr})'):
+            return
+        pg.wait_for_timeout(100)
+        waited += 100
+    raise TimeoutError(expr)
+
+
+def show_list(pg):
+    """The starter packs live at the top of the Bible browser."""
+    if pg.is_hidden('#vListWrap'):
+        pg.click('#vBibleBtn')
+
+
+def exit_verse(pg):
+    pg.evaluate('exitVerse()')
+
+
+def open_verses(pg):
+    """Go to the Memorize home screen."""
+    pg.click('[data-view="verses"]')
+
+
+def card(pg, ref):
+    raw = pg.evaluate('localStorage.getItem("ld_verse_srs")')
+    return (json.loads(raw) if raw else {}).get(ref)
+
+
+def xp(pg):
+    return pg.evaluate('getXp()')
+
+
+def verse_text(pg, ref):
+    return pg.evaluate(f'verseList.find(v => v.ref === {ref!r}).text')
+
+
+def click_btn(pg, name):
+    pg.get_by_role('button', name=name, exact=True).click()
+
+
+def guided_to_typed(pg, ref):
+    """Play the guided steps (Read, Phrases when present, Fill In, Order, Recall) through the UI."""
+    pg.evaluate(f'startVerse({ref!r})')
+    click_btn(pg, "I've read it →")
+    while pg.evaluate('vs.steps[vs.step].id') != 'type':
+        step = pg.evaluate('vs.steps[vs.step].id')
+        guard = 0
+        while pg.get_by_role('button', name='Next step →').count() == 0 and guard < 80:
+            guard += 1
+            if step == 'phrases':
+                phase = pg.evaluate('vs.phr.stage')
+                if phase == 'study':
+                    click_btn(pg, 'Cover it and type it →')
+                else:
+                    pg.fill('#vsInput', pg.evaluate('vs.phrases[vs.phr.i]'))
+                    click_btn(pg, 'Check')
+                continue
+            idx = pg.evaluate('''() => {
+                if (vs.steps[vs.step].id === 'order')
+                    return vs.order.bank.findIndex(c => c.key === normUnit(vs.order.units[vs.order.pos]));
+                return vs.fill.bank.findIndex(c => c.key === vs.tokens[vs.fill.active].key);
+            }''')
+            pg.locator('#vsBank .vchip').nth(idx).click()
+        check(f'{ref}: guided step {step} completes', pg.get_by_role('button', name='Next step →').count() == 1, guard)
+        click_btn(pg, 'Next step →')
+    check(f'{ref}: arrives at Type It', pg.evaluate('vs.steps[vs.step].id') == 'type')
+
+
+def submit(pg, text):
+    pg.fill('#vsInput', text)
+    click_btn(pg, 'Check')
+
+
+with sync_playwright() as p:
+    b = p.chromium.launch(executable_path=CHROME, args=['--no-sandbox'])
+
+    # ───────────── Navigation ─────────────
+    pg = new_page(b)
+    views = ['verses', 'settings']
+    for view in ['settings', 'verses']:
+        pg.click(f'[data-view="{view}"]')
+        visible = [v for v in views if pg.is_visible(f'#view-{v}')]
+        check(f'nav -> {view}', visible == [view], visible)
+    check('top bar has exactly two places: Memorize and Settings', pg.locator('.nav-btn').count() == 2, pg.locator('.nav-btn').count())
+    check('no Hebrew or Greek material anywhere in the page',
+          not any(0x0370 <= ord(c) <= 0x03FF or 0x0590 <= ord(c) <= 0x05FF or 0x1F00 <= ord(c) <= 0x1FFF
+                  for c in pg.inner_text('body') + pg.content()))
+    check('regression: no JS errors', not pg.errors, pg.errors[:2])
+    pg.context.close()
+
+    # ───────────── Scenario 1: learn + clean typed recall (day 0) ─────────────
+    pg = new_page(b)
+    check('home has one link to find other verses: Browse the Bible', pg.inner_text('#vBibleBtn') == 'Browse the Bible →'
+          and pg.locator('#vOtherBtn').count() == 0)
+    check('the starter list is not on the home screen', pg.is_hidden('#vListWrap'))
+    open_verses(pg)
+    check('fresh state: review button hidden', pg.is_hidden('#vReviewBtn'))
+    check('fresh state: invites the first verse', pg.inner_text('#vReviewTitle') == 'Learn your first verse')
+    check('fresh state: suggests a verse to start with', pg.is_visible('#vNextCard') and 'start with' in pg.inner_text('#vNextLabel').lower())
+    show_list(pg)
+    check('the Bible browser opens with the Start Here verses on top', pg.locator('.verse-card').count() >= 10)
+    pg.click('#bibBack')
+    check('Back from the Bible returns home', pg.is_visible('#vNextCard'))
+
+    guided_to_typed(pg, 'Psalm 23:1')
+    check('step bar matches the steps for this verse (incl. Phrases)', pg.locator('.vs-step').count() == pg.evaluate('vs.steps.length') == 6)
+    # Case/punctuation don't matter
+    submit(pg, 'the lord is my shepherd i shall not want')
+    check('clean pass message', 'Perfect recall' in pg.inner_text('#vsMsg'))
+    click_btn(pg, 'Continue →')
+    check('result: recalled from memory', pg.inner_text('#vrTitle') == 'Recalled from memory!')
+    check('result: 1 of 3 recall days', pg.inner_text('#vrStars') == '●○○', pg.inner_text('#vrStars'))
+    check('result: +25 XP', '+25 XP' in pg.inner_text('#vrXp'), pg.inner_text('#vrXp'))
+    check('result: next review tomorrow', 'Next review tomorrow' in pg.inner_text('#vrXp'))
+    check('result: 2 more days to master', '2 more recall days' in pg.inner_text('#vrXp'))
+    c = card(pg, 'Psalm 23:1')
+    check('card stored: stage 0, due tomorrow, 1 day',
+          c and c['stage'] == 0 and c['due'] == day(1) and c['days'] == [day(0)], c)
+    check('xp = 25', xp(pg) == 25, xp(pg))
+    pg.locator('#vResult button', has_text='All verses').click()
+    check('picker: caught-up card', pg.inner_text('#vReviewTitle') == "You're all caught up")
+    check('picker: next review tomorrow', 'tomorrow' in pg.inner_text('#vReviewSub'))
+    check('picker: verse shows review tomorrow', 'review tomorrow' in pg.inner_text('#verseGrid'))
+    if SHOTS:
+        pg.screenshot(path=f'{SHOTS}/picker_after_learning.png')
+    check('scenario 1: no JS errors', not pg.errors, pg.errors[:2])
+    pg.context.close()
+
+    # ───────────── Scenario 2: miss, feedback diff, same-day retry ─────────────
+    pg = new_page(b)
+    open_verses(pg)
+    pg.evaluate('startVerse("John 3:16"); goToStep("type")')
+    full = verse_text(pg, 'John 3:16')
+    submit(pg, full.replace('only begotten ', ''))
+    check('miss message', 'Not yet' in pg.inner_text('#vsMsg'))
+    check('miss: missing words shown in red', pg.locator('.d-miss').count() >= 1)
+    check('miss: offers Try again + Finish', pg.get_by_role('button', name='Try again').count() == 1
+          and pg.get_by_role('button', name='Finish for today').count() == 1)
+    c = card(pg, 'John 3:16')
+    check('miss recorded: stage 0, lapse 1, no recall day',
+          c['stage'] == 0 and c['lapses'] == 1 and c['days'] == [], c)
+    check('miss earns no XP', xp(pg) == 0, xp(pg))
+    if SHOTS:
+        pg.screenshot(path=f'{SHOTS}/typed_miss.png')
+    click_btn(pg, 'Try again')
+    check('retry: input cleared and enabled', pg.input_value('#vsInput') == '' and pg.is_enabled('#vsInput'))
+    submit(pg, full)
+    check('retry pass: not counted notice', 'already practiced this verse today' in pg.inner_text('#vsMsg'))
+    c2 = card(pg, 'John 3:16')
+    check('retry did not change schedule', c2 == {k: v for k, v in c.items() if k != 'slips'}, (c, c2))
+    check('retry typed the missed words correctly, so they left the list', 'slips' in c and 'slips' not in c2, (c, c2))
+    check('retry earns no XP', xp(pg) == 0, xp(pg))
+    click_btn(pg, 'Continue →')
+    check('result reflects first (missed) attempt', 'Good start' in pg.inner_text('#vrTitle'), pg.inner_text('#vrTitle'))
+    check('result: 0 of 3 days', pg.inner_text('#vrStars') == '○○○')
+    pg.context.close()
+
+    # ───────────── Scenario 3: hinted pass doesn't count as recall ─────────────
+    pg = new_page(b)
+    open_verses(pg)
+    pg.evaluate('startVerse("Psalm 56:3"); goToStep("type")')
+    click_btn(pg, 'Show first letters')
+    hint = pg.inner_text('#vsHint')
+    check('hint shows first letters', hint.startswith('W___ t___'), hint)
+    submit(pg, verse_text(pg, 'Psalm 56:3'))
+    check('hinted pass message', 'Recalled with a cue' in pg.inner_text('#vsMsg'))
+    c = card(pg, 'Psalm 56:3')
+    check('hinted pass: no recall day, stage 0', c['days'] == [] and c['stage'] == 0, c)
+    check('hinted pass earns 5 XP', xp(pg) == 5, xp(pg))
+    pg.context.close()
+
+    # ───────────── Scenario 4: "I don't remember" + typo tolerance ─────────────
+    pg = new_page(b)
+    open_verses(pg)
+    pg.evaluate('startVerse("Genesis 1:1"); goToStep("type")')
+    click_btn(pg, "I don't remember")
+    check('gave up: full verse shown', verse_text(pg, 'Genesis 1:1') in pg.inner_text('#vsText'))
+    check('gave up: counted as miss', card(pg, 'Genesis 1:1')['lapses'] == 1)
+    pg.context.close()
+
+    pg = new_page(b)
+    open_verses(pg)
+    pg.evaluate('startVerse("Genesis 1:1"); goToStep("type")')
+    submit(pg, 'In the begining God created the heaven and the earth.')
+    check('typo accepted with spelling note', 'Check the spelling' in pg.inner_text('#vsMsg'))
+    check('typo underlined', pg.locator('.d-typo').count() == 1)
+    pg.context.close()
+
+    # ───────────── Scenario 5: empty submit + Ctrl+Enter ─────────────
+    pg = new_page(b)
+    open_verses(pg)
+    pg.evaluate('startVerse("Psalm 23:1"); goToStep("type")')
+    click_btn(pg, 'Check')
+    check('empty submit asks for input', 'Type what you remember' in pg.inner_text('#vsMsg'))
+    check('empty submit records nothing', card(pg, 'Psalm 23:1') is None)
+    pg.fill('#vsInput', verse_text(pg, 'Psalm 23:1'))
+    pg.press('#vsInput', 'Control+Enter')
+    check('Ctrl+Enter submits', 'Perfect recall' in pg.inner_text('#vsMsg'))
+    pg.context.close()
+
+    # ───────────── Scenario 6: spaced reviews and mastery over several days ─────────────
+    pg = new_page(b, 0)
+    open_verses(pg)
+    # Day 0: learn Psalm 23:1 (pass) and Genesis 1:1 (miss)
+    pg.evaluate('startVerse("Psalm 23:1"); goToStep("type")')
+    submit(pg, verse_text(pg, 'Psalm 23:1'))
+    pg.evaluate('startVerse("Genesis 1:1"); goToStep("type")')
+    submit(pg, 'In the beginning God made the heaven and the earth.')
+    check('day0: Genesis miss recorded', card(pg, 'Genesis 1:1')['lapses'] == 1)
+
+    # Day 1: both due
+    at_day(pg, 1)
+    open_verses(pg)
+    check('day1: review card shows 2 due', pg.inner_text('#vReviewTitle') == "2 verses to review",
+          pg.inner_text('#vReviewTitle'))
+    show_list(pg)
+    check('day1: both cards flagged Due today', pg.locator('.verse-status.due').count() == 2)
+    pg.click('#bibBack')
+    if SHOTS:
+        pg.screenshot(path=f'{SHOTS}/review_due.png')
+    click_btn(pg, 'Start review')
+    check('review: step bar shows Review 1 of 2', pg.inner_text('#vsSteps') == 'Review 1 of 2', pg.inner_text('#vsSteps'))
+    check('review: typing area visible, no guided steps', pg.is_visible('#vsInput') and pg.locator('.vs-step').count() == 1)
+    seen = []
+    for _ in range(3):  # 2 verses + 1 requeued miss
+        ref = pg.evaluate('vs.verse.ref')
+        seen.append(ref)
+        full = verse_text(pg, ref)
+        if ref == 'Genesis 1:1' and seen.count(ref) == 1:
+            submit(pg, 'In the beginning God created the heaven')   # incomplete: miss
+        else:
+            submit(pg, full)
+        click_btn(pg, 'Next →')
+        if pg.is_visible('#vResult'):
+            break
+    check('review: missed verse was requeued once', seen.count('Genesis 1:1') == 2 and seen.count('Psalm 23:1') == 1, seen)
+    check('review: finished on result screen', pg.is_visible('#vResult') and pg.inner_text('#vrTitle') == 'Review complete')
+    check('review: summary 1 / 2 recalled', pg.inner_text('#vrStars') == '1 / 2', pg.inner_text('#vrStars'))
+    summ = pg.inner_text('#vrText')
+    check('review summary lists next dates',
+          'Psalm 23:1 — ✓ recalled · next in 3 days' in summ and 'Genesis 1:1 — missed · next tomorrow' in summ, summ)
+    p23, gen = card(pg, 'Psalm 23:1'), card(pg, 'Genesis 1:1')
+    check('day1: Psalm stage 1, due day4, 2 recall days',
+          p23['stage'] == 1 and p23['due'] == day(4) and p23['days'] == [day(0), day(1)], p23)
+    check('day1: Genesis reset, due day2, retry did not add a recall day',
+          gen['stage'] == 0 and gen['due'] == day(2) and gen['days'] == [], gen)
+    check('xp after day1 = 25 + 20', xp(pg) == 45, xp(pg))
+    check('review result hides learn-only buttons', pg.is_hidden('#vrNext') and pg.is_hidden('#vrAgain'))
+    check('review: not due again same day',
+          not pg.evaluate('Recall.dueRefs(getCards(), Recall.dateKey()).length'))
+    pg.locator('#vResult button', has_text='All verses').click()
+    check('after review: caught up', pg.inner_text('#vReviewTitle') == "You're all caught up")
+
+    # Day 4: Genesis (overdue) + Psalm due -> Psalm reaches 3 recall days = mastered
+    at_day(pg, 4)
+    open_verses(pg)
+    check('day4: 2 due', pg.inner_text('#vReviewTitle') == "2 verses to review", pg.inner_text('#vReviewTitle'))
+    click_btn(pg, 'Start review')
+    for _ in range(2):
+        submit(pg, verse_text(pg, pg.evaluate('vs.verse.ref')))
+        click_btn(pg, 'Next →')
+    check('day4: perfect review', pg.inner_text('#vrStars') == '2 / 2')
+    p23, gen = card(pg, 'Psalm 23:1'), card(pg, 'Genesis 1:1')
+    check('day4: Psalm mastered (3 days), stage 2, due day11',
+          len(p23['days']) == 3 and p23['stage'] == 2 and p23['due'] == day(11), p23)
+    check('day4: Genesis 1 recall day, stage 1', len(gen['days']) == 1 and gen['stage'] == 1, gen)
+    check('xp after day4 = 45 + 25 + 20', xp(pg) == 90, xp(pg))
+    pg.locator('#vResult button', has_text='All verses').click()
+    check('picker: Mastered count 1/', pg.inner_text('#vMastered').startswith('1/'), pg.inner_text('#vMastered'))
+    grid = pg.inner_text('#verseGrid')
+    check('picker: Psalm shows Mastered + next review', 'Mastered · review in 7 days' in grid, grid[:300])
+    if SHOTS:
+        pg.screenshot(path=f'{SHOTS}/picker_mastered.png')
+    check('scenario 6: no JS errors', not pg.errors, pg.errors[:2])
+    pg.context.close()
+
+    # ───────────── Scenario 8: packs and translations ─────────────
+    pg = new_page(b)
+    open_verses(pg)
+    show_list(pg)
+    n_start = pg.locator('.verse-card').count()
+    check('a new learner starts on the short Start Here pack', pg.input_value('#packSelect') == 'start' and 10 <= n_start <= 30, n_start)
+    check('pack picker lists 10+ packs plus All', pg.locator('#packSelect option').count() >= 11, pg.locator('#packSelect option').count())
+    pg.select_option('#packSelect', 'all')
+    n_all = pg.locator('.verse-card').count()
+    check('All shows 100+ verses', n_all >= 100, n_all)
+    pg.select_option('#packSelect', 'comfort')
+    n_comfort = pg.locator('.verse-card').count()
+    check('pack filter narrows the list', 10 <= n_comfort < n_all, n_comfort)
+    pg.reload()
+    pg.wait_for_selector('.verse-card', state='attached')
+    open_verses(pg)
+    show_list(pg)
+    check('pack filter persists across reload', pg.input_value('#packSelect') == 'comfort')
+    pg.select_option('#packSelect', 'all')
+    check('All restores the full list', pg.locator('.verse-card').count() == n_all)
+
+    # Translation switch: separate text and separate progress
+    web_text = pg.evaluate('verseList.find(v => v.ref === "John 3:16").translations.web')
+    kjv_text = verse_text(pg, 'John 3:16')
+    check('WEB and KJV texts differ', web_text != kjv_text)
+    pg.get_by_role('button', name='WEB', exact=True).click()
+    pg.evaluate('startVerse("John 3:16")')
+    check('session uses WEB text and WEB card key', pg.evaluate('vs.text') == web_text and pg.evaluate('vs.key') == 'John 3:16|web')
+    check('session header shows WEB', '· WEB' in pg.inner_text('#vsRef'))
+    pg.evaluate('goToStep("type")')
+    submit(pg, kjv_text)
+    check('KJV wording is rejected when learning WEB', 'Not yet' in pg.inner_text('#vsMsg'))
+    click_btn(pg, 'Try again')
+    submit(pg, web_text)
+    click_btn(pg, 'Continue →')
+    check('result shows (WEB)', '(WEB)' in pg.inner_text('#vrRef'), pg.inner_text('#vrRef'))
+    check('progress stored under the WEB key only', card(pg, 'John 3:16|web') is not None and card(pg, 'John 3:16') is None)
+
+    check('the result screen has no word chips', pg.locator('#vrWords').count() == 0 and pg.locator('.recent-tag').count() == 0)
+
+    # KJV-only verse under WEB falls back to KJV
+    pg.locator('#vResult button', has_text='All verses').click()
+    show_list(pg)
+    check('KJV-only verse is labelled in WEB mode',
+          'New · KJV only' in pg.locator('.verse-card', has_text='Psalm 23:1').first.inner_text())
+    pg.evaluate('startVerse("Psalm 23:1")')
+    check('fallback uses KJV text and plain key',
+          pg.evaluate('vs.translation') == 'kjv' and pg.evaluate('vs.key') == 'Psalm 23:1')
+    exit_verse(pg)
+
+    # Review a WEB card next day
+    at_day(pg, 1)
+    open_verses(pg)
+    check('WEB card is due next day', pg.inner_text('#vReviewTitle') == "1 verse to review", pg.inner_text('#vReviewTitle'))
+    click_btn(pg, 'Start review')
+    check('review uses the WEB text', pg.evaluate('vs.text') == web_text)
+    submit(pg, web_text)
+    click_btn(pg, 'Next →')
+    check('review summary names the translation', 'John 3:16 (WEB)' in pg.inner_text('#vrText'), pg.inner_text('#vrText'))
+    check('scenario 8: no JS errors', not pg.errors, pg.errors[:2])
+    pg.context.close()
+
+    # ───────────── Scenario 9: guess-first (pretest) and phrase-by-phrase study ─────────────
+    pg = new_page(b)
+    open_verses(pg)
+    pg.evaluate('startVerse("Psalm 23:1")')
+    full = verse_text(pg, 'Psalm 23:1')
+    check('guess option offered on the read step', pg.get_by_role('button', name='Guess it first (optional)').count() == 1)
+    click_btn(pg, 'Guess it first (optional)')
+    check('guess prompt hides the verse', pg.is_visible('#vsInput') and full not in pg.inner_text('#vsText'))
+    pg.fill('#vsInput', 'The Lord is my shepherd I will not lack')
+    click_btn(pg, 'Check my guess')
+    check('guess feedback reports words already known', 'already had' in pg.inner_text('#vsMsg'), pg.inner_text('#vsMsg'))
+    check('guess feedback marks correct words', pg.locator('#vsText .d-ok').count() >= 3)
+    click_btn(pg, 'Read it →')
+    check('then the verse is shown to read', full in pg.inner_text('#vsText'))
+    check('guess is only offered once', pg.get_by_role('button', name='Guess it first (optional)').count() == 0)
+    check('guessing leaves schedule and XP untouched', card(pg, 'Psalm 23:1') is None and xp(pg) == 0)
+
+    click_btn(pg, "I've read it →")
+    check('Phrases step follows Read', pg.evaluate('vs.steps[vs.step].id') == 'phrases')
+    check('step bar lists Phrases', 'Phrases' in pg.inner_text('#vsSteps'))
+    n_phr = pg.evaluate('vs.phrases.length')
+    check('Psalm 23:1 splits into 2 phrases', n_phr == 2, n_phr)
+    check('study stage names the phrase', 'Phrase 1 of 2' in pg.inner_text('#vsInstruction'))
+    check('study stage shows the phrase', pg.evaluate('vs.phrases[0]') in pg.inner_text('#vsText'))
+    click_btn(pg, 'Cover it and type it →')
+    check('type stage hides the phrase', pg.evaluate('vs.phrases[0]') not in pg.inner_text('#vsText') and pg.is_visible('#vsInput'))
+    pg.fill('#vsInput', 'the lord is')
+    click_btn(pg, 'Check')
+    check('wrong phrase is marked', 'Not yet' in pg.inner_text('#vsMsg') and pg.locator('#vsText .d-miss').count() >= 1)
+    click_btn(pg, 'Try again')
+    click_btn(pg, 'Show first letters')
+    check('phrase hint shows first letters', pg.inner_text('#vsHint').startswith('T__ L___'), pg.inner_text('#vsHint'))
+    pg.fill('#vsInput', pg.evaluate('vs.phrases[0]'))
+    pg.press('#vsInput', 'Control+Enter')
+    check('correct phrase moves to the next', 'Phrase 2 of 2' in pg.inner_text('#vsInstruction'))
+    check('earlier phrase stays visible as context', pg.evaluate('vs.phrases[0]') in pg.inner_text('#vsText'))
+    click_btn(pg, 'Cover it and type it →')
+    pg.fill('#vsInput', pg.evaluate('vs.phrases[1]'))
+    click_btn(pg, 'Check')
+    check('finishing phrases completes the step', pg.get_by_role('button', name='Next step →').count() == 1)
+    check('phrase practice does not touch schedule or XP', card(pg, 'Psalm 23:1') is None and xp(pg) == 0)
+    click_btn(pg, 'Next step →')
+    check('next step is Fill In', pg.evaluate('vs.steps[vs.step].id') == 'fill1')
+
+    # A single-phrase verse skips the Phrases step (WEB Hebrews 13:8)
+    exit_verse(pg)
+    show_list(pg)
+    pg.get_by_role('button', name='WEB', exact=True).click()
+    pg.evaluate('startVerse("Hebrews 13:8")')
+    ids = pg.evaluate('vs.steps.map(s => s.id)')
+    check('single-phrase verse has no Phrases step', 'phrases' not in ids and ids[0] == 'read', ids)
+    check('scenario 9: no JS errors', not pg.errors, pg.errors[:2])
+    pg.context.close()
+
+    # ───────────── Scenario 10: settings, backup/restore, reset, reminder, badge ─────────────
+    pg = new_page(b)
+    open_verses(pg)
+    pg.evaluate('startVerse("Psalm 23:1"); goToStep("type")')
+    submit(pg, verse_text(pg, 'Psalm 23:1'))
+    click_btn(pg, 'Continue →')
+    pg.locator('#vResult button', has_text='All verses').click()
+    check('learned verse is due tomorrow, so no badge yet', pg.is_hidden('#dueBadge'))
+    at_day(pg, 1)
+    check('badge shows 1 due', pg.inner_text('#dueBadge') == '1', pg.inner_text('#dueBadge'))
+    check('tab title shows the due count', pg.title().startswith('(1)'), pg.title())
+    at_day(pg, 0)
+
+    pg.click('[data-view="settings"]')
+    check('settings view opens', pg.is_visible('#view-settings'))
+    with pg.expect_download() as dl:
+        pg.click('#exportBtn')
+    backup_path = dl.value.path()
+    backup = json.load(open(backup_path))
+    check('backup is a LogosDepth v1 file', backup['app'] == 'logosdepth' and backup['schemaVersion'] == 1)
+    check('backup contains the learned verse', 'Psalm 23:1' in backup['data']['srs'] and backup['data']['xp'] == 25)
+    check('backup message shown', 'Backup downloaded' in pg.inner_text('#backupMsg'), pg.inner_text('#backupMsg'))
+    check('download is named with the date', dl.value.suggested_filename.startswith('logosdepth-progress-')
+          and dl.value.suggested_filename.endswith('.json'), dl.value.suggested_filename)
+
+    # Invalid files are rejected without touching progress
+    before = pg.evaluate('localStorage.getItem("ld_verse_srs")')
+    pg.set_input_files('#importFile', {'name': 'x.json', 'mimeType': 'application/json', 'buffer': b'not json at all'})
+    wait_for(pg, 'document.getElementById("backupMsg").textContent.includes("not valid JSON")')
+    check('garbage file rejected', 'not valid JSON' in pg.inner_text('#backupMsg'), pg.inner_text('#backupMsg'))
+    pg.set_input_files('#importFile', {'name': 'x.json', 'mimeType': 'application/json',
+                                       'buffer': json.dumps({'app': 'other', 'schemaVersion': 1, 'data': {}}).encode()})
+    wait_for(pg, 'document.getElementById("backupMsg").textContent.includes("LogosDepth backup")')
+    check('wrong-app file rejected', pg.is_hidden('#importChoice'))
+    check('rejected files change nothing', pg.evaluate('localStorage.getItem("ld_verse_srs")') == before)
+
+    # Erase, then restore (replace)
+    pg.click('#resetBtn')
+    check('reset asks for confirmation', pg.is_visible('#resetChoice'))
+    pg.get_by_role('button', name='Cancel').last.click()
+    check('cancelling keeps progress', pg.evaluate('localStorage.getItem("ld_verse_srs")') == before)
+    pg.click('#resetBtn')
+    pg.get_by_role('button', name='Yes, erase everything').click()
+    check('erase removes all progress keys',
+          pg.evaluate('["ld_verse_srs","ld_verse_xp","ld_verse_streak","ld_verse_settings"].every(k => localStorage.getItem(k) === null)'))
+    pg.set_input_files('#importFile', backup_path)
+    pg.wait_for_selector('#importChoice:not(.hidden)')
+    check('import summary describes the backup', '1 verse' in pg.inner_text('#importSummary')
+          and '25 XP' in pg.inner_text('#importSummary'), pg.inner_text('#importSummary'))
+    pg.get_by_role('button', name='Replace my progress').click()
+    check('replace restores the card and XP', card(pg, 'Psalm 23:1') is not None and xp(pg) == 25)
+
+    # Merging a backup into newer local progress never loses anything
+    pg.evaluate("""() => {
+        const c = getCards(); c['Psalm 23:1'].days.push('2026-11-09'); c['Psalm 23:1'].lastDate = '2026-11-09';
+        c['Psalm 23:1'].stage = 3; saveCards(c); vSave('ld_verse_xp', 90);
+    }""")
+    pg.set_input_files('#importFile', backup_path)
+    pg.wait_for_selector('#importChoice:not(.hidden)')
+    pg.get_by_role('button', name='Merge with my progress (recommended)').click()
+    merged = card(pg, 'Psalm 23:1')
+    check('merge keeps the newer schedule and all recall days', merged['stage'] == 3 and len(merged['days']) == 2, merged)
+    check('merge keeps the larger XP', xp(pg) == 90, xp(pg))
+
+    # Reminder .ics
+    pg.fill('#reminderTime', '07:45')
+    with pg.expect_download() as dl2:
+        pg.get_by_role('button', name='Add to calendar (.ics)').click()
+    ics = open(dl2.value.path(), encoding='utf-8').read()
+    check('reminder is a daily 07:45 event', 'RRULE:FREQ=DAILY' in ics and 'T074500' in ics, ics[:200])
+    check('reminder links back into the app', '/?view=verses' in ics.replace('\r\n ', ''))
+    check('scenario 10: no JS errors', not pg.errors, pg.errors[:2])
+    pg.context.close()
+
+    # Storage blocked: banner appears and the app still works
+    pg = new_page(b, init_script="Storage.prototype.setItem = function () { throw new Error('blocked'); };")
+    check('blocked storage shows the banner', pg.is_visible('#storageBanner'))
+    open_verses(pg)
+    show_list(pg)
+    check('app still loads verses with storage blocked', pg.locator('.verse-card').count() >= 10)
+    pg.context.close()
+
+    # ───────────── Scenario 11: first-run intro (one screen) ─────────────
+    pg = new_page(b, onboarded=False)
+    pg.wait_for_selector('#onboard:not(.hidden)')
+    check('the intro opens on first visit (Memorize is the home screen)', pg.is_visible('#onboard'))
+    check('it explains how it works', 'Welcome' in pg.inner_text('#onboardTitle') and 'three different days' in pg.inner_text('#onboardBody'))
+    check('it is a single screen: no Next button, no pack picker, no reminder step',
+          pg.get_by_role('button', name='Next →').count() == 0 and pg.locator('.onboard-pack').count() == 0
+          and 'habit' not in pg.inner_text('#onboard').lower() and pg.locator('#obTime').count() == 0)
+    pg.get_by_role('button', name='Start my first verse').click()
+    check('the overlay closes and the first verse starts', pg.is_hidden('#onboard') and pg.is_visible('#vSession'))
+    started = pg.evaluate('vs.verse.packs')
+    check('the first verse comes from the Start Here pack', 'start' in started, started)
+    check('the intro is remembered', pg.evaluate('localStorage.getItem("ld_onboarded")') == 'true')
+    exit_verse(pg)
+    pg.click('[data-view="settings"]')
+    pg.click('[data-view="verses"]')
+    check('the intro does not reappear', pg.is_hidden('#onboard'))
+    pg.context.close()
+
+    pg = new_page(b, onboarded=False)
+    pg.wait_for_selector('#onboard:not(.hidden)')
+    pg.keyboard.press('Escape')
+    check('Escape dismisses the intro and remembers it', pg.is_hidden('#onboard')
+          and pg.evaluate('localStorage.getItem("ld_onboarded")') == 'true')
+    pg.click('[data-view="settings"]')
+    pg.get_by_role('button', name='Show the intro').click()
+    check('Settings can reopen the intro', pg.is_visible('#onboard'))
+    pg.context.close()
+
+    # ───────────── Scenario 12: deep link, manifest and real offline use ─────────────
+    ctx = b.new_context(viewport={'width': 1280, 'height': 900})
+    ctx.add_init_script("try { localStorage.setItem('ld_onboarded', 'true'); } catch (e) {}")
+    pg = ctx.new_page()
+    pg.errors = []
+    pg.on('pageerror', lambda e: pg.errors.append(str(e)[:160]))
+    pg.goto(BASE + '?view=verses')
+    pg.wait_for_selector('.verse-card', state='attached')
+    check('?view=verses opens the Memorize view', pg.is_visible('#view-verses') and pg.is_hidden('#view-settings'))
+    mani = pg.evaluate('fetch(document.querySelector("link[rel=manifest]").href).then(r => r.json())')
+    check('manifest has name, standalone display and a maskable icon',
+          mani['name'] == 'LogosDepth' and mani['display'] == 'standalone'
+          and any(i['purpose'] == 'maskable' for i in mani['icons']), mani)
+    icon_status = pg.evaluate('Promise.all(document.querySelector("link[rel=manifest]") ? ["/static/icons/icon-192.png","/static/icons/icon-512.png"].map(u => fetch(u).then(r => r.status)) : [])')
+    check('manifest icons are served', icon_status == [200, 200], icon_status)
+    pg.evaluate('navigator.serviceWorker.ready.then(() => true)')
+    pg.reload()
+    pg.wait_for_selector('.verse-card', state='attached')
+    check('page is controlled by the service worker', pg.evaluate('!!navigator.serviceWorker.controller'))
+    pg.goto(BASE + 'about')
+    check('with the service worker active, /about is the About page (not the app)',
+          'keep it' in pg.inner_text('h1') and pg.locator('#vPicker').count() == 0, pg.inner_text('h1'))
+    pg.goto(BASE + 'privacy')
+    check('...and /privacy is the privacy page', pg.inner_text('h1') == 'Privacy')
+    pg.goto(BASE)
+    pg.wait_for_selector('.verse-card', state='attached')
+    ctx.set_offline(True)
+    pg.reload()
+    pg.wait_for_selector('.verse-card', state='attached', timeout=15000)
+    check('offline: page and verses still load', pg.locator('.verse-card').count() >= 10)
+    check('offline: fonts and styles still apply', pg.evaluate('getComputedStyle(document.body).backgroundColor') == 'rgb(255, 255, 255)')
+    pg.evaluate('startVerse("Psalm 23:1"); goToStep("type")')
+    submit(pg, verse_text(pg, 'Psalm 23:1'))
+    check('offline: can learn and grade a verse', 'Perfect recall' in pg.inner_text('#vsMsg'))
+    check('offline: progress is saved locally', card(pg, 'Psalm 23:1') is not None)
+    ctx.set_offline(False)
+    check('scenario 12: no JS errors', not pg.errors, pg.errors[:2])
+    ctx.close()
+
+    # ───────────── Scenario 13: the whole Bible ─────────────
+    pg = new_page(b)
+    pg.click('#vBibleBtn')
+    pg.wait_for_selector('.bib-books')
+    check('Bible browser lists all 66 books', pg.locator('.bib-books .bib-btn').count() == 66, pg.locator('.bib-books .bib-btn').count())
+    check('Old and New Testament headings', 'old testament' in pg.inner_text('#bibBody').lower() and 'new testament' in pg.inner_text('#bibBody').lower())
+    pg.get_by_role('button', name='Obadiah', exact=True).click()
+    check('Obadiah has one chapter', pg.locator('.bib-chapters .bib-btn').count() == 1)
+    pg.locator('.bib-chapters .bib-btn').first.click()
+    pg.wait_for_selector('.bib-verse')
+    check('chapter shows every verse', pg.locator('.bib-verse').count() == 21, pg.locator('.bib-verse').count())
+    check('no selection, no Learn bar', pg.is_hidden('#bibBar'))
+    pg.locator('.bib-verse').nth(14).click()
+    check('tapping a verse selects it and shows the passage', pg.inner_text('#bibSel').startswith('Obadiah 1:15 ·'), pg.inner_text('#bibSel'))
+    pg.locator('.bib-verse').nth(15).click()
+    check('tapping a second verse makes a range', pg.inner_text('#bibSel').startswith('Obadiah 1:15-16'), pg.inner_text('#bibSel'))
+    pg.locator('.bib-verse').nth(14).click()
+    pg.locator('.bib-verse').nth(14).click()
+    check('tapping the selected verse again keeps just that verse', pg.inner_text('#bibSel').startswith('Obadiah 1:15 ·'))
+    pg.click('#bibLearn')
+    pg.wait_for_selector('#vSession:not(.hidden)')
+    check('learning starts on the chosen passage', pg.inner_text('#vsRef') == 'Obadiah 1:15', pg.inner_text('#vsRef'))
+    pg.evaluate('goToStep("type")')
+    submit(pg, pg.evaluate('vs.text'))
+    check('typing the passage from memory is graded like any verse', 'Perfect recall' in pg.inner_text('#vsMsg'))
+    check('progress is saved under the passage reference', card(pg, 'Obadiah 1:15') is not None)
+    saved = pg.evaluate('JSON.parse(localStorage.getItem("ld_custom_verses"))')
+    check('the passage text is kept on this device for offline reviews', 'Obadiah 1:15' in saved and saved['Obadiah 1:15']['text'].startswith('For the day of the LORD'))
+    exit_verse(pg)
+    show_list(pg)
+    check('a "My verses" pack appears', 'My verses (1)' in pg.inner_text('#packSelect'))
+    pg.select_option('#packSelect', 'mine')
+    check('My verses lists the passage', pg.locator('.verse-card').count() == 1 and 'Obadiah 1:15' in pg.inner_text('.verse-card'))
+
+    # tomorrow it is due, and the review works
+    at_day(pg, 1)
+    check('next day: the passage is due for review', pg.inner_text('#vReviewTitle') == '1 verse to review', pg.inner_text('#vReviewTitle'))
+    click_btn(pg, 'Start review')
+    submit(pg, pg.evaluate('vs.text'))
+    check('review of a Bible passage works', 'Perfect recall' in pg.inner_text('#vsMsg'))
+    check('scenario 13: no JS errors', not pg.errors, pg.errors[:2])
+
+    # Go straight to a verse; a verse that is already in a pack is not duplicated
+    pg2 = new_page(b)
+    pg2.click('#vBibleBtn')
+    pg2.fill('#bibGoto', 'John 3:16')
+    pg2.keyboard.press('Enter')
+    pg2.wait_for_selector('#vSession:not(.hidden)')
+    check('"Go to a verse" starts learning it', pg2.inner_text('#vsRef') == 'John 3:16')
+    check('already-curated verse is not copied into My verses', pg2.evaluate('verseList.filter(v => v.ref === "John 3:16").length') == 1)
+    pg2.evaluate('exitVerse()')
+    pg2.click('#vBibleBtn')
+    pg2.fill('#bibGoto', 'Hezekiah 1:1')
+    pg2.click('text=Learn it')
+    wait_for(pg2, 'document.getElementById("bibMsg").textContent.includes("Unknown")')
+    check('an unknown book gets a clear message', 'Unknown book' in pg2.inner_text('#bibMsg'), pg2.inner_text('#bibMsg'))
+    pg2.fill('#bibGoto', 'Genesis 1:1-30')
+    pg2.click('text=Learn it')
+    wait_for(pg2, 'document.getElementById("bibMsg").textContent.includes("at most")')
+    check('too many verses gets a clear message', 'at most' in pg2.inner_text('#bibMsg'))
+    pg2.fill('#bibGoto', '')
+    pg2.click('text=Learn it')
+    check('empty box explains what to type', 'Type a reference' in pg2.inner_text('#bibMsg'))
+
+    # Length limit and WEB text in the chapter reader
+    pg2.get_by_role('button', name='Revelation', exact=True).click()
+    pg2.locator('.bib-chapters .bib-btn').first.click()
+    pg2.wait_for_selector('.bib-verse')
+    pg2.locator('.bib-verse').nth(0).click()
+    pg2.locator('.bib-verse').nth(11).click()
+    check('a selection that is too long cannot be learned', pg2.is_disabled('#bibLearn') and 'shorter range' in pg2.inner_text('#bibHint'))
+    pg2.get_by_role('button', name='WEB', exact=True).click()
+    check('the WEB switch changes the chapter text', 'WEB' in pg2.inner_html('#bibTranslation') and pg2.locator('.bib-text').first.inner_text() != '')
+    pg2.click('#bibBack')
+    check('Back returns to the chapter list, then the books, then Memorize',
+          pg2.is_visible('.bib-chapters'))
+    pg2.click('#bibBack')
+    pg2.click('#bibBack')
+    check('...and finally home', pg2.is_visible('#vPicker'))
+    pg2.context.close()
+
+    # A backup restored on a fresh device brings the passage back (text is fetched by reference)
+    backup = {'app': 'logosdepth', 'schemaVersion': 1, 'data': {
+        'srs': {'Obadiah 1:15': {'stage': 0, 'due': day(0), 'days': [], 'lapses': 0, 'lastDate': day(-1)}},
+        'xp': 25, 'streak': {'last': '', 'count': 0}, 'settings': {}}}
+    pg3 = new_page(b, init_script=f'localStorage.setItem("ld_verse_srs", {json.dumps(json.dumps(backup["data"]["srs"]))})')
+    wait_for(pg3, 'verseList.some(v => v.ref === "Obadiah 1:15")')
+    check('a passage known only from progress is fetched back by reference', pg3.evaluate('verseList.some(v => v.ref === "Obadiah 1:15" && v.custom)'))
+    check('...and is due', pg3.inner_text('#vReviewTitle') == '1 verse to review', pg3.inner_text('#vReviewTitle'))
+    pg3.context.close()
+
+    # ───────────── Scenario 14: the calendar reminder offer ─────────────
+    pg = new_page(b)
+    check('no reminder offer before a verse is learned', pg.is_hidden('#vRemindHome') and pg.is_hidden('#vrRemind'))
+    pg.evaluate('startVerse("Psalm 23:1"); goToStep("type")')
+    submit(pg, verse_text(pg, 'Psalm 23:1'))
+    click_btn(pg, 'Continue →')
+    check('after the first verse is learned, the result screen offers a reminder', pg.is_visible('#vrRemind')
+          and 'daily reminder' in pg.inner_text('#vrRemind').lower())
+    check('the offer has a time, an add button and a way to decline', pg.is_visible('#remResultTime')
+          and pg.get_by_role('button', name='Add to calendar').count() >= 1 and pg.get_by_role('button', name='Not now').count() >= 1)
+    pg.locator('#vrRemind').get_by_role('button', name='Not now').click()
+    check('"Not now" closes the offer', pg.is_hidden('#vrRemind'))
+    st = pg.evaluate('JSON.parse(localStorage.getItem("ld_reminder"))')
+    check('the decline is remembered with today\'s date', st['status'] == 'none' and st['last'] == day(0), st)
+    exit_verse(pg)
+    check('not asked again on the same day', pg.is_hidden('#vRemindHome'))
+    at_day(pg, 1)
+    open_verses(pg)
+    check('not asked the next day', pg.is_hidden('#vRemindHome'))
+    at_day(pg, 2)
+    open_verses(pg)
+    check('asked again two days later, on the home screen', pg.is_visible('#vRemindHome'))
+    pg.locator('#vRemindHome').get_by_role('button', name='Not now').click()
+    check('declining again closes it', pg.is_hidden('#vRemindHome'))
+    at_day(pg, 3)
+    open_verses(pg)
+    check('and it waits another couple of days', pg.is_hidden('#vRemindHome'))
+    at_day(pg, 4)
+    open_verses(pg)
+    check('asked again on day 4', pg.is_visible('#vRemindHome'))
+    pg.fill('#remHomeTime', '07:45')
+    with pg.expect_download() as dl:
+        pg.locator('#vRemindHome').get_by_role('button', name='Add to calendar').click()
+    ics = open(dl.value.path(), encoding='utf-8').read()
+    check('adding downloads a daily 07:45 calendar event', 'RRULE:FREQ=DAILY' in ics and 'T074500' in ics, ics[:120])
+    check('the card confirms and the choice is saved',
+          'ready' in pg.inner_text('#vRemindHome').lower()
+          and pg.evaluate('JSON.parse(localStorage.getItem("ld_reminder")).status') == 'accepted')
+    at_day(pg, 8)
+    open_verses(pg)
+    check('once added, it is never offered again', pg.is_hidden('#vRemindHome'))
+    check('scenario 14: no JS errors', not pg.errors, pg.errors[:2])
+    pg.context.close()
+
+    pg = new_page(b)
+    pg.evaluate('startVerse("Psalm 23:1"); goToStep("type")')
+    submit(pg, verse_text(pg, 'Psalm 23:1'))
+    click_btn(pg, 'Continue →')
+    pg.locator('#vrRemind').get_by_role('button', name="Don't ask again").click()
+    at_day(pg, 10)
+    open_verses(pg)
+    check("\"Don't ask again\" stops the offers for good", pg.is_hidden('#vRemindHome') and pg.is_hidden('#vrRemind'))
+    pg.context.close()
+
+    # ───────────── Scenario 16: trouble spots ─────────────
+    pg = new_page(b, 0)
+    open_verses(pg)
+    pg.evaluate('startVerse("Psalm 23:1"); goToStep("type")')
+    submit(pg, 'The Lord is my')   # misses "shepherd", "I", "shall", "not", "want"
+    check('trouble spots: missed words are saved on the card', 'shepherd' in (card(pg, 'Psalm 23:1').get('slips') or {}),
+          card(pg, 'Psalm 23:1'))
+    click_btn(pg, 'Finish for today')
+    check('trouble spots: result lists the words to watch', 'Words to watch in Psalm 23:1' in pg.inner_text('#vrSpots')
+          and 'shepherd' in pg.inner_text('#vrSpots'), pg.inner_text('#vrSpots'))
+    check('trouble spots: a drill button is offered', pg.is_visible('#vrDrill'))
+    pg.click('#vrDrill')
+    check('trouble spots: the drill blanks only those words',
+          pg.locator('.vslot').count() == len(card(pg, 'Psalm 23:1')['slips']) and pg.locator('.vslot').count() >= 1,
+          pg.locator('.vslot').count())
+    check('trouble spots: the step bar says what this is', 'Trouble spots 1 of 1' in pg.inner_text('#vsSteps'), pg.inner_text('#vsSteps'))
+    before = json.dumps(card(pg, 'Psalm 23:1'))
+    for _ in range(12):
+        if pg.locator('.vslot:not(.filled)').count() == 0:
+            break
+        pg.get_by_role('button', name='💡 Hint').click()
+    check('trouble spots: the drill completes', pg.get_by_role('button', name='Done').count() == 1)
+    check('trouble spots: practice does not change the schedule or the list', json.dumps(card(pg, 'Psalm 23:1')) == before)
+    click_btn(pg, 'Done')
+    check('trouble spots: Done returns home', pg.is_visible('#vPicker'))
+    at_day(pg, 1)
+    open_verses(pg)
+    click_btn(pg, 'Start review')
+    submit(pg, verse_text(pg, 'Psalm 23:1'))
+    check('trouble spots: typing the verse correctly clears the words', not card(pg, 'Psalm 23:1').get('slips'),
+          card(pg, 'Psalm 23:1'))
+    click_btn(pg, 'Next →')
+    check('trouble spots: nothing to watch afterwards', pg.is_hidden('#vrSpots') and pg.is_hidden('#vrDrill'))
+    check('trouble spots: no JS errors', not pg.errors, pg.errors[:2])
+    pg.context.close()
+
+    # ───────────── Scenario 17: share links ─────────────
+    pg = new_page(b, 0, permissions=['clipboard-read', 'clipboard-write'])
+    pg.goto(BASE + '?v=John%203:16')
+    wait_for(pg, "!document.getElementById('vShared').classList.contains('hidden')")
+    check('shared verse: the home screen offers it', 'John 3:16' in pg.text_content('#vSharedLabel')
+          and 'God so loved the world' in pg.text_content('#vSharedText'), pg.text_content('#vShared'))
+    check('shared verse: the link is tidied from the address bar', '?v=' not in pg.url and '%3A' not in pg.url, pg.url)
+    check('shared verse: nothing starts by itself', pg.is_visible('#vPicker') and pg.evaluate('vs') is None)
+    pg.click('#vSharedGo')
+    check('shared verse: Learn starts that verse', pg.evaluate('vs && vs.verse.ref') == 'John 3:16')
+    pg.evaluate('goToStep("type")')
+    submit(pg, verse_text(pg, 'John 3:16'))
+    click_btn(pg, 'Continue →')
+    check('share button is on the result screen', pg.is_visible('#vrShare'))
+    pg.click('#vrShare')
+    wait_for(pg, "document.getElementById('vrShareMsg').textContent.length > 0")
+    check('sharing copies a link to this verse', 'Link copied' in pg.inner_text('#vrShareMsg'), pg.inner_text('#vrShareMsg'))
+    copied = pg.evaluate('navigator.clipboard.readText()')
+    check('the copied link opens that verse', copied.endswith('/?v=John%203%3A16'), copied)
+    exit_verse(pg)
+
+    # a pack link
+    pg.goto(BASE + '?pack=comfort')
+    wait_for(pg, "!document.getElementById('vShared').classList.contains('hidden')")
+    check('shared pack: the home screen offers it', 'Comfort and Peace' in pg.text_content('#vSharedLabel')
+          and 'verses' in pg.text_content('#vSharedText'), pg.text_content('#vShared'))
+    pg.click('#vSharedGo')
+    check('shared pack: Start begins a verse from that pack', pg.evaluate('vs && vs.verse.packs.includes("comfort")') is True)
+    check('shared pack: the pack is now selected', json.loads(pg.evaluate('localStorage.getItem("ld_verse_settings")'))['pack'] == 'comfort')
+    exit_verse(pg)
+    show_list(pg)
+    check('pack share link is offered for a pack', pg.is_visible('#packShare'))
+    pg.click('#packShare')
+    wait_for(pg, "document.getElementById('packShareMsg').textContent.length > 0")
+    check('sharing a pack copies its link', pg.evaluate('navigator.clipboard.readText()').endswith('/?pack=comfort'))
+    pg.select_option('#packSelect', 'all')
+    check('no pack share link for "All verses"', pg.is_hidden('#packShare'))
+    pg.context.close()
+
+    # a whole-Bible passage (not a starter verse) and "Not now"
+    pg = new_page(b, 0)
+    pg.goto(BASE + '?v=Psalm%2023:1-3')
+    wait_for(pg, "!document.getElementById('vShared').classList.contains('hidden')")
+    check('shared passage: fetched from the whole Bible', pg.text_content('#vSharedLabel').endswith('Psalm 23:1-3')
+          and 'shepherd' in pg.text_content('#vSharedText'), pg.text_content('#vShared'))
+    pg.click('#vSharedGo')
+    check('shared passage: starts and is kept as one of my verses', pg.evaluate('vs && vs.verse.ref') == 'Psalm 23:1-3'
+          and 'Psalm 23:1-3' in json.loads(pg.evaluate('localStorage.getItem("ld_custom_verses")')))
+    pg.goto(BASE + '?v=Romans%208:28')
+    wait_for(pg, "!document.getElementById('vShared').classList.contains('hidden')")
+    pg.get_by_role('button', name='Not now', exact=True).click()
+    check('Not now hides the offer and starts nothing', pg.is_hidden('#vShared') and pg.evaluate('vs') is None)
+    for bad in ('?v=hello', '?v=Hezekiah%201:1', '?pack=nope', '?v=%3Cscript%3E'):
+        pg.goto(BASE + bad)
+        pg.wait_for_selector('.verse-card', state='attached')
+        pg.wait_for_timeout(400)
+        check(f'bad link {bad} shows nothing', pg.is_hidden('#vShared'))
+    real = [e for e in pg.errors if 'status of 400' not in e]  # the unknown book above is answered with a 400 on purpose
+    check('share links: no JS errors', not real, real[:2])
+    pg.context.close()
+
+    # first visit through a shared link: the intro's button starts the shared verse
+    pg = new_page(b, 0, onboarded=False)
+    pg.goto(BASE + '?v=Philippians%204:13')
+    wait_for(pg, "!document.getElementById('onboard').classList.contains('hidden')")
+    wait_for(pg, "!document.getElementById('vShared').classList.contains('hidden')")
+    click_btn(pg, 'Start my first verse')
+    check('first visit via a shared link starts the shared verse', pg.evaluate('vs && vs.verse.ref') == 'Philippians 4:13')
+    pg.context.close()
+
+    # ───────────── Scenario 7: mobile layout with the typing UI ─────────────
+    pg = new_page(b, 0, width=390, height=800)
+    check('mobile: the top bar is visible without a menu button', pg.is_visible('.sidebar-nav') and pg.locator('.menu-toggle').count() == 0)
+    pg.click('[data-view="verses"]')
+    pg.evaluate('startVerse("Isaiah 41:10"); goToStep("type")')
+    pg.fill('#vsInput', 'Fear thou not; for I am with thee')
+    if SHOTS:
+        pg.screenshot(path=f'{SHOTS}/mobile_typing.png')
+    click_btn(pg, 'Check')
+    if SHOTS:
+        pg.screenshot(path=f'{SHOTS}/mobile_feedback.png')
+    check('mobile: no horizontal overflow',
+          not pg.evaluate('document.documentElement.scrollWidth > document.documentElement.clientWidth'))
+    check('mobile: no JS errors', not pg.errors, pg.errors[:2])
+    pg.context.close()
+
+    b.close()
+
+print(f'\n{passes} passed, {len(fails)} failed')
+print('FAILED:', fails if fails else 'none')
+raise SystemExit(1 if fails else 0)

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}LogosDepth{% endblock %}</title>
+  <meta name="description" content="{% block description %}Memorize scripture word-for-word and keep it, using methods with strong scientific support.{% endblock %}" />
+  <meta name="theme-color" content="#0d1117" />
+  <link rel="icon" type="image/png" href="/static/icons/icon-192.png" />
+  <link rel="stylesheet" href="/static/css/fonts.css" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body class="doc-page">
+<header class="doc-header">
+  <a class="doc-brand" href="/about"><svg class="logo-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg><span class="logo-text">LogosDepth</span></a>
+  <nav class="doc-nav" aria-label="Site">
+    <a href="/about">About</a>
+    <a href="/about#science">The science</a>
+    <a href="/privacy">Privacy</a>
+    <a class="doc-cta" href="/">Open the app</a>
+  </nav>
+</header>
+<main class="doc-main">
+{% block content %}{% endblock %}
+</main>
+<footer class="doc-footer">
+  <p>Scripture: King James Version and World English Bible (public domain in the US).
+  See <a href="/about#credits">credits</a>.</p>
+</footer>
+</body>
+</html>

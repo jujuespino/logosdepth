@@ -3,181 +3,329 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LogosDepth — Bible Word Translator</title>
+  <title>LogosDepth</title>
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="description" content="{{ og_description }}" />
+  <meta property="og:site_name" content="LogosDepth" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="{{ og_title }}" />
+  <meta property="og:description" content="{{ og_description }}" />
+  <meta property="og:image" content="{{ og_image }}" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" href="/static/icons/icon-192.png" />
+  <link rel="preload" href="/static/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/static/css/fonts.css" />
   <link rel="stylesheet" href="/static/css/style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Noto+Serif+Hebrew&family=Noto+Serif:ital@0;1&display=swap" rel="stylesheet" />
 </head>
-<body>
+<body data-page="verses">
 
-<!-- ===== SIDEBAR ===== -->
+<!-- ===== TOP BAR ===== -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <span class="logo-icon">&#x05D0;</span>
+    <svg class="logo-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
     <span class="logo-text">LogosDepth</span>
   </div>
 
   <nav class="sidebar-nav">
-    <button class="nav-btn active" data-view="dashboard" onclick="showView('dashboard', this)">
-      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      Dashboard
+    <button class="nav-btn active" data-view="verses" data-click="showView" data-arg="verses">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      Memorize
+      <span class="nav-badge hidden" id="dueBadge" aria-label="Verses due for review"></span>
     </button>
-    <button class="nav-btn" data-view="search" onclick="showView('search', this)">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      Search Words
-    </button>
-    <button class="nav-btn" data-view="browse" onclick="showView('browse', this)">
-      <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      Browse
+    <button class="nav-btn" data-view="settings" data-click="showView" data-arg="settings">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      Settings
     </button>
   </nav>
 
-  <div class="sidebar-section-label">Language Filter</div>
-  <div class="lang-filter">
-    <button class="lang-btn active" data-lang="all" onclick="setLang('all', this)">All</button>
-    <button class="lang-btn hebrew" data-lang="hebrew" onclick="setLang('hebrew', this)">Hebrew</button>
-    <button class="lang-btn greek" data-lang="greek" onclick="setLang('greek', this)">Greek</button>
-  </div>
-
-  <div class="sidebar-section-label">Categories</div>
-  <ul class="category-list" id="categoryList">
-    <li class="cat-item loading">Loading…</li>
-  </ul>
-
-  <div class="sidebar-stats" id="sidebarStats">
-    <div class="stat-pill hebrew-pill">
-      <span class="stat-num" id="statHebrew">–</span>
-      <span class="stat-label">Hebrew</span>
-    </div>
-    <div class="stat-pill greek-pill">
-      <span class="stat-num" id="statGreek">–</span>
-      <span class="stat-label">Greek</span>
-    </div>
-  </div>
 </aside>
 
 <!-- ===== MAIN ===== -->
 <main class="main">
 
-  <!-- Top bar -->
-  <header class="topbar">
-    <button class="menu-toggle" onclick="toggleSidebar()">
-      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-    </button>
-    <div class="search-wrap" id="topSearchWrap">
-      <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input
-        type="text"
-        id="searchInput"
-        class="search-input"
-        placeholder='Search English words — e.g. "love", "peace", "faith"…'
-        autocomplete="off"
-        oninput="onSearchInput(this.value)"
-      />
-      <button class="clear-btn" id="clearBtn" onclick="clearSearch()" style="display:none">✕</button>
-    </div>
-  </header>
+  <div class="banner hidden" id="storageBanner" role="alert">
+    Your browser is blocking site storage, so your progress can't be saved here. Allow site data for this page
+    (or leave private browsing), and use <strong>Settings → Download backup</strong> to keep a copy.
+  </div>
+  <noscript><div class="banner">LogosDepth needs JavaScript to run.</div></noscript>
 
-  <!-- ===== VIEW: DASHBOARD ===== -->
-  <section class="view" id="view-dashboard">
+  <!-- ===== VIEW: SETTINGS ===== -->
+  <section class="view hidden" id="view-settings">
+    <div class="game-container settings-container">
+      <div class="game-header">
+        <div class="game-title-row"><span class="game-star-icon">✦</span><h1 class="game-title">Settings</h1></div>
+        <p class="game-subtitle">Your progress is saved in this browser. Back it up, set a reminder, or install the app.</p>
+      </div>
 
-    <div class="dashboard-grid">
-
-      <!-- Word of the Day -->
-      <div class="card wod-card" id="wodCard">
-        <div class="card-label">✦ Word of the Day</div>
-        <div class="wod-body">
-          <div class="wod-original" id="wodOriginal">…</div>
-          <div class="wod-translit" id="wodTranslit"></div>
-          <div class="wod-def" id="wodDef"></div>
-          <div class="wod-meta">
-            <span class="badge" id="wodLang"></span>
-            <span class="strongs-ref" id="wodRef"></span>
+      <div class="settings-card">
+        <h2>Back up your progress</h2>
+        <p>Download a file you can keep or use to move your progress to another device or browser.</p>
+        <div class="settings-row">
+          <button class="gs-start-btn" id="exportBtn" data-click="exportProgress">Download backup</button>
+          <label class="gd-back-btn file-btn" for="importFile">Restore from a backup…</label>
+          <input type="file" id="importFile" accept="application/json,.json" class="visually-hidden" data-change="chooseImportFile" />
+        </div>
+        <div class="settings-choice hidden" id="importChoice">
+          <div id="importSummary"></div>
+          <div class="settings-row">
+            <button class="gs-start-btn" data-click="applyImport" data-arg="merge">Merge with my progress (recommended)</button>
+            <button class="gd-back-btn" data-click="applyImport" data-arg="replace">Replace my progress</button>
+            <button class="gd-back-btn" data-click="cancelImport">Cancel</button>
           </div>
         </div>
+        <div class="settings-msg" id="backupMsg" aria-live="polite"></div>
       </div>
 
-      <!-- Stats row -->
-      <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-big" id="dashTotal">–</div>
-          <div class="stat-desc">Words in Lexicon</div>
+      <div class="settings-card hidden" id="syncCard">
+        <h2>Sync across devices (optional)</h2>
+        <p>Sign in with your email to keep the same progress on your phone and computer. There are no passwords: we email you a one-time link. We store only your email address and your progress.</p>
+        <div id="syncSignedOut">
+          <div class="settings-row">
+            <label class="settings-label" for="syncEmail">Email</label>
+            <input type="email" id="syncEmail" class="settings-input" autocomplete="email" placeholder="you@example.com" />
+            <button class="gs-start-btn" id="syncRequestBtn" data-click="requestSignIn">Email me a sign-in link</button>
+          </div>
         </div>
-        <div class="stat-card hebrew-card">
-          <div class="stat-big" id="dashHebrew">–</div>
-          <div class="stat-desc">Hebrew (OT)</div>
+        <div id="syncSignedIn" class="hidden">
+          <p>Signed in as <strong id="syncWho"></strong>.</p>
+          <div class="settings-row">
+            <button class="gs-start-btn" id="syncNowBtn" data-click="syncNow">Sync now</button>
+            <button class="gd-back-btn" data-click="signOut">Sign out</button>
+            <button class="gd-back-btn" data-click="signOutEverywhere">Sign out on all devices</button>
+          </div>
+          <div class="settings-row">
+            <button class="gd-back-btn" data-click="downloadAccountData">Download my account data</button>
+            <button class="gd-back-btn" id="deleteAccountBtn" data-click="askDeleteAccount">Delete my account…</button>
+          </div>
+          <div class="settings-choice hidden" id="deleteAccountChoice">
+            <div>This deletes your email and your synced progress from our server. Progress on this device is kept. This cannot be undone.</div>
+            <div class="settings-row">
+              <button class="gd-back-btn" data-click="cancelDeleteAccount">Cancel</button>
+              <button class="gs-start-btn danger-btn" data-click="confirmDeleteAccount">Yes, delete my account</button>
+            </div>
+          </div>
         </div>
-        <div class="stat-card greek-card">
-          <div class="stat-big" id="dashGreek">–</div>
-          <div class="stat-desc">Greek (NT)</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-big" id="dashCats">–</div>
-          <div class="stat-desc">Categories</div>
-        </div>
+        <div class="settings-msg" id="syncMsg" aria-live="polite"></div>
       </div>
 
-      <!-- Featured words -->
-      <div class="section-heading">Featured Words</div>
-      <div class="results-grid" id="featuredGrid"></div>
+      <div class="settings-card hidden" id="betaCard">
+        <h2>Help improve LogosDepth (beta)</h2>
+        <p>Optional and off by default. If you turn it on, the app sends anonymous usage events such as “started a verse” or “finished a review”, tied to a random ID kept only in this browser. It never sends what you type, which verses you choose, or your email. Turning it off deletes the ID and asks the server to erase what it received.</p>
+        <label class="check-row"><input type="checkbox" id="analyticsToggle" data-change="toggleAnalytics" /> Share anonymous usage</label>
+        <p class="settings-note hidden" id="analyticsSignalNote">Your browser’s privacy signal (Do Not Track or Global Privacy Control) is on, so usage sharing is switched off.</p>
+        <div class="settings-msg" id="analyticsMsg" aria-live="polite"></div>
+      </div>
 
-      <!-- Recent searches -->
-      <div class="section-heading" id="recentHeading" style="display:none">Recent Searches</div>
-      <div class="recent-tags" id="recentTags"></div>
+      <div class="settings-card hidden" id="feedbackCard">
+        <h2>Send feedback</h2>
+        <p>Tell us what is confusing, broken, or missing. We read every message. Add an email only if you would like a reply.</p>
+        <div class="settings-row">
+          <label class="settings-label" for="fbKind">Type</label>
+          <select id="fbKind" class="settings-input">
+            <option value="idea">Idea</option>
+            <option value="bug">Something is broken</option>
+            <option value="confusing">Something is confusing</option>
+            <option value="praise">Something I like</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <textarea id="fbMessage" class="settings-textarea" rows="4" maxlength="2000" aria-label="Your feedback" placeholder="What happened, or what would help?"></textarea>
+        <div class="settings-row">
+          <label class="settings-label" for="fbContact">Email (optional)</label>
+          <input type="email" id="fbContact" class="settings-input" autocomplete="email" />
+          <button class="gs-start-btn" id="fbSend" data-click="sendFeedback">Send</button>
+        </div>
+        <div class="settings-msg" id="fbMsg" aria-live="polite"></div>
+      </div>
 
+      <div class="settings-card">
+        <h2>Daily reminder</h2>
+        <p>Reviews work best when they are spaced out, so pick a time. This adds a repeating event to your calendar app; it works on any phone or computer.</p>
+        <div class="settings-row">
+          <label class="settings-label" for="reminderTime">Time</label>
+          <input type="time" id="reminderTime" value="08:00" class="settings-input" />
+          <button class="gs-start-btn" data-click="downloadReminder">Add to calendar (.ics)</button>
+        </div>
+        <div class="settings-msg" id="reminderMsg" aria-live="polite"></div>
+      </div>
+
+      <div class="settings-card" id="installCard">
+        <h2>Install the app</h2>
+        <p>Add LogosDepth to your home screen to open it like an app, and use it offline.</p>
+        <div class="settings-row"><button class="gs-start-btn hidden" id="installBtn" data-click="installApp">Install</button></div>
+        <p class="settings-note" id="installNote">On iPhone or iPad: tap Share, then “Add to Home Screen”. On Android or desktop Chrome: use the browser menu’s “Install app”.</p>
+      </div>
+
+      <div class="settings-card">
+        <h2>Intro</h2>
+        <p>See the short walkthrough again.</p>
+        <div class="settings-row"><button class="gd-back-btn" data-click="showOnboarding" data-arg="0">Show the intro</button></div>
+      </div>
+
+      <div class="settings-card">
+        <h2>Credits</h2>
+        <p class="settings-note">
+          Scripture: King James Version (1769, public domain in the US) and the World English Bible (public domain).
+          Fonts: Inter and Noto Serif (SIL Open Font License).
+          <a href="/about" target="_blank" rel="noopener">About &amp; the science</a> ·
+          <a href="/privacy" target="_blank" rel="noopener">Privacy</a>
+        </p>
+      </div>
+
+      <div class="settings-card settings-danger">
+        <h2>Erase my progress</h2>
+        <p>Permanently removes your XP, streak and every verse’s schedule from this device. Download a backup first if you might want it back.</p>
+        <div class="settings-row"><button class="gd-back-btn" id="resetBtn" data-click="askReset">Erase my progress…</button></div>
+        <div class="settings-choice hidden" id="resetChoice">
+          <div>Are you sure? This cannot be undone.</div>
+          <div class="settings-row">
+            <button class="gd-back-btn" data-click="cancelReset">Cancel</button>
+            <button class="gs-start-btn danger-btn" data-click="confirmReset">Yes, erase everything</button>
+          </div>
+        </div>
+        <div class="settings-msg" id="resetMsg" aria-live="polite"></div>
+      </div>
     </div>
   </section>
 
-  <!-- ===== VIEW: SEARCH ===== -->
-  <section class="view hidden" id="view-search">
-    <div class="results-header" id="resultsHeader"></div>
-    <div class="results-grid" id="resultsGrid"></div>
-    <div class="no-results hidden" id="noResults">
-      <div class="no-results-icon">🔍</div>
-      <div>No words found for <strong id="noResultsQuery"></strong></div>
-      <div class="no-results-hint">Try a different English word like "love", "faith", "covenant", or "grace".</div>
-    </div>
-    <div class="loading-state hidden" id="loadingState">Searching…</div>
-  </section>
+  <!-- ===== VIEW: MEMORIZE VERSES ===== -->
+  <section class="view" id="view-verses">
+    <div class="game-container verse-container">
 
-  <!-- ===== VIEW: BROWSE ===== -->
-  <section class="view hidden" id="view-browse">
-    <div class="browse-heading">Browse by Category</div>
-    <div class="browse-grid" id="browseGrid"></div>
+      <!-- Verse picker -->
+      <div id="vPicker" class="qf-home">
+        <section class="remind-card hidden" id="vShared" aria-labelledby="vSharedLabel">
+          <p class="qf-eyebrow" id="vSharedLabel"></p>
+          <p class="qf-verse" id="vSharedText"></p>
+          <div class="qf-actions">
+            <button class="qf-btn qf-btn-quiet" id="vSharedGo" data-click="sharedGo">Learn this verse</button>
+            <button class="qf-link" data-click="sharedDismiss">Not now</button>
+          </div>
+        </section>
+
+        <section class="qf-today" id="vReviewCard" aria-labelledby="vReviewTitle">
+          <p class="qf-eyebrow" id="vTodayLabel">Today</p>
+          <h1 class="qf-title" id="vReviewTitle"></h1>
+          <p class="qf-sub" id="vReviewSub"></p>
+          <button class="qf-btn" id="vReviewBtn" data-click="startReview">Start review</button>
+        </section>
+
+        <section class="qf-next hidden" id="vNextCard" aria-label="Next verse to learn">
+          <span class="qf-next-label" id="vNextLabel">Next up</span>
+          <p class="qf-verse" id="vNextText"></p>
+          <div class="qf-actions"><button class="qf-btn qf-btn-quiet" id="vNextBtn" data-click="learnNext">Learn this verse</button></div>
+        </section>
+
+        <div class="remind-card hidden" id="vRemindHome"></div>
+
+        <div class="qf-links">
+          <button class="qf-link" id="vBibleBtn" data-click="openBible">Browse the Bible →</button>
+        </div>
+
+        <p class="qf-stats" id="vStats">
+          <span id="vLevel">Level 1</span> · <span id="vXpLabel">0 / 100 XP</span> ·
+          <span><span id="vStreak">0</span>-day streak</span> ·
+          <span>Mastered <span id="vMastered">0</span></span>
+          <span class="qf-bar" aria-hidden="true"><i id="vXpFill" style="width:0%"></i></span>
+        </p>
+      </div>
+
+      <!-- The whole Bible -->
+      <div id="vBible" class="qf-bible hidden">
+        <div class="vs-top">
+          <button class="qf-link" id="bibBack" data-click="bibleBack">← Back</button>
+          <div class="translation-toggle" id="bibTranslation" role="group" aria-label="Translation"></div>
+        </div>
+        <h1 class="qf-title" id="bibTitle">The Bible</h1>
+        <p class="qf-sub" id="bibCrumb"></p>
+        <div class="bib-goto">
+          <label class="sr-only" for="bibGoto">Go straight to a verse</label>
+          <input type="text" id="bibGoto" class="settings-input" placeholder="Go to a verse, e.g. John 3:16" autocomplete="off" />
+          <button class="qf-btn qf-btn-quiet" data-click="bibleGoto">Learn it</button>
+        </div>
+        <p class="settings-msg" id="bibMsg" aria-live="polite"></p>
+        <div id="bibBody"></div>
+        <section class="qf-list" id="vListWrap" aria-label="Starter verses">
+          <h2 class="bib-heading">Starter verses</h2>
+          <div class="picker-controls">
+            <div class="pack-chips" id="packChips"></div>
+            <button class="qf-link hidden" id="packShare" data-click="sharePack">Share this pack</button>
+            <span class="settings-msg" id="packShareMsg" aria-live="polite"></span>
+          </div>
+          <div class="verse-grid" id="verseGrid"></div>
+        </section>
+        <div class="bib-bar hidden" id="bibBar">
+          <div class="bib-bar-row"><span id="bibSel"></span><button class="qf-btn" id="bibLearn" data-click="bibleLearn">Learn this</button></div>
+          <p class="bib-hint" id="bibHint" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <!-- Practice session -->
+      <div id="vSession" class="hidden">
+        <h1 class="sr-only">Practice session</h1>
+        <div class="vs-top">
+          <button class="qf-link" id="vsBack" data-click="exitVerse">← All verses</button>
+          <div class="vs-steps" id="vsSteps"></div>
+          <span class="qf-steplabel" id="vsLabel"></span>
+        </div>
+        <div class="vs-card">
+          <div class="vs-ref" id="vsRef"></div>
+          <div class="vs-instruction" id="vsInstruction"></div>
+          <div class="vs-text" id="vsText"></div>
+          <textarea id="vsInput" class="vs-input hidden" rows="5" placeholder="Type the verse here…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Type the verse from memory"></textarea>
+          <div class="vs-hint hidden" id="vsHint"></div>
+          <div class="vs-msg" id="vsMsg" aria-live="polite"></div>
+          <div class="vs-bank" id="vsBank"></div>
+          <div class="vs-actions" id="vsActions"></div>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div id="vResult" class="game-done-screen hidden">
+        <div class="vr-stars" id="vrStars"></div>
+        <h1 class="gd-title" id="vrTitle"></h1>
+        <div class="vr-ref" id="vrRef"></div>
+        <div class="vr-text" id="vrText"></div>
+        <div class="vr-spots hidden" id="vrSpots"></div>
+        <div class="vr-xp" id="vrXp"></div>
+        <div class="remind-card hidden" id="vrRemind"></div>
+        <div class="vr-buttons">
+          <button class="gs-start-btn hidden" id="vrReview" data-click="startReview">Start today's review →</button>
+          <button class="gs-start-btn" id="vrNext" data-click="nextVerse">Next verse →</button>
+          <button class="gd-back-btn" id="vrAgain" data-click="retryVerse">Practice again</button>
+          <button class="gd-back-btn" id="vrShare" data-click="shareVerse">Share this verse</button>
+          <button class="gd-back-btn hidden" id="vrDrill" data-click="startDrillFromResult">Practice the words you missed</button>
+          <button class="gd-back-btn" data-click="exitVerse">All verses</button>
+        </div>
+        <p class="settings-msg" id="vrShareMsg" aria-live="polite"></p>
+      </div>
+
+    </div>
   </section>
 
 </main>
 
-<!-- ===== DETAIL MODAL ===== -->
-<div class="modal-backdrop hidden" id="modalBackdrop" onclick="closeModal()"></div>
-<div class="modal hidden" id="wordModal">
-  <button class="modal-close" onclick="closeModal()">✕</button>
-  <div class="modal-lang-badge" id="modalLang"></div>
-  <div class="modal-original" id="modalOriginal"></div>
-  <div class="modal-translit" id="modalTranslit"></div>
-  <div class="modal-pronunciation" id="modalPronun"></div>
-  <div class="modal-strongs" id="modalStrongs"></div>
-  <div class="modal-divider"></div>
-  <div class="modal-section-label">Definition</div>
-  <div class="modal-def" id="modalDef"></div>
-  <div class="modal-section-label" style="margin-top:1.2rem">In Depth</div>
-  <div class="modal-extended" id="modalExtended"></div>
-  <div class="modal-meta">
-    <div>
-      <span class="modal-meta-label">Category</span>
-      <span class="modal-meta-val" id="modalCat"></span>
-    </div>
-    <div>
-      <span class="modal-meta-label">KJV Translations</span>
-      <span class="modal-meta-val" id="modalKjv"></span>
-    </div>
-    <div>
-      <span class="modal-meta-label">OT/NT Occurrences</span>
-      <span class="modal-meta-val" id="modalUsage"></span>
-    </div>
-  </div>
+<!-- ===== ONBOARDING ===== -->
+<div class="modal-backdrop hidden" id="onboardBackdrop"></div>
+<div class="onboard hidden" id="onboard" role="dialog" aria-modal="true" aria-labelledby="onboardTitle">
+  <div class="onboard-dots" id="onboardDots" aria-hidden="true"></div>
+  <h2 class="onboard-title" id="onboardTitle"></h2>
+  <div class="onboard-body" id="onboardBody"></div>
+  <div class="onboard-actions" id="onboardActions"></div>
 </div>
 
 <script src="/static/js/app.js"></script>
+<script src="/static/js/recall.js"></script>
+<script src="/static/js/progress.js"></script>
+<script src="/static/js/sync.js"></script>
+<script src="/static/js/analytics.js"></script>
+<script src="/static/js/reminder.js"></script>
+<script src="/static/js/share.js"></script>
+<script src="/static/js/verses.js"></script>
+<script src="/static/js/bible.js"></script>
+<script src="/static/js/settings.js"></script>
+<script src="/static/js/actions.js"></script>
 </body>
 </html>

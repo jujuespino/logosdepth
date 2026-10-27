@@ -1,0 +1,2010 @@
+[
+ {
+  "ref": "Genesis 1:1",
+  "text": "In the beginning God created the heaven and the earth.",
+  "packs": [
+   "start",
+   "character"
+  ],
+  "translations": {
+   "web": "In the beginning, God created the heavens and the earth."
+  }
+ },
+ {
+  "ref": "Psalm 23:1",
+  "text": "The LORD is my shepherd; I shall not want.",
+  "packs": [
+   "start",
+   "character"
+  ]
+ },
+ {
+  "ref": "Psalm 56:3",
+  "text": "What time I am afraid, I will trust in thee.",
+  "packs": [
+   "start",
+   "comfort"
+  ],
+  "translations": {
+   "web": "When I am afraid, I will put my trust in you."
+  }
+ },
+ {
+  "ref": "1 John 4:19",
+  "text": "We love him, because he first loved us.",
+  "packs": [
+   "start",
+   "love"
+  ],
+  "translations": {
+   "web": "We love him, because he first loved us."
+  }
+ },
+ {
+  "ref": "Psalm 46:1",
+  "text": "God is our refuge and strength, a very present help in trouble.",
+  "packs": [
+   "start",
+   "strength"
+  ]
+ },
+ {
+  "ref": "Philippians 4:13",
+  "text": "I can do all things through Christ which strengtheneth me.",
+  "packs": [
+   "start",
+   "strength"
+  ],
+  "translations": {
+   "web": "I can do all things through Christ who strengthens me."
+  }
+ },
+ {
+  "ref": "Psalm 119:105",
+  "text": "Thy word is a lamp unto my feet, and a light unto my path.",
+  "packs": [
+   "start",
+   "wisdom"
+  ],
+  "translations": {
+   "web": "Your word is a lamp to my feet, and a light for my path."
+  }
+ },
+ {
+  "ref": "Psalm 118:24",
+  "text": "This is the day which the LORD hath made; we will rejoice and be glad in it.",
+  "packs": [
+   "start",
+   "praise"
+  ],
+  "translations": {
+   "web": "This is the day that the LORD has made. We will rejoice and be glad in it!"
+  }
+ },
+ {
+  "ref": "Hebrews 13:8",
+  "text": "Jesus Christ the same yesterday, and to day, and for ever.",
+  "packs": [
+   "start",
+   "character"
+  ],
+  "translations": {
+   "web": "Jesus Christ is the same yesterday, today, and forever."
+  }
+ },
+ {
+  "ref": "Philippians 4:4",
+  "text": "Rejoice in the Lord alway: and again I say, Rejoice.",
+  "packs": [
+   "start",
+   "praise"
+  ],
+  "translations": {
+   "web": "Rejoice in the Lord always! Again I will say, “Rejoice!”"
+  }
+ },
+ {
+  "ref": "Proverbs 15:1",
+  "text": "A soft answer turneth away wrath: but grievous words stir up anger.",
+  "packs": [
+   "start"
+  ],
+  "translations": {
+   "web": "A gentle answer turns away wrath, but a harsh word stirs up anger."
+  }
+ },
+ {
+  "ref": "Romans 3:23",
+  "text": "For all have sinned, and come short of the glory of God;",
+  "packs": [
+   "start",
+   "gospel"
+  ],
+  "translations": {
+   "web": "for all have sinned, and fall short of the glory of God;"
+  }
+ },
+ {
+  "ref": "Psalm 34:8",
+  "text": "O taste and see that the LORD is good: blessed is the man that trusteth in him.",
+  "packs": [
+   "start"
+  ],
+  "translations": {
+   "web": "Oh taste and see that the LORD is good. Blessed is the man who takes refuge in him."
+  }
+ },
+ {
+  "ref": "2 Timothy 1:7",
+  "text": "For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.",
+  "packs": [
+   "start",
+   "strength"
+  ],
+  "translations": {
+   "web": "For God didn’t give us a spirit of fear, but of power, love, and self-control."
+  }
+ },
+ {
+  "ref": "Psalm 119:11",
+  "text": "Thy word have I hid in mine heart, that I might not sin against thee.",
+  "packs": [
+   "start",
+   "wisdom"
+  ],
+  "translations": {
+   "web": "I have hidden your word in my heart, that I might not sin against you."
+  }
+ },
+ {
+  "ref": "Matthew 11:28",
+  "text": "Come unto me, all ye that labour and are heavy laden, and I will give you rest.",
+  "packs": [
+   "start",
+   "comfort"
+  ],
+  "translations": {
+   "web": "“Come to me, all you who labor and are heavily burdened, and I will give you rest."
+  }
+ },
+ {
+  "ref": "John 3:16",
+  "text": "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.",
+  "packs": [
+   "start",
+   "gospel"
+  ],
+  "translations": {
+   "web": "For God so loved the world, that he gave his only born Son, that whoever believes in him should not perish, but have eternal life."
+  }
+ },
+ {
+  "ref": "John 3:17",
+  "text": "For God sent not his Son into the world to condemn the world; but that the world through him might be saved.",
+  "packs": [
+   "gospel"
+  ],
+  "translations": {
+   "web": "For God didn’t send his Son into the world to judge the world, but that the world should be saved through him."
+  }
+ },
+ {
+  "ref": "Romans 5:8",
+  "text": "But God commendeth his love toward us, in that, while we were yet sinners, Christ died for us.",
+  "packs": [
+   "gospel",
+   "love"
+  ],
+  "translations": {
+   "web": "But God commends his own love toward us, in that while we were yet sinners, Christ died for us."
+  }
+ },
+ {
+  "ref": "Romans 6:23",
+  "text": "For the wages of sin is death; but the gift of God is eternal life through Jesus Christ our Lord.",
+  "packs": [
+   "gospel"
+  ],
+  "translations": {
+   "web": "For the wages of sin is death, but the free gift of God is eternal life in Christ Jesus our Lord."
+  }
+ },
+ {
+  "ref": "Romans 10:9",
+  "text": "That if thou shalt confess with thy mouth the Lord Jesus, and shalt believe in thine heart that God hath raised him from the dead, thou shalt be saved.",
+  "packs": [
+   "gospel"
+  ],
+  "translations": {
+   "web": "that if you will confess with your mouth that Jesus is Lord and believe in your heart that God raised him from the dead, you will be saved."
+  }
+ },
+ {
+  "ref": "Romans 10:13",
+  "text": "For whosoever shall call upon the name of the Lord shall be saved.",
+  "packs": [
+   "gospel"
+  ],
+  "translations": {
+   "web": "For, “Whoever will call on the name of the Lord will be saved.”"
+  }
+ },
+ {
+  "ref": "Ephesians 2:8-9",
+  "text": "For by grace are ye saved through faith; and that not of yourselves: it is the gift of God: Not of works, lest any man should boast.",
+  "packs": [
+   "gospel"
+  ],
+  "translations": {
+   "web": "for by grace you have been saved through faith, and that not of yourselves; it is the gift of God, not of works, that no one would boast."
+  }
+ },
+ {
+  "ref": "John 14:6",
+  "text": "Jesus saith unto him, I am the way, the truth, and the life: no man cometh unto the Father, but by me.",
+  "packs": [
+   "gospel"
+  ],
+  "translations": {
+   "web": "Jesus said to him, “I am the way, the truth, and the life. No one comes to the Father, except through me."
+  }
+ },
+ {
+  "ref": "Acts 4:12",
+  "text": "Neither is there salvation in any other: for there is none other name under heaven given among men, whereby we must be saved.",
+  "packs": [
+   "gospel"
+  ],
+  "translations": {
+   "web": "There is salvation in no one else, for there is no other name under heaven that is given among men, by which we must be saved!”"
+  }
+ },
+ {
+  "ref": "John 1:12",
+  "text": "But as many as received him, to them gave he power to become the sons of God, even to them that believe on his name:",
+  "packs": [
+   "gospel"
+  ],
+  "translations": {
+   "web": "But as many as received him, to them he gave the right to become God’s children, to those who believe in his name:"
+  }
+ },
+ {
+  "ref": "1 John 1:9",
+  "text": "If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness.",
+  "packs": [
+   "gospel"
+  ],
+  "translations": {
+   "web": "If we confess our sins, he is faithful and righteous to forgive us the sins and to cleanse us from all unrighteousness."
+  }
+ },
+ {
+  "ref": "2 Corinthians 5:17",
+  "text": "Therefore if any man be in Christ, he is a new creature: old things are passed away; behold, all things are become new.",
+  "packs": [
+   "gospel"
+  ],
+  "translations": {
+   "web": "Therefore if anyone is in Christ, he is a new creation. The old things have passed away. Behold, all things have become new."
+  }
+ },
+ {
+  "ref": "John 5:24",
+  "text": "Verily, verily, I say unto you, He that heareth my word, and believeth on him that sent me, hath everlasting life, and shall not come into condemnation; but is passed from death unto life.",
+  "packs": [
+   "gospel"
+  ],
+  "translations": {
+   "web": "“Most certainly I tell you, he who hears my word and believes him who sent me has eternal life, and doesn’t come into judgment, but has passed out of death into life."
+  }
+ },
+ {
+  "ref": "1 Corinthians 15:3-4",
+  "text": "For I delivered unto you first of all that which I also received, how that Christ died for our sins according to the scriptures; And that he was buried, and that he rose again the third day according to the scriptures:",
+  "packs": [
+   "gospel"
+  ],
+  "translations": {
+   "web": "For I delivered to you first of all that which I also received: that Christ died for our sins according to the Scriptures, that he was buried, that he was raised on the third day according to the Scriptures,"
+  }
+ },
+ {
+  "ref": "Romans 8:1",
+  "text": "There is therefore now no condemnation to them which are in Christ Jesus, who walk not after the flesh, but after the Spirit.",
+  "packs": [
+   "gospel"
+  ],
+  "translations": {
+   "web": "There is therefore now no condemnation to those who are in Christ Jesus, who don’t walk according to the flesh, but according to the Spirit."
+  }
+ },
+ {
+  "ref": "Acts 16:31",
+  "text": "And they said, Believe on the Lord Jesus Christ, and thou shalt be saved, and thy house.",
+  "packs": [
+   "gospel"
+  ],
+  "translations": {
+   "web": "They said, “Believe in the Lord Jesus Christ, and you will be saved, you and your household.”"
+  }
+ },
+ {
+  "ref": "John 10:10",
+  "text": "The thief cometh not, but for to steal, and to kill, and to destroy: I am come that they might have life, and that they might have it more abundantly.",
+  "packs": [
+   "gospel"
+  ],
+  "translations": {
+   "web": "The thief only comes to steal, kill, and destroy. I came that they may have life, and may have it abundantly."
+  }
+ },
+ {
+  "ref": "Isaiah 41:10",
+  "text": "Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness.",
+  "packs": [
+   "comfort",
+   "strength"
+  ],
+  "translations": {
+   "web": "Don’t you be afraid, for I am with you. Don’t be dismayed, for I am your God. I will strengthen you. Yes, I will help you. Yes, I will uphold you with the right hand of my righteousness."
+  }
+ },
+ {
+  "ref": "John 14:27",
+  "text": "Peace I leave with you, my peace I give unto you: not as the world giveth, give I unto you. Let not your heart be troubled, neither let it be afraid.",
+  "packs": [
+   "comfort"
+  ],
+  "translations": {
+   "web": "Peace I leave with you. My peace I give to you; not as the world gives, I give to you. Don’t let your heart be troubled, neither let it be fearful."
+  }
+ },
+ {
+  "ref": "Philippians 4:6-7",
+  "text": "Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God. And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.",
+  "packs": [
+   "comfort"
+  ],
+  "translations": {
+   "web": "In nothing be anxious, but in everything, by prayer and petition with thanksgiving, let your requests be made known to God. And the peace of God, which surpasses all understanding, will guard your hearts and your thoughts in Christ Jesus."
+  }
+ },
+ {
+  "ref": "1 Peter 5:7",
+  "text": "Casting all your care upon him; for he careth for you.",
+  "packs": [
+   "comfort"
+  ],
+  "translations": {
+   "web": "casting all your worries on him, because he cares for you."
+  }
+ },
+ {
+  "ref": "Psalm 34:18",
+  "text": "The LORD is nigh unto them that are of a broken heart; and saveth such as be of a contrite spirit.",
+  "packs": [
+   "comfort"
+  ],
+  "translations": {
+   "web": "The LORD is near to those who have a broken heart, and saves those who have a crushed spirit."
+  }
+ },
+ {
+  "ref": "Joshua 1:9",
+  "text": "Have not I commanded thee? Be strong and of a good courage; be not afraid, neither be thou dismayed: for the LORD thy God is with thee whithersoever thou goest.",
+  "packs": [
+   "comfort",
+   "strength"
+  ],
+  "translations": {
+   "web": "Haven’t I commanded you? Be strong and courageous. Don’t be afraid. Don’t be dismayed, for the LORD your God is with you wherever you go.”"
+  }
+ },
+ {
+  "ref": "Deuteronomy 31:6",
+  "text": "Be strong and of a good courage, fear not, nor be afraid of them: for the LORD thy God, he it is that doth go with thee; he will not fail thee, nor forsake thee.",
+  "packs": [
+   "comfort",
+   "strength"
+  ],
+  "translations": {
+   "web": "Be strong and courageous. Don’t be afraid or scared of them, for the LORD your God himself is who goes with you. He will not fail you nor forsake you.”"
+  }
+ },
+ {
+  "ref": "Isaiah 26:3",
+  "text": "Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee.",
+  "packs": [
+   "comfort"
+  ],
+  "translations": {
+   "web": "You will keep whoever’s mind is steadfast in perfect peace, because he trusts in you."
+  }
+ },
+ {
+  "ref": "Psalm 27:1",
+  "text": "The LORD is my light and my salvation; whom shall I fear? the LORD is the strength of my life; of whom shall I be afraid?",
+  "packs": [
+   "comfort",
+   "strength"
+  ]
+ },
+ {
+  "ref": "Nahum 1:7",
+  "text": "The LORD is good, a strong hold in the day of trouble; and he knoweth them that trust in him.",
+  "packs": [
+   "comfort"
+  ],
+  "translations": {
+   "web": "The LORD is good, a stronghold in the day of trouble; and he knows those who take refuge in him."
+  }
+ },
+ {
+  "ref": "Psalm 55:22",
+  "text": "Cast thy burden upon the LORD, and he shall sustain thee: he shall never suffer the righteous to be moved.",
+  "packs": [
+   "comfort"
+  ],
+  "translations": {
+   "web": "Cast your burden on the LORD and he will sustain you. He will never allow the righteous to be moved."
+  }
+ },
+ {
+  "ref": "Psalm 46:10",
+  "text": "Be still, and know that I am God: I will be exalted among the heathen, I will be exalted in the earth.",
+  "packs": [
+   "comfort",
+   "character"
+  ],
+  "translations": {
+   "web": "“Be still, and know that I am God. I will be exalted among the nations. I will be exalted in the earth.”"
+  }
+ },
+ {
+  "ref": "Psalm 94:19",
+  "text": "In the multitude of my thoughts within me thy comforts delight my soul.",
+  "packs": [
+   "comfort"
+  ],
+  "translations": {
+   "web": "In the multitude of my thoughts within me, your comforts delight my soul."
+  }
+ },
+ {
+  "ref": "Lamentations 3:22-23",
+  "text": "It is of the LORD'S mercies that we are not consumed, because his compassions fail not. They are new every morning: great is thy faithfulness.",
+  "packs": [
+   "comfort",
+   "character"
+  ],
+  "translations": {
+   "web": "It is because of the LORD’s loving kindnesses that we are not consumed, because his mercies don’t fail. They are new every morning. Great is your faithfulness."
+  }
+ },
+ {
+  "ref": "Psalm 121:1-2",
+  "text": "I will lift up mine eyes unto the hills, from whence cometh my help. My help cometh from the LORD, which made heaven and earth.",
+  "packs": [
+   "comfort"
+  ]
+ },
+ {
+  "ref": "Psalm 91:1",
+  "text": "He that dwelleth in the secret place of the most High shall abide under the shadow of the Almighty.",
+  "packs": [
+   "comfort"
+  ],
+  "translations": {
+   "web": "He who dwells in the secret place of the Most High will rest in the shadow of the Almighty."
+  }
+ },
+ {
+  "ref": "Romans 8:28",
+  "text": "And we know that all things work together for good to them that love God, to them who are the called according to his purpose.",
+  "packs": [
+   "comfort",
+   "faith"
+  ],
+  "translations": {
+   "web": "We know that all things work together for good for those who love God, for those who are called according to his purpose."
+  }
+ },
+ {
+  "ref": "Isaiah 43:2",
+  "text": "When thou passest through the waters, I will be with thee; and through the rivers, they shall not overflow thee: when thou walkest through the fire, thou shalt not be burned; neither shall the flame kindle upon thee.",
+  "packs": [
+   "comfort"
+  ],
+  "translations": {
+   "web": "When you pass through the waters, I will be with you, and through the rivers, they will not overflow you. When you walk through the fire, you will not be burned, and flame will not scorch you."
+  }
+ },
+ {
+  "ref": "Proverbs 3:5-6",
+  "text": "Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.",
+  "packs": [
+   "faith",
+   "wisdom"
+  ],
+  "translations": {
+   "web": "Trust in the LORD with all your heart, and don’t lean on your own understanding. In all your ways acknowledge him, and he will make your paths straight."
+  }
+ },
+ {
+  "ref": "Hebrews 11:1",
+  "text": "Now faith is the substance of things hoped for, the evidence of things not seen.",
+  "packs": [
+   "faith"
+  ],
+  "translations": {
+   "web": "Now faith is assurance of things hoped for, proof of things not seen."
+  }
+ },
+ {
+  "ref": "Hebrews 11:6",
+  "text": "But without faith it is impossible to please him: for he that cometh to God must believe that he is, and that he is a rewarder of them that diligently seek him.",
+  "packs": [
+   "faith"
+  ],
+  "translations": {
+   "web": "Without faith it is impossible to be well pleasing to him, for he who comes to God must believe that he exists, and that he is a rewarder of those who seek him."
+  }
+ },
+ {
+  "ref": "Jeremiah 29:11",
+  "text": "For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end.",
+  "packs": [
+   "faith"
+  ],
+  "translations": {
+   "web": "For I know the thoughts that I think toward you,” says the LORD, “thoughts of peace, and not of evil, to give you hope and a future."
+  }
+ },
+ {
+  "ref": "Psalm 37:4-5",
+  "text": "Delight thyself also in the LORD; and he shall give thee the desires of thine heart. Commit thy way unto the LORD; trust also in him; and he shall bring it to pass.",
+  "packs": [
+   "faith"
+  ],
+  "translations": {
+   "web": "Also delight yourself in the LORD, and he will give you the desires of your heart. Commit your way to the LORD. Trust also in him, and he will do this:"
+  }
+ },
+ {
+  "ref": "2 Corinthians 5:7",
+  "text": "(For we walk by faith, not by sight:)",
+  "packs": [
+   "faith"
+  ],
+  "translations": {
+   "web": "for we walk by faith, not by sight."
+  }
+ },
+ {
+  "ref": "Mark 9:23",
+  "text": "Jesus said unto him, If thou canst believe, all things are possible to him that believeth.",
+  "packs": [
+   "faith"
+  ],
+  "translations": {
+   "web": "Jesus said to him, “If you can believe, all things are possible to him who believes.”"
+  }
+ },
+ {
+  "ref": "Romans 10:17",
+  "text": "So then faith cometh by hearing, and hearing by the word of God.",
+  "packs": [
+   "faith"
+  ],
+  "translations": {
+   "web": "So faith comes by hearing, and hearing by the word of God."
+  }
+ },
+ {
+  "ref": "Isaiah 40:31",
+  "text": "But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint.",
+  "packs": [
+   "faith",
+   "strength"
+  ],
+  "translations": {
+   "web": "but those who wait for the LORD will renew their strength. They will mount up with wings like eagles. They will run, and not be weary. They will walk, and not faint."
+  }
+ },
+ {
+  "ref": "James 1:5-6",
+  "text": "If any of you lack wisdom, let him ask of God, that giveth to all men liberally, and upbraideth not; and it shall be given him. But let him ask in faith, nothing wavering. For he that wavereth is like a wave of the sea driven with the wind and tossed.",
+  "packs": [
+   "faith"
+  ],
+  "translations": {
+   "web": "But if any of you lacks wisdom, let him ask of God, who gives to all liberally and without reproach, and it will be given to him. But let him ask in faith, without any doubting, for he who doubts is like a wave of the sea, driven by the wind and tossed."
+  }
+ },
+ {
+  "ref": "Psalm 118:8",
+  "text": "It is better to trust in the LORD than to put confidence in man.",
+  "packs": [
+   "faith"
+  ],
+  "translations": {
+   "web": "It is better to take refuge in the LORD, than to put confidence in man."
+  }
+ },
+ {
+  "ref": "Habakkuk 2:4",
+  "text": "Behold, his soul which is lifted up is not upright in him: but the just shall live by his faith.",
+  "packs": [
+   "faith"
+  ],
+  "translations": {
+   "web": "Behold, his soul is puffed up. It is not upright in him, but the righteous will live by his faith."
+  }
+ },
+ {
+  "ref": "Ephesians 2:8",
+  "text": "For by grace are ye saved through faith; and that not of yourselves: it is the gift of God:",
+  "packs": [
+   "faith"
+  ],
+  "translations": {
+   "web": "for by grace you have been saved through faith, and that not of yourselves; it is the gift of God,"
+  }
+ },
+ {
+  "ref": "Galatians 2:20",
+  "text": "I am crucified with Christ: nevertheless I live; yet not I, but Christ liveth in me: and the life which I now live in the flesh I live by the faith of the Son of God, who loved me, and gave himself for me.",
+  "packs": [
+   "faith",
+   "living"
+  ],
+  "translations": {
+   "web": "I have been crucified with Christ, and it is no longer I who live, but Christ lives in me. That life which I now live in the flesh, I live by faith in the Son of God, who loved me and gave himself up for me."
+  }
+ },
+ {
+  "ref": "Matthew 6:33",
+  "text": "But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you.",
+  "packs": [
+   "faith",
+   "living"
+  ],
+  "translations": {
+   "web": "But seek first God’s Kingdom and his righteousness; and all these things will be given to you as well."
+  }
+ },
+ {
+  "ref": "1 John 4:8",
+  "text": "He that loveth not knoweth not God; for God is love.",
+  "packs": [
+   "love",
+   "character"
+  ],
+  "translations": {
+   "web": "He who doesn’t love doesn’t know God, for God is love."
+  }
+ },
+ {
+  "ref": "1 Corinthians 13:13",
+  "text": "And now abideth faith, hope, charity, these three; but the greatest of these is charity.",
+  "packs": [
+   "love"
+  ],
+  "translations": {
+   "web": "But now faith, hope, and love remain—these three. The greatest of these is love."
+  }
+ },
+ {
+  "ref": "John 13:34",
+  "text": "A new commandment I give unto you, That ye love one another; as I have loved you, that ye also love one another.",
+  "packs": [
+   "love"
+  ],
+  "translations": {
+   "web": "A new commandment I give to you, that you love one another. Just as I have loved you, you also love one another."
+  }
+ },
+ {
+  "ref": "John 15:13",
+  "text": "Greater love hath no man than this, that a man lay down his life for his friends.",
+  "packs": [
+   "love"
+  ],
+  "translations": {
+   "web": "Greater love has no one than this, that someone lay down his life for his friends."
+  }
+ },
+ {
+  "ref": "Colossians 3:14",
+  "text": "And above all these things put on charity, which is the bond of perfectness.",
+  "packs": [
+   "love"
+  ],
+  "translations": {
+   "web": "Above all these things, walk in love, which is the bond of perfection."
+  }
+ },
+ {
+  "ref": "1 Peter 4:8",
+  "text": "And above all things have fervent charity among yourselves: for charity shall cover the multitude of sins.",
+  "packs": [
+   "love"
+  ],
+  "translations": {
+   "web": "And above all things be earnest in your love among yourselves, for love covers a multitude of sins."
+  }
+ },
+ {
+  "ref": "Proverbs 17:17",
+  "text": "A friend loveth at all times, and a brother is born for adversity.",
+  "packs": [
+   "love"
+  ],
+  "translations": {
+   "web": "A friend loves at all times; and a brother is born for adversity."
+  }
+ },
+ {
+  "ref": "Deuteronomy 6:5",
+  "text": "And thou shalt love the LORD thy God with all thine heart, and with all thy soul, and with all thy might.",
+  "packs": [
+   "love"
+  ],
+  "translations": {
+   "web": "You shall love the LORD your God with all your heart, with all your soul, and with all your might."
+  }
+ },
+ {
+  "ref": "Micah 6:8",
+  "text": "He hath shewed thee, O man, what is good; and what doth the LORD require of thee, but to do justly, and to love mercy, and to walk humbly with thy God?",
+  "packs": [
+   "love",
+   "living"
+  ],
+  "translations": {
+   "web": "He has shown you, O man, what is good. What does the LORD require of you, but to act justly, to love mercy, and to walk humbly with your God?"
+  }
+ },
+ {
+  "ref": "Ephesians 4:32",
+  "text": "And be ye kind one to another, tenderhearted, forgiving one another, even as God for Christ's sake hath forgiven you.",
+  "packs": [
+   "love",
+   "living"
+  ],
+  "translations": {
+   "web": "And be kind to one another, tender hearted, forgiving each other, just as God also in Christ forgave you."
+  }
+ },
+ {
+  "ref": "1 John 3:18",
+  "text": "My little children, let us not love in word, neither in tongue; but in deed and in truth.",
+  "packs": [
+   "love"
+  ],
+  "translations": {
+   "web": "My little children, let’s not love in word only, or with the tongue only, but in deed and truth."
+  }
+ },
+ {
+  "ref": "John 15:12",
+  "text": "This is my commandment, That ye love one another, as I have loved you.",
+  "packs": [
+   "love"
+  ],
+  "translations": {
+   "web": "“This is my commandment, that you love one another, even as I have loved you."
+  }
+ },
+ {
+  "ref": "Romans 12:10",
+  "text": "Be kindly affectioned one to another with brotherly love; in honour preferring one another;",
+  "packs": [
+   "love"
+  ],
+  "translations": {
+   "web": "In love of the brothers be tenderly affectionate to one another; in honor prefer one another,"
+  }
+ },
+ {
+  "ref": "1 John 4:7",
+  "text": "Beloved, let us love one another: for love is of God; and every one that loveth is born of God, and knoweth God.",
+  "packs": [
+   "love"
+  ],
+  "translations": {
+   "web": "Beloved, let’s love one another, for love is of God; and everyone who loves has been born of God and knows God."
+  }
+ },
+ {
+  "ref": "Proverbs 1:7",
+  "text": "The fear of the LORD is the beginning of knowledge: but fools despise wisdom and instruction.",
+  "packs": [
+   "wisdom"
+  ],
+  "translations": {
+   "web": "The fear of the LORD is the beginning of knowledge, but the foolish despise wisdom and instruction."
+  }
+ },
+ {
+  "ref": "Proverbs 16:3",
+  "text": "Commit thy works unto the LORD, and thy thoughts shall be established.",
+  "packs": [
+   "wisdom"
+  ],
+  "translations": {
+   "web": "Commit your deeds to the LORD, and your plans shall succeed."
+  }
+ },
+ {
+  "ref": "Proverbs 22:6",
+  "text": "Train up a child in the way he should go: and when he is old, he will not depart from it.",
+  "packs": [
+   "wisdom"
+  ],
+  "translations": {
+   "web": "Train up a child in the way he should go, and when he is old he will not depart from it."
+  }
+ },
+ {
+  "ref": "James 1:5",
+  "text": "If any of you lack wisdom, let him ask of God, that giveth to all men liberally, and upbraideth not; and it shall be given him.",
+  "packs": [
+   "wisdom"
+  ],
+  "translations": {
+   "web": "But if any of you lacks wisdom, let him ask of God, who gives to all liberally and without reproach, and it will be given to him."
+  }
+ },
+ {
+  "ref": "2 Timothy 3:16",
+  "text": "All scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness:",
+  "packs": [
+   "wisdom"
+  ],
+  "translations": {
+   "web": "Every Scripture is God-breathed and profitable for teaching, for reproof, for correction, and for instruction in righteousness,"
+  }
+ },
+ {
+  "ref": "Joshua 1:8",
+  "text": "This book of the law shall not depart out of thy mouth; but thou shalt meditate therein day and night, that thou mayest observe to do according to all that is written therein: for then thou shalt make thy way prosperous, and then thou shalt have good success.",
+  "packs": [
+   "wisdom"
+  ],
+  "translations": {
+   "web": "This book of the law shall not depart from your mouth, but you shall meditate on it day and night, that you may observe to do according to all that is written in it; for then you shall make your way prosperous, and then you shall have good success."
+  }
+ },
+ {
+  "ref": "Psalm 19:14",
+  "text": "Let the words of my mouth, and the meditation of my heart, be acceptable in thy sight, O LORD, my strength, and my redeemer.",
+  "packs": [
+   "wisdom"
+  ],
+  "translations": {
+   "web": "Let the words of my mouth and the meditation of my heart be acceptable in your sight, LORD, my rock, and my redeemer."
+  }
+ },
+ {
+  "ref": "Proverbs 4:23",
+  "text": "Keep thy heart with all diligence; for out of it are the issues of life.",
+  "packs": [
+   "wisdom"
+  ],
+  "translations": {
+   "web": "Keep your heart with all diligence, for out of it is the wellspring of life."
+  }
+ },
+ {
+  "ref": "Hebrews 4:12",
+  "text": "For the word of God is quick, and powerful, and sharper than any twoedged sword, piercing even to the dividing asunder of soul and spirit, and of the joints and marrow, and is a discerner of the thoughts and intents of the heart.",
+  "packs": [
+   "wisdom"
+  ],
+  "translations": {
+   "web": "For the word of God is living and active, and sharper than any two-edged sword, piercing even to the dividing of soul and spirit, of both joints and marrow, and is able to discern the thoughts and intentions of the heart."
+  }
+ },
+ {
+  "ref": "Isaiah 55:11",
+  "text": "So shall my word be that goeth forth out of my mouth: it shall not return unto me void, but it shall accomplish that which I please, and it shall prosper in the thing whereto I sent it.",
+  "packs": [
+   "wisdom"
+  ],
+  "translations": {
+   "web": "so is my word that goes out of my mouth: it will not return to me void, but it will accomplish that which I please, and it will prosper in the thing I sent it to do."
+  }
+ },
+ {
+  "ref": "Matthew 4:4",
+  "text": "But he answered and said, It is written, Man shall not live by bread alone, but by every word that proceedeth out of the mouth of God.",
+  "packs": [
+   "wisdom"
+  ],
+  "translations": {
+   "web": "But he answered, “It is written, ‘Man shall not live by bread alone, but by every word that proceeds out of God’s mouth.’”"
+  }
+ },
+ {
+  "ref": "Colossians 3:16",
+  "text": "Let the word of Christ dwell in you richly in all wisdom; teaching and admonishing one another in psalms and hymns and spiritual songs, singing with grace in your hearts to the Lord.",
+  "packs": [
+   "wisdom"
+  ],
+  "translations": {
+   "web": "Let the word of Christ dwell in you richly; in all wisdom teaching and admonishing one another with psalms, hymns, and spiritual songs, singing with grace in your heart to the Lord."
+  }
+ },
+ {
+  "ref": "Proverbs 9:10",
+  "text": "The fear of the LORD is the beginning of wisdom: and the knowledge of the holy is understanding.",
+  "packs": [
+   "wisdom"
+  ],
+  "translations": {
+   "web": "The fear of the LORD is the beginning of wisdom. The knowledge of the Holy One is understanding."
+  }
+ },
+ {
+  "ref": "Psalm 1:1-2",
+  "text": "Blessed is the man that walketh not in the counsel of the ungodly, nor standeth in the way of sinners, nor sitteth in the seat of the scornful. But his delight is in the law of the LORD; and in his law doth he meditate day and night.",
+  "packs": [
+   "wisdom"
+  ],
+  "translations": {
+   "web": "Blessed is the man who doesn’t walk in the counsel of the wicked, nor stand on the path of sinners, nor sit in the seat of scoffers; but his delight is in the LORD’s law. On his law he meditates day and night."
+  }
+ },
+ {
+  "ref": "Proverbs 27:17",
+  "text": "Iron sharpeneth iron; so a man sharpeneth the countenance of his friend.",
+  "packs": [
+   "wisdom"
+  ],
+  "translations": {
+   "web": "Iron sharpens iron; so a man sharpens his friend’s countenance."
+  }
+ },
+ {
+  "ref": "Psalm 28:7",
+  "text": "The LORD is my strength and my shield; my heart trusted in him, and I am helped: therefore my heart greatly rejoiceth; and with my song will I praise him.",
+  "packs": [
+   "strength"
+  ],
+  "translations": {
+   "web": "The LORD is my strength and my shield. My heart has trusted in him, and I am helped. Therefore my heart greatly rejoices. With my song I will thank him."
+  }
+ },
+ {
+  "ref": "Nehemiah 8:10",
+  "text": "Then he said unto them, Go your way, eat the fat, and drink the sweet, and send portions unto them for whom nothing is prepared: for this day is holy unto our Lord: neither be ye sorry; for the joy of the LORD is your strength.",
+  "packs": [
+   "strength"
+  ],
+  "translations": {
+   "web": "Then he said to them, “Go your way. Eat the fat, drink the sweet, and send portions to him for whom nothing is prepared, for today is holy to our Lord. Don’t be grieved, for the joy of the LORD is your strength.”"
+  }
+ },
+ {
+  "ref": "Ephesians 6:10",
+  "text": "Finally, my brethren, be strong in the Lord, and in the power of his might.",
+  "packs": [
+   "strength"
+  ],
+  "translations": {
+   "web": "Finally, be strong in the Lord and in the strength of his might."
+  }
+ },
+ {
+  "ref": "1 Corinthians 16:13",
+  "text": "Watch ye, stand fast in the faith, quit you like men, be strong.",
+  "packs": [
+   "strength"
+  ],
+  "translations": {
+   "web": "Watch! Stand firm in the faith! Be courageous! Be strong!"
+  }
+ },
+ {
+  "ref": "Psalm 18:2",
+  "text": "The LORD is my rock, and my fortress, and my deliverer; my God, my strength, in whom I will trust; my buckler, and the horn of my salvation, and my high tower.",
+  "packs": [
+   "strength"
+  ],
+  "translations": {
+   "web": "The LORD is my rock, my fortress, and my deliverer; my God, my rock, in whom I take refuge; my shield, and the horn of my salvation, my high tower."
+  }
+ },
+ {
+  "ref": "Exodus 14:14",
+  "text": "The LORD shall fight for you, and ye shall hold your peace.",
+  "packs": [
+   "strength"
+  ],
+  "translations": {
+   "web": "The LORD will fight for you, and you shall be still.”"
+  }
+ },
+ {
+  "ref": "2 Corinthians 12:9",
+  "text": "And he said unto me, My grace is sufficient for thee: for my strength is made perfect in weakness. Most gladly therefore will I rather glory in my infirmities, that the power of Christ may rest upon me.",
+  "packs": [
+   "strength"
+  ],
+  "translations": {
+   "web": "He has said to me, “My grace is sufficient for you, for my power is made perfect in weakness.” Most gladly therefore I will rather glory in my weaknesses, that the power of Christ may rest on me."
+  }
+ },
+ {
+  "ref": "Romans 8:31",
+  "text": "What shall we then say to these things? If God be for us, who can be against us?",
+  "packs": [
+   "strength"
+  ],
+  "translations": {
+   "web": "What then shall we say about these things? If God is for us, who can be against us?"
+  }
+ },
+ {
+  "ref": "Psalm 73:26",
+  "text": "My flesh and my heart faileth: but God is the strength of my heart, and my portion for ever.",
+  "packs": [
+   "strength"
+  ],
+  "translations": {
+   "web": "My flesh and my heart fails, but God is the strength of my heart and my portion forever."
+  }
+ },
+ {
+  "ref": "Isaiah 40:29",
+  "text": "He giveth power to the faint; and to them that have no might he increaseth strength.",
+  "packs": [
+   "strength"
+  ],
+  "translations": {
+   "web": "He gives power to the weak. He increases the strength of him who has no might."
+  }
+ },
+ {
+  "ref": "1 Thessalonians 5:16-18",
+  "text": "Rejoice evermore. Pray without ceasing. In every thing give thanks: for this is the will of God in Christ Jesus concerning you.",
+  "packs": [
+   "praise"
+  ],
+  "translations": {
+   "web": "Always rejoice. Pray without ceasing. In everything give thanks, for this is the will of God in Christ Jesus toward you."
+  }
+ },
+ {
+  "ref": "Psalm 100:4-5",
+  "text": "Enter into his gates with thanksgiving, and into his courts with praise: be thankful unto him, and bless his name. For the LORD is good; his mercy is everlasting; and his truth endureth to all generations.",
+  "packs": [
+   "praise"
+  ],
+  "translations": {
+   "web": "Enter into his gates with thanksgiving, and into his courts with praise. Give thanks to him, and bless his name. For the LORD is good. His loving kindness endures forever, his faithfulness to all generations."
+  }
+ },
+ {
+  "ref": "Psalm 103:1-2",
+  "text": "Bless the LORD, O my soul: and all that is within me, bless his holy name. Bless the LORD, O my soul, and forget not all his benefits:",
+  "packs": [
+   "praise"
+  ]
+ },
+ {
+  "ref": "Psalm 150:6",
+  "text": "Let every thing that hath breath praise the LORD. Praise ye the LORD.",
+  "packs": [
+   "praise"
+  ],
+  "translations": {
+   "web": "Let everything that has breath praise the LORD! Praise the LORD!"
+  }
+ },
+ {
+  "ref": "Colossians 3:17",
+  "text": "And whatsoever ye do in word or deed, do all in the name of the Lord Jesus, giving thanks to God and the Father by him.",
+  "packs": [
+   "praise"
+  ],
+  "translations": {
+   "web": "Whatever you do, in word or in deed, do all in the name of the Lord Jesus, giving thanks to God the Father through him."
+  }
+ },
+ {
+  "ref": "Psalm 107:1",
+  "text": "O give thanks unto the LORD, for he is good: for his mercy endureth for ever.",
+  "packs": [
+   "praise"
+  ],
+  "translations": {
+   "web": "Give thanks to the LORD, for he is good, for his loving kindness endures forever."
+  }
+ },
+ {
+  "ref": "Psalm 34:1",
+  "text": "I will bless the LORD at all times: his praise shall continually be in my mouth.",
+  "packs": [
+   "praise"
+  ]
+ },
+ {
+  "ref": "Hebrews 13:15",
+  "text": "By him therefore let us offer the sacrifice of praise to God continually, that is, the fruit of our lips giving thanks to his name.",
+  "packs": [
+   "praise"
+  ],
+  "translations": {
+   "web": "Through him, then, let’s offer up a sacrifice of praise to God continually, that is, the fruit of lips which proclaim allegiance to his name."
+  }
+ },
+ {
+  "ref": "Psalm 136:1",
+  "text": "O give thanks unto the LORD; for he is good: for his mercy endureth for ever.",
+  "packs": [
+   "praise"
+  ],
+  "translations": {
+   "web": "Give thanks to the LORD, for he is good, for his loving kindness endures forever."
+  }
+ },
+ {
+  "ref": "1 Chronicles 16:34",
+  "text": "O give thanks unto the LORD; for he is good; for his mercy endureth for ever.",
+  "packs": [
+   "praise"
+  ],
+  "translations": {
+   "web": "Oh give thanks to the LORD, for he is good, for his loving kindness endures forever."
+  }
+ },
+ {
+  "ref": "Psalm 9:1",
+  "text": "I will praise thee, O LORD, with my whole heart; I will shew forth all thy marvellous works.",
+  "packs": [
+   "praise"
+  ]
+ },
+ {
+  "ref": "Romans 12:2",
+  "text": "And be not conformed to this world: but be ye transformed by the renewing of your mind, that ye may prove what is that good, and acceptable, and perfect, will of God.",
+  "packs": [
+   "living"
+  ],
+  "translations": {
+   "web": "Don’t be conformed to this world, but be transformed by the renewing of your mind, so that you may prove what is the good, well-pleasing, and perfect will of God."
+  }
+ },
+ {
+  "ref": "Galatians 5:22-23",
+  "text": "But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith, Meekness, temperance: against such there is no law.",
+  "packs": [
+   "living"
+  ],
+  "translations": {
+   "web": "But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faith, gentleness, and self-control. Against such things there is no law."
+  }
+ },
+ {
+  "ref": "Colossians 3:23",
+  "text": "And whatsoever ye do, do it heartily, as to the Lord, and not unto men;",
+  "packs": [
+   "living"
+  ],
+  "translations": {
+   "web": "And whatever you do, work heartily, as for the Lord and not for men,"
+  }
+ },
+ {
+  "ref": "Matthew 5:16",
+  "text": "Let your light so shine before men, that they may see your good works, and glorify your Father which is in heaven.",
+  "packs": [
+   "living"
+  ],
+  "translations": {
+   "web": "Even so, let your light shine before men, that they may see your good works and glorify your Father who is in heaven."
+  }
+ },
+ {
+  "ref": "Romans 12:1",
+  "text": "I beseech you therefore, brethren, by the mercies of God, that ye present your bodies a living sacrifice, holy, acceptable unto God, which is your reasonable service.",
+  "packs": [
+   "living"
+  ],
+  "translations": {
+   "web": "Therefore I urge you, brothers, by the mercies of God, to present your bodies a living sacrifice, holy, acceptable to God, which is your spiritual service."
+  }
+ },
+ {
+  "ref": "James 1:22",
+  "text": "But be ye doers of the word, and not hearers only, deceiving your own selves.",
+  "packs": [
+   "living"
+  ],
+  "translations": {
+   "web": "But be doers of the word, and not only hearers, deluding your own selves."
+  }
+ },
+ {
+  "ref": "Philippians 2:3-4",
+  "text": "Let nothing be done through strife or vainglory; but in lowliness of mind let each esteem other better than themselves. Look not every man on his own things, but every man also on the things of others.",
+  "packs": [
+   "living"
+  ],
+  "translations": {
+   "web": "doing nothing through rivalry or through conceit, but in humility, each counting others better than himself; each of you not just looking to his own things, but each of you also to the things of others."
+  }
+ },
+ {
+  "ref": "Matthew 7:12",
+  "text": "Therefore all things whatsoever ye would that men should do to you, do ye even so to them: for this is the law and the prophets.",
+  "packs": [
+   "living",
+   "sermon"
+  ],
+  "translations": {
+   "web": "Therefore, whatever you desire for men to do to you, you shall also do to them; for this is the law and the prophets."
+  }
+ },
+ {
+  "ref": "Romans 12:12",
+  "text": "Rejoicing in hope; patient in tribulation; continuing instant in prayer;",
+  "packs": [
+   "living"
+  ],
+  "translations": {
+   "web": "rejoicing in hope, enduring in troubles, continuing steadfastly in prayer,"
+  }
+ },
+ {
+  "ref": "1 Timothy 4:12",
+  "text": "Let no man despise thy youth; but be thou an example of the believers, in word, in conversation, in charity, in spirit, in faith, in purity.",
+  "packs": [
+   "living"
+  ],
+  "translations": {
+   "web": "Let no man despise your youth; but be an example to those who believe, in word, in your way of life, in love, in spirit, in faith, and in purity."
+  }
+ },
+ {
+  "ref": "John 1:1",
+  "text": "In the beginning was the Word, and the Word was with God, and the Word was God.",
+  "packs": [
+   "character"
+  ],
+  "translations": {
+   "web": "In the beginning was the Word, and the Word was with God, and the Word was God."
+  }
+ },
+ {
+  "ref": "Exodus 3:14",
+  "text": "And God said unto Moses, I AM THAT I AM: and he said, Thus shalt thou say unto the children of Israel, I AM hath sent me unto you.",
+  "packs": [
+   "character"
+  ],
+  "translations": {
+   "web": "God said to Moses, “I AM WHO I AM,” and he said, “You shall tell the children of Israel this: ‘I AM has sent me to you.’”"
+  }
+ },
+ {
+  "ref": "Isaiah 9:6",
+  "text": "For unto us a child is born, unto us a son is given: and the government shall be upon his shoulder: and his name shall be called Wonderful, Counsellor, The mighty God, The everlasting Father, The Prince of Peace.",
+  "packs": [
+   "character"
+  ],
+  "translations": {
+   "web": "For a child is born to us. A son is given to us; and the government will be on his shoulders. His name will be called Wonderful Counselor, Mighty God, Everlasting Father, Prince of Peace."
+  }
+ },
+ {
+  "ref": "Psalm 103:8",
+  "text": "The LORD is merciful and gracious, slow to anger, and plenteous in mercy.",
+  "packs": [
+   "character"
+  ],
+  "translations": {
+   "web": "The LORD is merciful and gracious, slow to anger, and abundant in loving kindness."
+  }
+ },
+ {
+  "ref": "Numbers 6:24-26",
+  "text": "The LORD bless thee, and keep thee: The LORD make his face shine upon thee, and be gracious unto thee: The LORD lift up his countenance upon thee, and give thee peace.",
+  "packs": [
+   "character"
+  ],
+  "translations": {
+   "web": "‘The LORD bless you, and keep you. The LORD make his face to shine on you, and be gracious to you. The LORD lift up his face toward you, and give you peace.’"
+  }
+ },
+ {
+  "ref": "Revelation 22:13",
+  "text": "I am Alpha and Omega, the beginning and the end, the first and the last.",
+  "packs": [
+   "character"
+  ],
+  "translations": {
+   "web": "I am the Alpha and the Omega, the First and the Last, the Beginning and the End."
+  }
+ },
+ {
+  "ref": "Psalm 145:8",
+  "text": "The LORD is gracious, and full of compassion; slow to anger, and of great mercy.",
+  "packs": [
+   "character"
+  ],
+  "translations": {
+   "web": "The LORD is gracious, merciful, slow to anger, and of great loving kindness."
+  }
+ },
+ {
+  "ref": "Psalm 90:2",
+  "text": "Before the mountains were brought forth, or ever thou hadst formed the earth and the world, even from everlasting to everlasting, thou art God.",
+  "packs": [
+   "character"
+  ],
+  "translations": {
+   "web": "Before the mountains were born, before you had formed the earth and the world, even from everlasting to everlasting, you are God."
+  }
+ },
+ {
+  "ref": "Isaiah 40:28",
+  "text": "Hast thou not known? hast thou not heard, that the everlasting God, the LORD, the Creator of the ends of the earth, fainteth not, neither is weary? there is no searching of his understanding.",
+  "packs": [
+   "character"
+  ],
+  "translations": {
+   "web": "Haven’t you known? Haven’t you heard? The everlasting God, the LORD, the Creator of the ends of the earth, doesn’t faint. He isn’t weary. His understanding is unsearchable."
+  }
+ },
+ {
+  "ref": "Deuteronomy 6:4",
+  "text": "Hear, O Israel: The LORD our God is one LORD:",
+  "packs": [
+   "character"
+  ],
+  "translations": {
+   "web": "Hear, Israel: The LORD is our God. The LORD is one."
+  }
+ },
+ {
+  "ref": "Malachi 3:6",
+  "text": "For I am the LORD, I change not; therefore ye sons of Jacob are not consumed.",
+  "packs": [
+   "character"
+  ],
+  "translations": {
+   "web": "“For I, the LORD, don’t change; therefore you, sons of Jacob, are not consumed."
+  }
+ },
+ {
+  "ref": "Matthew 5:3",
+  "text": "Blessed are the poor in spirit: for their's is the kingdom of heaven.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "“Blessed are the poor in spirit, for theirs is the Kingdom of Heaven."
+  }
+ },
+ {
+  "ref": "Matthew 5:4",
+  "text": "Blessed are they that mourn: for they shall be comforted.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "Blessed are those who mourn, for they shall be comforted."
+  }
+ },
+ {
+  "ref": "Matthew 5:5",
+  "text": "Blessed are the meek: for they shall inherit the earth.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "Blessed are the gentle, for they shall inherit the earth."
+  }
+ },
+ {
+  "ref": "Matthew 5:6",
+  "text": "Blessed are they which do hunger and thirst after righteousness: for they shall be filled.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "Blessed are those who hunger and thirst for righteousness, for they shall be filled."
+  }
+ },
+ {
+  "ref": "Matthew 5:7",
+  "text": "Blessed are the merciful: for they shall obtain mercy.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "Blessed are the merciful, for they shall obtain mercy."
+  }
+ },
+ {
+  "ref": "Matthew 5:8",
+  "text": "Blessed are the pure in heart: for they shall see God.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "Blessed are the pure in heart, for they shall see God."
+  }
+ },
+ {
+  "ref": "Matthew 5:9",
+  "text": "Blessed are the peacemakers: for they shall be called the children of God.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "Blessed are the peacemakers, for they shall be called children of God."
+  }
+ },
+ {
+  "ref": "Matthew 5:14",
+  "text": "Ye are the light of the world. A city that is set on an hill cannot be hid.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "“You are the light of the world. A city located on a hill can’t be hidden."
+  }
+ },
+ {
+  "ref": "Matthew 5:44",
+  "text": "But I say unto you, Love your enemies, bless them that curse you, do good to them that hate you, and pray for them which despitefully use you, and persecute you;",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "But I tell you, love your enemies, bless those who curse you, do good to those who hate you, and pray for those who mistreat you and persecute you,"
+  }
+ },
+ {
+  "ref": "Matthew 6:9-10",
+  "text": "After this manner therefore pray ye: Our Father which art in heaven, Hallowed be thy name. Thy kingdom come. Thy will be done in earth, as it is in heaven.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "Pray like this: “‘Our Father in heaven, may your name be kept holy. Let your Kingdom come. Let your will be done on earth as it is in heaven."
+  }
+ },
+ {
+  "ref": "Matthew 6:11-12",
+  "text": "Give us this day our daily bread. And forgive us our debts, as we forgive our debtors.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "Give us today our daily bread. Forgive us our debts, as we also forgive our debtors."
+  }
+ },
+ {
+  "ref": "Matthew 6:19-20",
+  "text": "Lay not up for yourselves treasures upon earth, where moth and rust doth corrupt, and where thieves break through and steal: But lay up for yourselves treasures in heaven, where neither moth nor rust doth corrupt, and where thieves do not break through nor steal:",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "“Don’t lay up treasures for yourselves on the earth, where moth and rust consume, and where thieves break through and steal; but lay up for yourselves treasures in heaven, where neither moth nor rust consume, and where thieves don’t break through and steal;"
+  }
+ },
+ {
+  "ref": "Matthew 6:21",
+  "text": "For where your treasure is, there will your heart be also.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "for where your treasure is, there your heart will be also."
+  }
+ },
+ {
+  "ref": "Matthew 6:34",
+  "text": "Take therefore no thought for the morrow: for the morrow shall take thought for the things of itself. Sufficient unto the day is the evil thereof.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "Therefore don’t be anxious for tomorrow, for tomorrow will be anxious for itself. Each day’s own evil is sufficient."
+  }
+ },
+ {
+  "ref": "Matthew 7:7-8",
+  "text": "Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you: For every one that asketh receiveth; and he that seeketh findeth; and to him that knocketh it shall be opened.",
+  "packs": [
+   "sermon"
+  ],
+  "translations": {
+   "web": "“Ask, and it will be given you. Seek, and you will find. Knock, and it will be opened for you. For everyone who asks receives. He who seeks finds. To him who knocks it will be opened."
+  }
+ },
+ {
+  "ref": "Psalm 8:3-4",
+  "text": "When I consider thy heavens, the work of thy fingers, the moon and the stars, which thou hast ordained; What is man, that thou art mindful of him? and the son of man, that thou visitest him?",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "When I consider your heavens, the work of your fingers, the moon and the stars, which you have ordained, what is man, that you think of him? What is the son of man, that you care for him?"
+  }
+ },
+ {
+  "ref": "Psalm 16:11",
+  "text": "Thou wilt shew me the path of life: in thy presence is fulness of joy; at thy right hand there are pleasures for evermore.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "You will show me the path of life. In your presence is fullness of joy. In your right hand there are pleasures forever more."
+  }
+ },
+ {
+  "ref": "Psalm 19:1",
+  "text": "The heavens declare the glory of God; and the firmament sheweth his handywork.",
+  "packs": [
+   "psalms"
+  ]
+ },
+ {
+  "ref": "Psalm 25:4-5",
+  "text": "Shew me thy ways, O LORD; teach me thy paths. Lead me in thy truth, and teach me: for thou art the God of my salvation; on thee do I wait all the day.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "Show me your ways, LORD. Teach me your paths. Guide me in your truth, and teach me, for you are the God of my salvation. I wait for you all day long."
+  }
+ },
+ {
+  "ref": "Psalm 27:4",
+  "text": "One thing have I desired of the LORD, that will I seek after; that I may dwell in the house of the LORD all the days of my life, to behold the beauty of the LORD, and to enquire in his temple.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "One thing I have asked of the LORD, that I will seek after: that I may dwell in the LORD’s house all the days of my life, to see the LORD’s beauty, and to inquire in his temple."
+  }
+ },
+ {
+  "ref": "Psalm 30:5",
+  "text": "For his anger endureth but a moment; in his favour is life: weeping may endure for a night, but joy cometh in the morning.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "For his anger is but for a moment. His favor is for a lifetime. Weeping may stay for the night, but joy comes in the morning."
+  }
+ },
+ {
+  "ref": "Psalm 32:8",
+  "text": "I will instruct thee and teach thee in the way which thou shalt go: I will guide thee with mine eye.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "I will instruct you and teach you in the way which you shall go. I will counsel you with my eye on you."
+  }
+ },
+ {
+  "ref": "Psalm 40:1-2",
+  "text": "I waited patiently for the LORD; and he inclined unto me, and heard my cry. He brought me up also out of an horrible pit, out of the miry clay, and set my feet upon a rock, and established my goings.",
+  "packs": [
+   "psalms"
+  ]
+ },
+ {
+  "ref": "Psalm 42:1",
+  "text": "As the hart panteth after the water brooks, so panteth my soul after thee, O God.",
+  "packs": [
+   "psalms"
+  ]
+ },
+ {
+  "ref": "Psalm 51:10",
+  "text": "Create in me a clean heart, O God; and renew a right spirit within me.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "Create in me a clean heart, O God. Renew a right spirit within me."
+  }
+ },
+ {
+  "ref": "Psalm 63:1",
+  "text": "O God, thou art my God; early will I seek thee: my soul thirsteth for thee, my flesh longeth for thee in a dry and thirsty land, where no water is;",
+  "packs": [
+   "psalms"
+  ]
+ },
+ {
+  "ref": "Psalm 84:10",
+  "text": "For a day in thy courts is better than a thousand. I had rather be a doorkeeper in the house of my God, than to dwell in the tents of wickedness.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "For a day in your courts is better than a thousand. I would rather be a doorkeeper in the house of my God, than to dwell in the tents of wickedness."
+  }
+ },
+ {
+  "ref": "Psalm 86:11",
+  "text": "Teach me thy way, O LORD; I will walk in thy truth: unite my heart to fear thy name.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "Teach me your way, LORD. I will walk in your truth. Make my heart undivided to fear your name."
+  }
+ },
+ {
+  "ref": "Psalm 119:9",
+  "text": "Wherewithal shall a young man cleanse his way? by taking heed thereto according to thy word.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "How can a young man keep his way pure? By living according to your word."
+  }
+ },
+ {
+  "ref": "Psalm 130:5",
+  "text": "I wait for the LORD, my soul doth wait, and in his word do I hope.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "I wait for the LORD. My soul waits. I hope in his word."
+  }
+ },
+ {
+  "ref": "Psalm 139:14",
+  "text": "I will praise thee; for I am fearfully and wonderfully made: marvellous are thy works; and that my soul knoweth right well.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "I will give thanks to you, for I am fearfully and wonderfully made. Your works are wonderful. My soul knows that very well."
+  }
+ },
+ {
+  "ref": "Psalm 139:23-24",
+  "text": "Search me, O God, and know my heart: try me, and know my thoughts: And see if there be any wicked way in me, and lead me in the way everlasting.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "Search me, God, and know my heart. Try me, and know my thoughts. See if there is any wicked way in me, and lead me in the everlasting way."
+  }
+ },
+ {
+  "ref": "Psalm 143:8",
+  "text": "Cause me to hear thy lovingkindness in the morning; for in thee do I trust: cause me to know the way wherein I should walk; for I lift up my soul unto thee.",
+  "packs": [
+   "psalms"
+  ],
+  "translations": {
+   "web": "Cause me to hear your loving kindness in the morning, for I trust in you. Cause me to know the way in which I should walk, for I lift up my soul to you."
+  }
+ },
+ {
+  "ref": "Romans 15:13",
+  "text": "Now the God of hope fill you with all joy and peace in believing, that ye may abound in hope, through the power of the Holy Ghost.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "Now may the God of hope fill you with all joy and peace in believing, that you may abound in hope in the power of the Holy Spirit."
+  }
+ },
+ {
+  "ref": "Romans 5:1",
+  "text": "Therefore being justified by faith, we have peace with God through our Lord Jesus Christ:",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "Being therefore justified by faith, we have peace with God through our Lord Jesus Christ;"
+  }
+ },
+ {
+  "ref": "Romans 8:18",
+  "text": "For I reckon that the sufferings of this present time are not worthy to be compared with the glory which shall be revealed in us.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "For I consider that the sufferings of this present time are not worthy to be compared with the glory which will be revealed toward us."
+  }
+ },
+ {
+  "ref": "Romans 8:38-39",
+  "text": "For I am persuaded, that neither death, nor life, nor angels, nor principalities, nor powers, nor things present, nor things to come, Nor height, nor depth, nor any other creature, shall be able to separate us from the love of God, which is in Christ Jesus our Lord.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "For I am persuaded that neither death, nor life, nor angels, nor principalities, nor things present, nor things to come, nor powers, nor height, nor depth, nor any other created thing will be able to separate us from God’s love which is in Christ Jesus our Lord."
+  }
+ },
+ {
+  "ref": "Hebrews 10:23",
+  "text": "Let us hold fast the profession of our faith without wavering; (for he is faithful that promised;)",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "let’s hold fast the confession of our hope without wavering; for he who promised is faithful."
+  }
+ },
+ {
+  "ref": "Hebrews 6:19",
+  "text": "Which hope we have as an anchor of the soul, both sure and stedfast, and which entereth into that within the veil;",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "This hope we have as an anchor of the soul, a hope both sure and steadfast and entering into that which is within the veil,"
+  }
+ },
+ {
+  "ref": "John 16:33",
+  "text": "These things I have spoken unto you, that in me ye might have peace. In the world ye shall have tribulation: but be of good cheer; I have overcome the world.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "I have told you these things, that in me you may have peace. In the world you have trouble; but cheer up! I have overcome the world.”"
+  }
+ },
+ {
+  "ref": "John 11:25-26",
+  "text": "Jesus said unto her, I am the resurrection, and the life: he that believeth in me, though he were dead, yet shall he live: And whosoever liveth and believeth in me shall never die. Believest thou this?",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "Jesus said to her, “I am the resurrection and the life. He who believes in me will still live, even if he dies. Whoever lives and believes in me will never die. Do you believe this?”"
+  }
+ },
+ {
+  "ref": "1 Corinthians 15:57",
+  "text": "But thanks be to God, which giveth us the victory through our Lord Jesus Christ.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "But thanks be to God, who gives us the victory through our Lord Jesus Christ."
+  }
+ },
+ {
+  "ref": "1 Corinthians 15:58",
+  "text": "Therefore, my beloved brethren, be ye stedfast, unmoveable, always abounding in the work of the Lord, forasmuch as ye know that your labour is not in vain in the Lord.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "Therefore, my beloved brothers, be steadfast, immovable, always abounding in the Lord’s work, because you know that your labor is not in vain in the Lord."
+  }
+ },
+ {
+  "ref": "2 Corinthians 4:18",
+  "text": "While we look not at the things which are seen, but at the things which are not seen: for the things which are seen are temporal; but the things which are not seen are eternal.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "while we don’t look at the things which are seen, but at the things which are not seen. For the things which are seen are temporal, but the things which are not seen are eternal."
+  }
+ },
+ {
+  "ref": "Revelation 21:4",
+  "text": "And God shall wipe away all tears from their eyes; and there shall be no more death, neither sorrow, nor crying, neither shall there be any more pain: for the former things are passed away.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "He will wipe away every tear from their eyes. Death will be no more; neither will there be mourning, nor crying, nor pain any more. The first things have passed away.”"
+  }
+ },
+ {
+  "ref": "Isaiah 40:8",
+  "text": "The grass withereth, the flower fadeth: but the word of our God shall stand for ever.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "The grass withers, the flower fades; but the word of our God stands forever.”"
+  }
+ },
+ {
+  "ref": "Zephaniah 3:17",
+  "text": "The LORD thy God in the midst of thee is mighty; he will save, he will rejoice over thee with joy; he will rest in his love, he will joy over thee with singing.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "The LORD, your God, is among you, a mighty one who will save. He will rejoice over you with joy. He will calm you in his love. He will rejoice over you with singing."
+  }
+ },
+ {
+  "ref": "2 Peter 3:9",
+  "text": "The Lord is not slack concerning his promise, as some men count slackness; but is longsuffering to us-ward, not willing that any should perish, but that all should come to repentance.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "The Lord is not slow concerning his promise, as some count slowness; but he is patient with us, not wishing that anyone should perish, but that all should come to repentance."
+  }
+ },
+ {
+  "ref": "Psalm 31:24",
+  "text": "Be of good courage, and he shall strengthen your heart, all ye that hope in the LORD.",
+  "packs": [
+   "hope"
+  ],
+  "translations": {
+   "web": "Be strong, and let your heart take courage, all you who hope in the LORD."
+  }
+ },
+ {
+  "ref": "Jeremiah 33:3",
+  "text": "Call unto me, and I will answer thee, and shew thee great and mighty things, which thou knowest not.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "‘Call to me, and I will answer you, and will show you great and difficult things, which you don’t know.’"
+  }
+ },
+ {
+  "ref": "1 John 5:14",
+  "text": "And this is the confidence that we have in him, that, if we ask any thing according to his will, he heareth us:",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "This is the boldness which we have toward him, that if we ask anything according to his will, he listens to us."
+  }
+ },
+ {
+  "ref": "James 4:8",
+  "text": "Draw nigh to God, and he will draw nigh to you. Cleanse your hands, ye sinners; and purify your hearts, ye double minded.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "Draw near to God, and he will draw near to you. Cleanse your hands, you sinners. Purify your hearts, you double-minded."
+  }
+ },
+ {
+  "ref": "James 5:16",
+  "text": "Confess your faults one to another, and pray one for another, that ye may be healed. The effectual fervent prayer of a righteous man availeth much.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "Confess your sins to one another and pray for one another, that you may be healed. The insistent prayer of a righteous person is powerfully effective."
+  }
+ },
+ {
+  "ref": "Philippians 4:19",
+  "text": "But my God shall supply all your need according to his riches in glory by Christ Jesus.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "My God will supply every need of yours according to his riches in glory in Christ Jesus."
+  }
+ },
+ {
+  "ref": "Hebrews 4:16",
+  "text": "Let us therefore come boldly unto the throne of grace, that we may obtain mercy, and find grace to help in time of need.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "Let’s therefore draw near with boldness to the throne of grace, that we may receive mercy and may find grace for help in time of need."
+  }
+ },
+ {
+  "ref": "Matthew 21:22",
+  "text": "And all things, whatsoever ye shall ask in prayer, believing, ye shall receive.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "All things, whatever you ask in prayer, believing, you will receive.”"
+  }
+ },
+ {
+  "ref": "Luke 9:23",
+  "text": "And he said to them all, If any man will come after me, let him deny himself, and take up his cross daily, and follow me.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "He said to all, “If anyone desires to come after me, let him deny himself, take up his cross, and follow me."
+  }
+ },
+ {
+  "ref": "John 14:15",
+  "text": "If ye love me, keep my commandments.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "If you love me, keep my commandments."
+  }
+ },
+ {
+  "ref": "Galatians 6:9",
+  "text": "And let us not be weary in well doing: for in due season we shall reap, if we faint not.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "Let’s not be weary in doing good, for we will reap in due season if we don’t give up."
+  }
+ },
+ {
+  "ref": "1 Corinthians 10:13",
+  "text": "There hath no temptation taken you but such as is common to man: but God is faithful, who will not suffer you to be tempted above that ye are able; but will with the temptation also make a way to escape, that ye may be able to bear it.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "No temptation has taken you except what is common to man. God is faithful, who will not allow you to be tempted above what you are able, but will with the temptation also make the way of escape, that you may be able to endure it."
+  }
+ },
+ {
+  "ref": "Acts 1:8",
+  "text": "But ye shall receive power, after that the Holy Ghost is come upon you: and ye shall be witnesses unto me both in Jerusalem, and in all Judaea, and in Samaria, and unto the uttermost part of the earth.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "But you will receive power when the Holy Spirit has come upon you. You will be witnesses to me in Jerusalem, in all Judea and Samaria, and to the uttermost parts of the earth.”"
+  }
+ },
+ {
+  "ref": "Mark 12:30-31",
+  "text": "And thou shalt love the Lord thy God with all thy heart, and with all thy soul, and with all thy mind, and with all thy strength: this is the first commandment. And the second is like, namely this, Thou shalt love thy neighbour as thyself. There is none other commandment greater than these.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "You shall love the Lord your God with all your heart, with all your soul, with all your mind, and with all your strength.’ This is the first commandment. The second is like this: ‘You shall love your neighbor as yourself.’ There is no other commandment greater than these.”"
+  }
+ },
+ {
+  "ref": "Matthew 28:19-20",
+  "text": "Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Ghost: Teaching them to observe all things whatsoever I have commanded you: and, lo, I am with you alway, even unto the end of the world. Amen.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "Go and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit, teaching them to observe all things that I commanded you. Behold, I am with you always, even to the end of the age.” Amen."
+  }
+ },
+ {
+  "ref": "Luke 11:9",
+  "text": "And I say unto you, Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you.",
+  "packs": [
+   "walk"
+  ],
+  "translations": {
+   "web": "“I tell you, keep asking, and it will be given you. Keep seeking, and you will find. Keep knocking, and it will be opened to you."
+  }
+ }
+]
